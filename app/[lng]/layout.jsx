@@ -2,7 +2,7 @@ import '@/fonts';
 
 import '../globals.css';
 
-import TranslationsProvider from '@/components/Internationalization/TranslationsProvider';
+import TranslationsProvider from '@/components/Internationalization/TranslationProvider';
 import i18nConfig from '@/i18nConfig';
 import { roboto } from '@/fonts';
 

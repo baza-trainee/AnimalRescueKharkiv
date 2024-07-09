@@ -1,7 +1,7 @@
 import initTranslations from '@/app/i18n';
 
 export const NumberOfHostsForeign = async ({ lng }) => {
-    const { t } = await initTranslations(lng, ['number-of-hosts-foreign']);
+    const { t } = await initTranslations(lng, ['numberOfHostsForeign']);
     return (
         <section className=''>
             <div>
