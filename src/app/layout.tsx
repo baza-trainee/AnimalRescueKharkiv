@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
-import Header from "../components/common/Header";
-import Footer from '../components/common/Footer';
-import Main from '../components/common/MainPage'
+
 
 export const metadata: Metadata = {
   title: 'ARK',
@@ -19,9 +17,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="16x16" />
       </head>
       <body>
-        <Header />
         {children} {/* Here the pages will be injected */}
-        <Footer />
       </body>
     </html>
   )
