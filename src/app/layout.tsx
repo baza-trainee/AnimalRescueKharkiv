@@ -20,7 +20,7 @@ export default function RootLayout({
       </head>
       <body>
         <Header />
-        <Main/>
+        {children} {/* Here the pages will be injected */}
         <Footer />
       </body>
     </html>
