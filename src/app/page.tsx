@@ -1,8 +1,15 @@
+import Header from "../components/common/Header";
+import Footer from '../components/common/Footer';
+
 export default function Home() {
   return (
-    <div>
-      <h1>CRM Page</h1>
-      <p>This is the CRM page.</p>
-    </div>
+    <>
+      <Header />
+      <div>
+        <h1>Main Page</h1>
+        <p>This is the Main page.</p>
+      </div>
+      <Footer />
+    </>
   )
 }
