@@ -6,7 +6,7 @@ export default function Home() {
     <>
       <Header />
       <div>
-        <h1>Main Page</h1>
+        <h1 className="underline" >Main Page</h1>
         <p>This is the Main page.</p>
       </div>
       <Footer />
