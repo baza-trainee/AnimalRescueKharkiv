@@ -1,10 +1,11 @@
+import DashbordAdmin from "./dashbordAdmin";
+
+
 const HeaderCrm = () => {
     return (
         <header className="border-b border-gray-300">
-            <div className="h-[36px] px-6 ">
-                <div className="flex">
-                    <p>Статистика</p>
-                </div>
+            <div className="flex h-[56px] px-6 pt-5 justify-between xl:">
+                <DashbordAdmin />
             </div>
         </header>
     )
