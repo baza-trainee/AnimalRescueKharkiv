@@ -10,12 +10,13 @@
     "export": "next export"
   },
   "dependencies": {
-    "imask": "^7.6.1",
+    "@hookform/resolvers": "^3.9.1",
     "next": "14.2.12",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
-    "react-hook-form-yup": "^1.0.0-alpha.4"
+    "react-hook-form-yup": "^1.0.0-alpha.4",
+    "react-imask": "^7.6.1"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
