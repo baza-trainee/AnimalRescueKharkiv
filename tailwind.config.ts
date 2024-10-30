@@ -18,6 +18,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        lightBlue: "#EDEEFA",
+        mainBlue: "#4855CC",
       },
     },
   },
