@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { ErrorPopUp } from ".";
+import Main from "../../mainLogo";
 
 interface PropsRegisterSuccess {
   onClose: () => void;

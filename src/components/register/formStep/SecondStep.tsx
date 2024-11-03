@@ -52,7 +52,7 @@ export const SecondStep: FC<PropsFirstStep> = ({
 
   const closeModalSuccess = () => {
     toggleModal();
-    if (isSuccess) router.push("/crm");
+    if (isSuccess) router.push("/mainlogo");
   };
 
   return (
