@@ -1,5 +1,5 @@
 
-import { ICONS } from '../../../constants/icons/icons';
+import { ICONS } from '../../constants/icons/icons';
 
 export interface LogoProps {}
 
