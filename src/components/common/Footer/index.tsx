@@ -1,3 +1,6 @@
+"use client"
+
+
 const Footer = () => {
     return (
         <div>Footer</div>
