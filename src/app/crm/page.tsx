@@ -1,13 +1,11 @@
 import FooterCrm from "@/src/components/crm/Footer";
 import HeaderCrm from "@/src/components/crm/Header";
 
-export default function CRMPage({children}: {
-  children: React.ReactNode
-}) {
+export default function CRMPage() {
   return (
     <>
       <HeaderCrm />
-      {children}
+      <div>Content</div>
       <FooterCrm/>
     </>
   );
