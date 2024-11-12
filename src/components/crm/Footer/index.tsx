@@ -1,4 +1,5 @@
 'use client'
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import StatisticIcon  from "./FooterIcons/Statistic";
@@ -10,48 +11,42 @@ import ProfileIcon from "./FooterIcons/Profile";
 type Path = '/statistic' | '/addcard' | '/cards' | '/profile';
 
 const FooterCrm = () => {
-
- const pathname = usePathname(); 
-
-  
-    const isActive = (path:Path): boolean => pathname === path;   
-      
-    return (
-        <footer className="flex justify-center w-[390] h-[67px] ml-0 border-t border-lightBlue">
-            <nav className="px-0 py-2">
+  const pathname = usePathname(); 
+  const isActive = (path:Path): boolean => pathname === path;   
+  return (
+    <footer className="flex justify-center w-[390] h-[67px] ml-0 border-t border-lightBlue">
+      <nav className="px-0 py-2">
         <ul className='flex flex-row px-4'>
           <li className="w-20 flex justify-center"> 
-                        <Link href="/statistic" className={`flex flex-col items-cente ${
-                isActive('/statistic') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
-              } `} >
-                            
-               <div className=" flex justify-center "><StatisticIcon/></div>
-              <p className="font-normal text-[10px] leading-normal text-center pt-1">Статистика</p>
+            <Link href="/crm" className={`flex flex-col items-cente ${
+              isActive('/statistic') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
+              } `} >              
+                <div className=" flex justify-center "><StatisticIcon/></div>
+                <p className="font-normal text-[10px] leading-normal text-center pt-1">Статистика</p>
             </Link>
           </li>
           <li className="w-20 flex justify-center">
-                        <Link href="/addcard" className={`flex flex-col items-cente ${
-                isActive('/addcard') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
+            <Link href="/crm/add-card" className={`flex flex-col items-cente ${
+              isActive('/addcard') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
               } `}>
-                            <div className="flex justify-center"><AddIcon/></div> 
-              <p className="font-normal text-[10px] leading-normal text-center pt-1">Додати<br/> картку</p>
+                <div className="flex justify-center"><AddIcon/></div> 
+                <p className="font-normal text-[10px] leading-normal text-center pt-1">Додати<br/> картку</p>
             </Link>
           </li>
           <li className="w-20 flex justify-center">
-                        <Link href="/cards" className={`flex flex-col items-cente ${
-                isActive('/cards') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
+            <Link href="/crm/catalog" className={`flex flex-col items-cente ${
+              isActive('/cards') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
               } `}>
-                            <div className="flex justify-center"><CardIcon/></div>
-              <p className="font-normal text-[10px] leading-normal text-center pt-1">Картотека</p>
+                <div className="flex justify-center"><CardIcon/></div>
+                <p className="font-normal text-[10px] leading-normal text-center pt-1">Картотека</p>
             </Link>
           </li>
           <li className="w-20 flex justify-center">
-                        <Link href="/profile"  className={`flex flex-col items-cente ${
-                isActive('/profile') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
+            <Link href="/crm/profile"  className={`flex flex-col items-cente ${
+              isActive('/profile') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
               } `}>
-                            <div className="flex justify-center"><ProfileIcon/></div>
-                            
-              <p className="font-normal text-[10px] leading-normal text-center pt-1">Профіль</p>
+                <div className="flex justify-center"><ProfileIcon/></div>            
+                <p className="font-normal text-[10px] leading-normal text-center pt-1">Профіль</p>
             </Link>
           </li>
         </ul>
