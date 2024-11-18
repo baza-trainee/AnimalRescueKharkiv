@@ -24,6 +24,7 @@ const config: Config = {
         foreground: "var(--foreground)",
         lightBlue: "#EDEEFA",
         mainBlue: "#4855CC",
+        crmBlack: "#070600",
       },
     },
   },

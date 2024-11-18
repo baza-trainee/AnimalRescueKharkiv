@@ -1,4 +1,4 @@
-import { inter } from '../../../../fonts'
+import { inter } from '../../../../fonts';
              
 const DashbordAdmin = () => {
     return (
