@@ -8,9 +8,13 @@ export const newCardSchema = Yup.object().shape({
   files: Yup.mixed<FileList>()
     .test("fileFormat", "Тільки фото або відео", (value) => {
       if (!value || value.length === 0) return true;
-      const file = value[0];
-      if (!file.type || file.type === "") return false;
-      return file && ["image", "video"].includes(file.type.split("/")[0]);
+
+      for (let i = 0; i < value.length; i++) {
+        const file = value[i];
+        if (!file.type || file.type === "") return false;
+        if (!["image", "video"].includes(file.type.split("/")[0])) return false;
+      }
+      return true;
     })
     .notRequired(),
 });
