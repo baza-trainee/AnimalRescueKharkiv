@@ -1,5 +1,6 @@
 'use client'
 
+import Header from "@/src/components/crm/Header/index";
 import CountryStatistic from "@/src/components/crm/CountryStatistic";
 import DepartmentStatistic from "@/src/components/crm/DepartmentStatistic";
 import FooterCrm from "@/src/components/crm/Footer";
@@ -13,8 +14,13 @@ export default function CRMPage() {
         <section className="w-full flex">
           {/* <HeaderCrm /> */}
           <MenuDesktop />
-          <DepartmentStatistic />
-          <CountryStatistic />
+          <div className="flex-col">
+            <Header title="Cтатистика" />
+            <div className="flex">
+              <DepartmentStatistic />
+              <CountryStatistic />
+            </div>
+          </div>
         </section>
         <FooterCrm />
       </main>

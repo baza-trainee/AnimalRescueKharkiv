@@ -49,7 +49,6 @@ const DepartmentStatistic = () => {
 
   return (
     <>
-      <Header title="Cтатистика" />
       <div className=" w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
         <h3 className="font-semibold text-2xl text-black ">
           Кількість тварин по відділах:

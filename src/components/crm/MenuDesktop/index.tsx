@@ -15,8 +15,8 @@ const MenuDesktop = () => {
   const isActive = (path: Path): boolean => pathname === path;
   return (
     <section>
-      <nav className="flex flex-col justify-between w-[334px] h-[832px] m-0 border px-[64px] py-[40px] text-xl font-bold text-mainBlue">
-        <ul className=" w-full flex justify-start flex-col gap-[24px]">
+      <nav className="hidden md:flex flex-col justify-between md:w-[250px] xl:w-[374px] min-h-screen m-0 border md:px-[38px] xl:px-[64px] md:py-[18px] xl:py-[40px] md:text-base xl:text-xl font-bold text-mainBlue">
+        <ul className=" w-full flex justify-start flex-col md:gap-[18px] xl:gap-[24px]">
           <li className="w-full flex justify-start font-medium mb-[40px]">
             <Link href="/crm" className={`flex flex-row items-center ${isActive('/crm') ? 'text-mainBlue fill-mainBlue  text-opacity-100' : ' text-mainBlue text-opacity-40 '
               } `}><div className=" flex justify-center gap-[8px]"> <ProfileLogoIcon /><p>User</p></div></Link>
@@ -44,7 +44,7 @@ const MenuDesktop = () => {
               </div></Link>
           </li>
         </ul>
-        <button className="w-[206px] h-[56px] border border-mainBlue rounded-[10px] font-normal">Вийти</button>
+        <button className="md:w-[170px] md:h-[36px] xl:w-[246px] xl:h-[56px] border border-mainBlue rounded-[10px] font-normal">Вийти</button>
       </nav>
     </section>
   )
