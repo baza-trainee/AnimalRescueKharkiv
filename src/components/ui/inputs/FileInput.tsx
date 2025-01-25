@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import { ErrorMessage } from "./ErrorMessage";
 import { AddCardIcon } from "../icon/AddCardIcon";
 
@@ -15,7 +15,7 @@ interface FilePreview {
 }
 
 type FileInputProps = PropsFileInput & {
-  onChange: (files: FileList) => void;
+  onChange: (files: FileList | null) => void;
 };
 
 export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
@@ -23,6 +23,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
     { label, errorMessage, name, onChange, value, ...rest },
     _ref: React.ForwardedRef<HTMLInputElement>
   ) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const [previews, setPreviews] = useState<FilePreview[]>([]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +42,18 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
       }
     };
 
+    const handleClearFiles = () => {
+      setPreviews([]);
+
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+
+      if (onChange) {
+        onChange(null);
+      }
+    };
+
     return (
       <div className="relative">
         <label
@@ -56,7 +69,13 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
           </span>
           <input
             {...rest}
-            ref={_ref}
+            ref={(el) => {
+              if (_ref) {
+                if (typeof _ref === "function") _ref(el);
+                else _ref.current = el;
+              }
+              inputRef.current = el;
+            }}
             type="file"
             id={name}
             onChange={handleFileChange}
@@ -128,6 +147,19 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
             }
           })}
         </ul>
+
+        {previews.length !== 0 && (
+          <div className="flex justify-center mt-[8px]">
+            <button
+              type="button"
+              onClick={handleClearFiles}
+              className="px-[16px] py-[8px] bg-[#B6BBEB] rounded-[10px]"
+            >
+              Очистити вибір
+            </button>
+          </div>
+        )}
+
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </div>
     );
