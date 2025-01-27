@@ -1,0 +1,42 @@
+import * as Yup from "yup";
+
+const animalTypes = [
+  "Кіт/кішка",
+  "Собака",
+  "Кінь",
+  "Корова",
+  "Коза",
+  "Кролик",
+  "Птах",
+  "Лис",
+  "Інші",
+];
+
+export const addCardSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(2, "Ім’я має бути не менше 2 символів")
+    .max(50, "Ім’я має бути не більше 50 символів")
+    .required("Введіть ім’я"),
+  files: Yup.mixed<FileList>()
+    .test("fileFormat", "Тільки фото або відео", (value) => {
+      if (!value || value.length === 0) return true;
+
+      for (let i = 0; i < value.length; i++) {
+        const file = value[i];
+        if (!file.type || file.type === "") return false;
+        if (!["image", "video"].includes(file.type.split("/")[0])) return false;
+      }
+      return true;
+    })
+    .notRequired(),
+  city: Yup.string()
+    .min(2, "Місто має бути не менше 2 символів")
+    .max(50, "Місто має бути не більше 50 символів")
+    .required("Введіть місто"),
+  address: Yup.string().notRequired(),
+  animalType: Yup.string()
+    .oneOf(animalTypes, "Оберіть тип тварини зі списку")
+    .required("Оберіть тип тварини"),
+});
+
+export type TypeAddCardSchema = Yup.InferType<typeof addCardSchema>;

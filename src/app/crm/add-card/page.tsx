@@ -6,7 +6,7 @@ import MenuDesktop from "@/src/components/crm/MenuDesktop";
 export default function AddCardPage() {
   return (
     <>
-      <section className="flex">
+      <section className="">
         {/* <HeaderCrm /> */}
         <MenuDesktop />
         <AddCardCrm />

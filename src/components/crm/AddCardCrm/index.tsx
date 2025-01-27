@@ -1,10 +1,10 @@
 import Header from "../Header";
-import { CardForm } from "../CardForm/CardForm";
+import { AddCardForm } from "../AddCardForm/AddCardForm";
 const AddCardCrm = () => {
   return (
     <>
       <Header title="Нова картка" />
-      <CardForm />
+      <AddCardForm />
     </>
   );
 };
