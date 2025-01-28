@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useRef, useState } from "react";
 import { ErrorMessage } from "./ErrorMessage";
-import { AddCardIcon } from "../icon/AddCardIcon";
+import { PlusIcon } from "../icon/PlusIcon";
 
 interface PropsFileInput extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
@@ -79,7 +79,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
             type="file"
             id={name}
             onChange={handleFileChange}
-            className="absolute top-0 left-0 w-[0px] h-[0px] opacity-0"
+            className="absolute top-0 left-0 w-[0px] h-[0px] z-[-10] opacity-0"
           />
           <div className="flex flex-col justify-center items-center">
             <div
@@ -87,7 +87,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
                 previews.length !== 0 && "hidden"
               }`}
             >
-              <AddCardIcon />
+              <PlusIcon style={"fill-[#F8F9FD]"} />
             </div>
             {previews.length !== 0 && (
               <div className="px-[16px] py-[8px] mb-[8px] bg-[#B6BBEB] rounded-[10px]">

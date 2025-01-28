@@ -12,6 +12,9 @@ import { TypeAddCardSchema } from "../AddCardCrm/addCardSchema";
 import { useState } from "react";
 import { useToggle } from "../../register/popUp/useToggle";
 import { AnimalType } from "../../register/popUp/AnimalType";
+import { ArrowUpIcon } from "../../ui/icon/ArrowUpIcon";
+import { ArrowDownIcon } from "../../ui/icon/ArrowDownIcon";
+import { PopupInput } from "../../ui/inputs/PopupInput";
 
 interface PropsBasicInfoForm {
   control: Control<any>;
@@ -71,27 +74,19 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
         </div>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <div className={errors?.animalType && "pb-[26px]"}>
-          <Controller
-            name="animalType"
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                {...field}
-                label="Тип тварини*"
-                placeholder="Оберіть тип тварини"
-                errorMessage={errors?.animalType?.message}
-                onClick={toggleModal}
-                value={selectedAnimalType || field.value || ""}
-                readOnly
-              />
-            )}
-          />
-        </div>
+        <PopupInput
+          name="animalType"
+          label="Тип тварини*"
+          placeholder="Оберіть тип тварини"
+          selectedValue={selectedAnimalType}
+          control={control}
+          errors={errors}
+          isOpen={isOpen}
+          onClose={toggleModal}
+        >
+          <AnimalType onClose={toggleModal} onSelect={handleSetectAnimalType} />
+        </PopupInput>
       </fieldset>
-      {isOpen && (
-        <AnimalType onClose={toggleModal} onSelect={handleSetectAnimalType} />
-      )}
     </>
   );
 };
