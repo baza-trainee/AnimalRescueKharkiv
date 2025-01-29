@@ -16,6 +16,9 @@ const defaultValues = {
   address: "",
   animalType: "",
   gender: "",
+  weight: "",
+  age: "",
+  specialMarks: "",
 };
 
 export const AddCardForm = () => {

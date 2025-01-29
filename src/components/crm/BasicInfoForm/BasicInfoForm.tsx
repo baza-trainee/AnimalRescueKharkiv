@@ -116,6 +116,48 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
             }
           />
         </PopupInput>
+        <div className={errors?.weight && "pb-[26px]"}>
+          <Controller
+            name="weight"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                label="Вага тварини"
+                placeholder="Введіть вагу"
+                errorMessage={errors?.weight?.message}
+                {...field}
+              />
+            )}
+          />
+        </div>
+        <div className={errors?.age && "pb-[26px]"}>
+          <Controller
+            name="age"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                label="Вік тварини"
+                placeholder="Введіть вік"
+                errorMessage={errors?.age?.message}
+                {...field}
+              />
+            )}
+          />
+        </div>
+        <div className={errors?.address && "pb-[26px]"}>
+          <Controller
+            name="specialMarks"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                label="Особливі прикмети"
+                placeholder="Напишіть особливі прикмети"
+                errorMessage={errors?.address?.message}
+                {...field}
+              />
+            )}
+          />
+        </div>
       </fieldset>
     </div>
   );
