@@ -36,8 +36,8 @@ export const PopupInput: React.FC<PropsPopupInput> = ({
           <div className="relative">
             <span
               onClick={onClose}
-              className={`absolute top-[46px] right-[8px] z-[10] cursor-pointer ${
-                !!errors.animalType ? "stroke-[#B00000]" : "stroke-[#B6BBEB]"
+              className={`absolute top-[46px] right-[8px] z-[5] cursor-pointer ${
+                !!errors[name] ? "stroke-[#B00000]" : "stroke-[#B6BBEB]"
               }  transition duration-[350ms]`}
             >
               {isOpen ? (

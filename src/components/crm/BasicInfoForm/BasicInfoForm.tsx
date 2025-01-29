@@ -12,9 +12,8 @@ import { TypeAddCardSchema } from "../AddCardCrm/addCardSchema";
 import { useState } from "react";
 import { useToggle } from "../../register/popUp/useToggle";
 import { AnimalType } from "../../register/popUp/AnimalType";
-import { ArrowUpIcon } from "../../ui/icon/ArrowUpIcon";
-import { ArrowDownIcon } from "../../ui/icon/ArrowDownIcon";
 import { PopupInput } from "../../ui/inputs/PopupInput";
+import { Genders } from "../../register/popUp/Genders";
 
 interface PropsBasicInfoForm {
   control: Control<any>;
@@ -32,17 +31,26 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   const [selectedAnimalType, setSelectedAnimalType] = useState<string | null>(
     null
   );
-  const { isOpen, toggleModal } = useToggle();
+  const [selectedGender, setSelectedGender] = useState<string | null>(null);
+  const [openPopup, setOpenPopup] = useState<string | null>(null);
 
-  const handleSetectAnimalType = (type: string) => {
-    setSelectedAnimalType(type);
-    setValue && setValue("animalType", type, { shouldValidate: true });
-    clearErrors && clearErrors("animalType");
-    toggleModal();
+  const handleToggleModal = (name: string) => {
+    setOpenPopup((prev) => (prev === name ? null : name));
+  };
+
+  const handleSelect = (
+    name: keyof TypeAddCardSchema,
+    value: string,
+    setter: (value: string) => void
+  ) => {
+    setter(value);
+    setValue && setValue(name, value, { shouldValidate: true });
+    clearErrors && clearErrors(name);
+    setOpenPopup(null);
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-[16px]">
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <div className={errors?.city && "pb-[26px]"}>
           <Controller
@@ -81,12 +89,34 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           selectedValue={selectedAnimalType}
           control={control}
           errors={errors}
-          isOpen={isOpen}
-          onClose={toggleModal}
+          isOpen={openPopup === "animalType"}
+          onClose={() => handleToggleModal("animalType")}
         >
-          <AnimalType onClose={toggleModal} onSelect={handleSetectAnimalType} />
+          <AnimalType
+            onClose={() => handleToggleModal("animalType")}
+            onSelect={(value: string) =>
+              handleSelect("animalType", value, setSelectedAnimalType)
+            }
+          />
+        </PopupInput>
+        <PopupInput
+          name="gender"
+          label="Стать*"
+          placeholder="Оберіть стать тварини"
+          selectedValue={selectedGender}
+          control={control}
+          errors={errors}
+          isOpen={openPopup === "gender"}
+          onClose={() => handleToggleModal("gender")}
+        >
+          <Genders
+            onClose={() => handleToggleModal("gender")}
+            onSelect={(value: string) =>
+              handleSelect("gender", value, setSelectedGender)
+            }
+          />
         </PopupInput>
       </fieldset>
-    </>
+    </div>
   );
 };

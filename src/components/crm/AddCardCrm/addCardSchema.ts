@@ -12,6 +12,8 @@ const animalTypes = [
   "Інші",
 ];
 
+const genders = ["Самець", "Самка"];
+
 export const addCardSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Ім’я має бути не менше 2 символів")
@@ -37,6 +39,9 @@ export const addCardSchema = Yup.object().shape({
   animalType: Yup.string()
     .oneOf(animalTypes, "Оберіть тип тварини зі списку")
     .required("Оберіть тип тварини"),
+  gender: Yup.string()
+    .oneOf(genders, "Оберіть стать тварини зі списку")
+    .required("Оберіть стать тварини"),
 });
 
 export type TypeAddCardSchema = Yup.InferType<typeof addCardSchema>;
