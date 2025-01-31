@@ -14,7 +14,7 @@ const FooterCrm = () => {
   const pathname = usePathname();
   const isActive = (path: Path): boolean => pathname === path;
   return (
-    <footer className="flex justify-center md:hidden w-[390px] h-[67px] ml-0 border-t border-lightBlue">
+    <footer className="flex justify-center w-[390px] h-[67px] ml-0 border-t border-lightBlue">
       <nav className="px-0 py-2">
         <ul className='flex flex-row px-4'>
           <li className="w-20 flex justify-center">
