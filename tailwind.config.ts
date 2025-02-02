@@ -11,6 +11,7 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    center: true,
     screens: {
       md: '768px',
       lg: '960px',
@@ -24,6 +25,7 @@ const config: Config = {
         foreground: "var(--foreground)",
         lightBlue: "#EDEEFA",
         mainBlue: "#4855CC",
+        'color-Id': '#B6BBEB',
       },
     },
   },
