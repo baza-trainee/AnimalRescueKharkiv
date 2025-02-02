@@ -2,6 +2,10 @@
 const nextConfig = {
   output: "export",
 
+  images: {
+    unoptimized: true, // Додаємо це, щоб вирішити проблему з оптимізацією зображень
+  },
+
   webpack(config) {
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.(".svg")
