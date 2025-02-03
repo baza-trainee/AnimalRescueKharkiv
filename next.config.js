@@ -1,7 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: "export",
-  trailingSlash: true, // Додає слеші в кінці URL
+  output: "export",
+  trailingSlash: false,
+
+  async redirects() {
+    return [
+      {
+        source: "/crm/:path*",
+        destination: "/crm",
+        permanent: false,
+      },
+    ];
+  },
 
   images: {
     unoptimized: true,
