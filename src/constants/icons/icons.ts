@@ -8,7 +8,7 @@ import searchInputIcon from '../../../public/assets/icons/catalogCrm/search-inpu
 import addIcon from '../../../public/assets/icons/footer/documentAdd.svg'
 import filterIcon from '../../../public/assets/icons/catalogCrm/filter.svg'
 import setIcon from '../../../public/assets/icons/catalogCrm/set.svg'
-import closeBtn from '../../../public/assets/icons/catalogCrm/Closebtn.svg'
+import closeBtn from '../../../public/assets/icons/catalogCrm/closebtn.svg'
 import downArrow from '../../../public/assets/icons/catalogCrm/down-arrow.svg'
 import arrowInCircle from '../../../public/assets/icons/catalogCrm/arrow_in_circle.svg'
 
