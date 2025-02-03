@@ -1,12 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
   trailingSlash: false,
 
   async redirects() {
     return [
       {
-        source: "/crm/:path*",
+        source: "/crm/:path+",
         destination: "/crm",
         permanent: false,
       },
