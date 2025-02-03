@@ -1,0 +1,17 @@
+{
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/documents/:filename(.+\\.pdf)",
+      "destination": "/documents/:filename"
+    },
+    {
+      "source": "/documents/:path*",
+      "destination": "/"
+    },
+    {
+      "source": "/:path((?!.*\\.).*)",
+      "destination": "/"
+    }
+  ]
+}
