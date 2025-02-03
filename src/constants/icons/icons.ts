@@ -10,6 +10,7 @@ import filterIcon from '../../../public/assets/icons/catalogCrm/filter.svg'
 import setIcon from '../../../public/assets/icons/catalogCrm/set.svg'
 import closeBtn from '../../../public/assets/icons/catalogCrm/Closebtn.svg'
 import downArrow from '../../../public/assets/icons/catalogCrm/down-arrow.svg'
+import arrowInCircle from '../../../public/assets/icons/catalogCrm/arrow_in_circle.svg'
 
 
 
@@ -26,5 +27,6 @@ export const ICONS = {
     SET_ICON: setIcon,
     CLOSE_BTN: closeBtn,
     DOWN_ARROW: downArrow,
+    ARROW_IN_CIRCLE:arrowInCircle
     
 };

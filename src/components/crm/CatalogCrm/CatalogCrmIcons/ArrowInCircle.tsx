@@ -2,8 +2,8 @@ import { ICONS } from '../../../../constants/icons/icons';
 
 export interface LogoProps { }
 
-export const AnimalLogo: React.FC<LogoProps> = ({ }) => {
-  const AddComponent = ICONS.ANIMAL_LOGO;
+export const ArrowInCircle: React.FC<LogoProps> = ({ }) => {
+  const AddComponent = ICONS.ARROW_IN_CIRCLE;
 
   return (
     <>
@@ -13,4 +13,4 @@ export const AnimalLogo: React.FC<LogoProps> = ({ }) => {
 };
 
 
-export default AnimalLogo;
+export default ArrowInCircle;
