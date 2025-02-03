@@ -2,16 +2,6 @@
 const nextConfig = {
   trailingSlash: false,
 
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: "/crm/:path+",
-  //       destination: "/crm",
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
-
   images: {
     unoptimized: true,
   },
