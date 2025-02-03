@@ -1,9 +1,9 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
+  trailingSlash: true, // Додає слеші в кінці URL
 
   images: {
-    unoptimized: true, // Додаємо це, щоб вирішити проблему з оптимізацією зображень
+    unoptimized: true,
   },
 
   webpack(config) {
