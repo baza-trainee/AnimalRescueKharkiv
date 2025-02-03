@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
+  // output: "export",
   trailingSlash: true, // Додає слеші в кінці URL
 
   images: {
