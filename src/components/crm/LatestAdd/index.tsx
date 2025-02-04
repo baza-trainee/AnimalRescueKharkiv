@@ -1,52 +1,59 @@
 "use client";
-const LatesrAdd = () => {
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+
+const slides = [
+  {
+    text: "Кузя",
+    texId: "ID414141",
+    texCity: "Вовчанск",
+    dateText: "13.06",
+    img: "/assets/imagescrm/сat.png",
+  },
+  {
+    text: "Кузя",
+    texId: "ID414141",
+    texCity: "Вовчанск",
+    dateText: "13.06",
+    img: "/assets/imagescrm/сat.png",
+  },
+  {
+    text: "Кузя",
+    texId: "ID414141",
+    texCity: "Вовчанск",
+    dateText: "13.06",
+    img: "/assets/imagescrm/сat.png",
+  },
+];
+
+export default () => {
   return (
-    <>
-      <div className="mx-5 px-5 py-2 w-[342px] border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)] overflow-x-auto">
-        <h3 className="font-semibold text-2xl mb-4">Останні поповнення:</h3>
-        <div className="flex gap-x-4 overflow-x-auto scroll-my-4 pb-3">
-          <div className="flex-[0_0_163px]  shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
-            <img
-              src="/assets/imagescrm/сat.png"
-              className="w-full h-40"
-              alt="cat"
-            />
-            <div className="p-1">
-              <p className="text-xl --font-inter">Кузя</p>
-              <p className="text-color-Id">ID414141</p>
-              <p className="">Вовчанск</p>
-              <p className="">13.06</p>
+    <div className="max-w-[342px] overflow-hidden mx-6 shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)] border-[1px] border-solid border-mainBlue rounded-[10px]">
+      <h3 className="font-semibold text-2xl mb-3 px-3 pt-2">Останні поповнення:</h3>
+      <Swiper
+        className="w-[340px] m-auto"
+        spaceBetween={16}
+        slidesPerView={1.2}
+        onSlideChange={() => console.log("slide change")}
+        onSwiper={(swiper) => console.log(swiper)}>
+        {slides.map((slide, index) => (
+          <SwiperSlide key={index} className="!w-44 shadow-[3px_4px_10px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] border-[1px]">
+            <div className="p-3">
+              <img src={slide.img} alt={slide.text} className="w-40" />
+              <div className="p-1">
+                <p className="mt-2 text-xl font-normal --font-inter">
+                  {slide.text}
+                </p>
+                <p className="text-color-Id">{slide.texId}</p>
+                <p className="">{slide.texCity}</p>
+                <p className="">{slide.dateText}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex-[0_0_163px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
-            <img
-              src="/assets/imagescrm/сat.png"
-              className="w-full h-40"
-              alt="cat"
-            />
-            <div className="p-1">
-              <p className="text-xl --font-inter">Кузя</p>
-              <p className="text-color-Id">ID414141</p>
-              <p className="">Вовчанск</p>
-              <p className="">13.06</p>
-            </div>
-          </div>
-          <div className="flex-[0_0_163px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
-            <img
-              src="/assets/imagescrm/сat.png"
-              className="w-full h-40"
-              alt="cat"
-            />
-            <div className="p-1">
-              <p className="text-xl --font-inter">Кузя</p>
-              <p className="text-color-Id">ID414141</p>
-              <p className="">Вовчанск</p>
-              <p className="">13.06</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
   );
 };
-export default LatesrAdd;
