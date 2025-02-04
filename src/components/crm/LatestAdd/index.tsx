@@ -34,12 +34,12 @@ export default () => {
       <h3 className="font-semibold text-2xl mb-3 px-3 pt-2">Останні поповнення:</h3>
       <Swiper
         className="w-[340px] m-auto"
-        spaceBetween={-2}
-        slidesPerView={1.5}
+        spaceBetween={16}
+        slidesPerView={1.2}
         onSlideChange={() => console.log("slide change")}
         onSwiper={(swiper) => console.log(swiper)}>
         {slides.map((slide, index) => (
-          <SwiperSlide key={index} className="!w-44">
+          <SwiperSlide key={index} className="!w-44 shadow-[3px_4px_10px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] border-[1px]">
             <div className="p-3">
               <img src={slide.img} alt={slide.text} className="w-40" />
               <div className="p-1">
