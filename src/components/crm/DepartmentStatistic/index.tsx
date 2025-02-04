@@ -1,7 +1,9 @@
+"use client";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import Header from "../../crm/Header";
+
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 interface ChartData {
