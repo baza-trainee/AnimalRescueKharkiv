@@ -14,6 +14,7 @@ import { useToggle } from "../../register/popUp/useToggle";
 import { AnimalType } from "../../register/popUp/AnimalType";
 import { PopupInput } from "../../ui/inputs/PopupInput";
 import { Genders } from "../../register/popUp/Genders";
+import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 
 interface PropsBasicInfoForm {
   control: Control<any>;
@@ -33,6 +34,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   );
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [openPopup, setOpenPopup] = useState<string | null>(null);
+  const [arrivalDate, setArrivalDate] = useState<Date | null>(null);
 
   const handleToggleModal = (name: string) => {
     setOpenPopup((prev) => (prev === name ? null : name));
@@ -49,9 +51,31 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
     setOpenPopup(null);
   };
 
+  const handleDate = (
+    date: Date | null,
+    setter: (date: Date | null) => void
+  ): void => {
+    setter(date);
+  };
+
   return (
     <div className="flex flex-col gap-[16px]">
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+        <div className={errors?.arrivalDate && "pb-[26px]"}>
+          <Controller
+            name="arrivalDate"
+            control={control}
+            render={({ field }) => (
+              <CustomDatePicker
+                {...field}
+                label="Дата прибуття*"
+                selected={field.value}
+                onChange={(date) => field.onChange(date)}
+                errorMessage={errors?.arrivalDate?.message}
+              />
+            )}
+          />
+        </div>
         <div className={errors?.city && "pb-[26px]"}>
           <Controller
             name="city"

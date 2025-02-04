@@ -45,6 +45,7 @@ export const addCardSchema = Yup.object().shape({
   weight: Yup.string().max(50, "Не більше 50 символів").notRequired(),
   age: Yup.string().max(50, "Не більше 50 символів").notRequired(),
   specialMarks: Yup.string().max(200, "Не більше 200 символів").notRequired(),
+  arrivalDate: Yup.date().required("Дата прибуття обов’язкова"),
 });
 
 export type TypeAddCardSchema = Yup.InferType<typeof addCardSchema>;

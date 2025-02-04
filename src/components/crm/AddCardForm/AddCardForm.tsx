@@ -8,6 +8,8 @@ import { FileInput } from "@/src/components/ui/inputs/FileInput";
 import { BasicInfoForm } from "../BasicInfoForm/BasicInfoForm";
 import { useToggle } from "../../register/popUp/useToggle";
 import { RequiredValues } from "../../register/popUp/RequiredValues";
+import { useState } from "react";
+import { MedicalInfoForm } from "../MedicalInfoForm/MedicalInfoForm";
 
 const defaultValues = {
   name: "",
@@ -19,6 +21,7 @@ const defaultValues = {
   weight: "",
   age: "",
   specialMarks: "",
+  arrivalDate: null,
 };
 
 export const AddCardForm = () => {
@@ -34,6 +37,7 @@ export const AddCardForm = () => {
     mode: "onSubmit",
     resolver: yupResolver(addCardSchema),
   });
+  const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
   const onSubmit = (data: TypeAddCardSchema) => {
     console.log(data);
@@ -62,7 +66,7 @@ export const AddCardForm = () => {
             />
           </div>
           <div
-            className={`w-[342px] min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] ${
+            className={`min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[24px] ${
               errors.files && "pb-[26px]"
             }`}
           >
@@ -82,22 +86,54 @@ export const AddCardForm = () => {
             />
           </div>
         </fieldset>
-        <fieldset>
-          <BasicInfoForm
-            control={control}
-            errors={errors}
-            setValue={setValue}
-            clearErrors={clearErrors}
-          />
-        </fieldset>
-        <button type="submit" onClick={toggleModal}>
+        <div className="flex justify-center items-center mb-[16px]">
+          <button
+            type="button"
+            onClick={() => setActiveTab("basic")}
+            className={`${
+              activeTab === "basic"
+                ? "bg-[#4855CC] text-[#EDEEFA]"
+                : "bg-transparent text-[#4855CC]"
+            } w-[171px] px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
+          >
+            Основна інформація
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("medical")}
+            className={`${
+              activeTab === "medical"
+                ? "bg-[#4855CC] text-[#EDEEFA]"
+                : "bg-transparent text-[#4855CC]"
+            } w-[171px] px-[16px] py-[4px] border-[1px] border-l-0 border-[#4855CC] rounded-r-lg text-[24px] font-bold leading-[36px]`}
+          >
+            Медична інформація
+          </button>
+        </div>
+        <div>
+          <fieldset className={activeTab === "basic" ? "block" : "hidden"}>
+            <BasicInfoForm
+              control={control}
+              errors={errors}
+              setValue={setValue}
+              clearErrors={clearErrors}
+            />
+          </fieldset>
+          <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
+            <MedicalInfoForm />
+          </fieldset>
+        </div>
+        <button
+          type="submit"
+          onClick={toggleModal}
+          className="flex justify-center items-center w-full py-[13px] rounded-[10px] text-[20px] text-[#EDEEFA] leading-[30px] bg-[#4855CC] hover:bg-[#B6BBEB] focus::bg-[#B6BBEB]"
+        >
           Надіслати
         </button>
       </form>
       {isOpen && isSubmitted && (
         <>{!isValid ? <RequiredValues onClose={toggleModal} /> : null}</>
       )}
-      {/* {isOpen && <RequiredValues onClose={toggleModal} />} */}
     </>
   );
 };
