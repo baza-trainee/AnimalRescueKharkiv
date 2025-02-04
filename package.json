@@ -22,7 +22,8 @@
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
     "react-hook-form-yup": "^1.0.0-alpha.4",
-    "react-imask": "^7.6.1"
+    "react-imask": "^7.6.1",
+    "react-tailwindcss-datepicker": "^1.7.4"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
