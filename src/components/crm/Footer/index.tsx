@@ -44,8 +44,7 @@ const FooterCrm = () => {
                 <AddIcon />
               </div>
               <p className="font-normal text-[10px] leading-normal text-center pt-1">
-                Додати
-                <br /> картку
+                Додати картку
               </p>
             </Link>
           </li>
