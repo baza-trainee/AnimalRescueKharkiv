@@ -15,7 +15,7 @@ const FooterCrm = () => {
   return (
     <footer className="flex justify-center w-[390px] h-[67px] ml-0 mt-6 border-t border-lightBlue">
       <nav className="px-0 py-2">
-        <ul className="flex flex-row px-4">
+        <ul className="flex flex-row gap-3 px-4">
           <li className="w-20 flex justify-center">
             <Link
               href="/crm"

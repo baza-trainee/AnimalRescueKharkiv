@@ -3,13 +3,22 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { uk } from "date-fns/locale";
+import { isSameMonth, isSameYear } from "date-fns";
 
+ const today = new Date(); 
+const oneMonthAgo = new Date();
+oneMonthAgo.setMonth(today.getMonth() - 1);
 
 export default function DateRangePicker() {
-    
-  const [startDate, setStartDate] = useState<Date | null>(null); 
-  const [endDate, setEndDate] = useState<Date | null>(null); 
-
+  
+  const [startDate, setStartDate] = useState<Date | null>(oneMonthAgo); // Дата на месяц назад
+  const [endDate, setEndDate] = useState<Date | null>(today); 
+const highlightDates = [
+    startDate,
+    endDate
+  ].filter((date): date is Date => date !== null) 
+    .filter(date => isSameMonth(date, today) && isSameYear(date, today)); 
+  
   return (
       <div className=" container">
           <div className="flex flex-row justify-between w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
@@ -33,13 +42,18 @@ export default function DateRangePicker() {
                     placeholderText=""
             dateFormat="dd.MM.yyyy" 
             closeOnScroll={(e) => e.target === document}
-            calendarClassName="custom-calendar"
+             calendarClassName={`custom-calendar  ${
+    startDate && startDate.toDateString() !== today.toDateString()
+      ? "hide-today"
+      : ""
+  }`}
             showYearDropdown
              dropdownMode="select"
       yearDropdownItemNumber={10}
             scrollableYearDropdown
              withPortal
-      portalId="root-portal"
+            portalId="root-portal"
+      highlightDates={highlightDates}
                   />
                 <div className=" absolute right-3 top-2/3 transform -translate-y-1/2 pointer-events-none">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +77,11 @@ export default function DateRangePicker() {
           minDate={startDate ?? undefined}
             placeholderText=""
             closeOnScroll={(e) => e.target === document}
-            calendarClassName="custom-calendar"
+            calendarClassName={`custom-calendar ${
+    startDate && startDate.toDateString() !== today.toDateString()
+      ? "hide-today"
+      : ""
+  }`}
             showYearDropdown
              dropdownMode="select"
       yearDropdownItemNumber={10}
