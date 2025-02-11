@@ -7,7 +7,7 @@ export default function MainLogo() {
       <h1 className="mx-auto text-center mt-20 mb-36 font-bold text-2xl text-black" >CRM СИСТЕМА<br/>
 Animal Rescue Kharkiv</h1>
       <div className="mx-auto mb-40"><Main/></div>
-      <Link href="/login"  className=" mx-auto w-[342px] lg:w-[366px]  py-3 rounded-lg bg-[#4855CC] text-white text-center font-normal text-[20px] leading-[30px]">Увійти</Link>
+      <Link href="../crm"  className=" mx-auto w-[342px] lg:w-[366px]  py-3 rounded-lg bg-[#4855CC] text-white text-center font-normal text-[20px] leading-[30px]">Увійти</Link>
       </div>
     
   )
