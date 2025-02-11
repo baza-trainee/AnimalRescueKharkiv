@@ -14,8 +14,8 @@ export default function CRMPage() {
     <>
       {" "}
       <Header title="Статистика" />
-      <main className="w-full flex-col">
-        <section className="">
+      <main className="w-full flex flex-col justify-items-center">
+        <section className="mx-auto">
           {/* <HeaderCrm /> */}
           {/* <MenuDesktop /> */}
           <DepartmentStatistic />

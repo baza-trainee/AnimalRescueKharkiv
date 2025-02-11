@@ -6,7 +6,7 @@ export default function CatalogPage() {
   return (
     <>
       {/* <HeaderCrm /> */}
-      <section className="px-4">
+      <section className="w-[390px] mx-auto px-4">
         {/* <MenuDesktop /> */}
         <CatalogCrm />
       </section>

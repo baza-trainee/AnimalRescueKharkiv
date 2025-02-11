@@ -13,13 +13,13 @@ const FooterCrm = () => {
   const pathname = usePathname();
   const isActive = (path: Path): boolean => pathname === path;
   return (
-    <footer className="fixed bottom-0 z-20">
-      <div className="flex justify-center  bg-white w-[390px] h-[67px] ml-0 mt-6 border-t border-lightBlue">
+    <footer className="fixed bottom-0 w-full mx-auto z-20">
+      <div className="flex justify-center mx-auto bg-white w-[390px] h-[67px] mt-6 border-t border-lightBlue">
         <nav className="px-0 py-2">
           <ul className="flex flex-row gap-3 px-4">
             <li className="w-20 flex justify-center">
               <Link
-                href="/crm"
+                href="/crm/statistic"
                 className={`flex flex-col items-center ${
                   isActive("/crm/statistic")
                     ? "text-mainBlue fill-mainBlue  text-opacity-100"
