@@ -1,29 +1,14 @@
-"use client";
+import Link from "next/link";
+import Main from "../../components/mainLogo/index";
 
-import CountryStatistic from "@/src/components/crm/CountryStatistic";
-import DepartmentStatistic from "@/src/components/crm/DepartmentStatistic";
-import FooterCrm from "@/src/components/crm/Footer";
-import Header from "@/src/components/crm/Header";
-import LatesrAdd from "@/src/components/crm/LatestAdd";
-import DateRangePicker from "@/src/components/crm/Statistic";
-// import MenuDesktop from "@/src/components/crm/MenuDesktop";
-// import HeaderCrm from "@/src/components/crm/Header";
-
-export default function CRMPage() {
+export default function MainLogo() {
   return (
-    <>
-      <Header title="Статистика" />
-      <main className="w-full flex-col">
-        <section className="pb-20">
-          {/* <HeaderCrm /> */}
-          {/* <MenuDesktop /> */}
-          <DepartmentStatistic />
-          <DateRangePicker />
-          <CountryStatistic />
-          <LatesrAdd />
-        </section>
-      </main>
-      <FooterCrm />
-    </>
-  );
+      <div className="flex flex-col justify-items-center">
+      <h1 className="mx-auto text-center mt-20 mb-36 font-bold text-2xl text-black" >CRM СИСТЕМА<br/>
+Animal Rescue Kharkiv</h1>
+      <div className="mx-auto mb-40"><Main/></div>
+      <Link href="../crm/login"  className=" mx-auto w-[342px] lg:w-[366px]  py-3 rounded-lg bg-[#4855CC] text-white text-center font-normal text-[20px] leading-[30px]">Увійти</Link>
+      </div>
+    
+  )
 }

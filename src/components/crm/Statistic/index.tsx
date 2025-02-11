@@ -17,22 +17,34 @@ export default function DateRangePicker() {
     .filter((date) => isSameMonth(date, today) && isSameYear(date, today));
 
   return (
-    <div className=" container">
-      <div className="flex flex-row justify-between w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
-        <div className="--font-inter font-medium text-2xl leading-9 text-crm-black">
-          Всього тварин в АRK{" "}
-        </div>
-        <div className="--font-inter font-medium text-2xl leading-9 text-center text-mainBlue">
-          342
-        </div>
-      </div>
+// <<<<<<< admin-panel
+//     <div className=" container">
+//       <div className="flex flex-row justify-between w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
+//         <div className="--font-inter font-medium text-2xl leading-9 text-crm-black">
+//           Всього тварин в АRK{" "}
+//         </div>
+//         <div className="--font-inter font-medium text-2xl leading-9 text-center text-mainBlue">
+//           342
+//         </div>
+//       </div>
 
-      <h2 className="--font-inter font-medium text-2xl leading-9 text-crm-black text-center mb-4 max-w-[342px] pl-12">
-        Статистика по ARK
-      </h2>
-      <div className="flex justify-between w-[342px] mb-6 ml-6 mr-6 mt-4">
-        <div className=" relative">
-          <p>З</p>
+//       <h2 className="--font-inter font-medium text-2xl leading-9 text-crm-black text-center mb-4 max-w-[342px] pl-12">
+//         Статистика по ARK
+//       </h2>
+//       <div className="flex justify-between w-[342px] mb-6 ml-6 mr-6 mt-4">
+//         <div className=" relative">
+//           <p>З</p>
+// =======
+      <div className=" container">
+          <div className="flex flex-row justify-between w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
+              <div className="--font-inter font-medium text-2xl leading-9 text-crm-black">Всього тварин в АRK </div>
+              <div className="--font-inter font-medium text-2xl leading-9 text-center text-mainBlue">342</div>          
+          </div>
+        
+      <h2 className="--font-inter w-[342px] ml-6 mr-6 font-medium text-2xl leading-9 text-crm-black text-center mb-4">Статистика по ARK</h2>
+          <div className="flex justify-between w-[342px] mb-6 ml-6 mr-6 mt-4">
+              <div className=" relative">
+                  <p>З</p>
           <DatePicker
             toggleCalendarOnIconClick
             selected={startDate}
