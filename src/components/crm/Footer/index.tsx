@@ -7,7 +7,7 @@ import AddIcon from "./FooterIcons/Add";
 import CardIcon from "./FooterIcons/Card";
 import ProfileIcon from "./FooterIcons/Profile";
 
-type Path = "/crm" | "/crm/add-card" | "/crm/catalog" | "/crm/profile";
+type Path = "/crm/statistic" | "/crm/add-card" | "/crm/catalog" | "/crm/profile";
 
 const FooterCrm = () => {
   const pathname = usePathname();
@@ -21,7 +21,7 @@ const FooterCrm = () => {
               <Link
                 href="/crm"
                 className={`flex flex-col items-center ${
-                  isActive("/crm")
+                  isActive("/crm/statistic")
                     ? "text-mainBlue fill-mainBlue  text-opacity-100"
                     : " text-mainBlue text-opacity-40 "
                 } `}>

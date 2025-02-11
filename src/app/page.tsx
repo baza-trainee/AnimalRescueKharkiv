@@ -1,4 +1,4 @@
-import Mainlogo from './mainlogo/page'
+import Mainlogo from './crm/page'
 export default function Home() {
   return (
    <div>
