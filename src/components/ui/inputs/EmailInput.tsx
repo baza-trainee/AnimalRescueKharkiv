@@ -1,5 +1,5 @@
 import { FC, ForwardedRef, forwardRef } from "react";
-import { ErrorMessage } from "./ErrorMessage";
+// import { ErrorMessage } from "./ErrorMessage";
 
 interface PropsEmailInput extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
@@ -7,36 +7,26 @@ interface PropsEmailInput extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const EmailInput: FC<PropsEmailInput> = forwardRef(
-  (
-    { errorMessage, label, name, ...rest },
-    _ref: ForwardedRef<HTMLInputElement>
-  ) => {
+  ({ errorMessage, label, name, ...rest }, _ref: ForwardedRef<HTMLInputElement>) => {
     return (
-      <div className=" relative w-full">
-        <label htmlFor={name} className="block mb-[4px]">
-          <span
-            className={`${
-              !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
-            } text-[18px] font-medium leading-[27px]`}
-          >
-            {label}
-          </span>
+      <div className="relative w-full">
+        <label htmlFor={name} className="block mb-2 text-[18px] font-medium">
+          {label}
         </label>
         <input
           {...rest}
           type="email"
           id={name}
           ref={_ref}
-          className={` w-full px-[8px] py-[12px] rounded-[10px] border-[1px]  ${
-            !!errorMessage
-              ? "border-[#B00000] placeholder:text-[#B00000] outline-[#B00000]"
-              : "placeholder:text-[#B6BBEB] border-[#B6BBEB] outline-[#4855CC]"
-          }  transition duration-[350ms]  outline-1 text-[#070600] text-[14px] font-normal`}
+          className={`w-full px-3 py-2 mb-2 rounded border ${
+            errorMessage
+              ? "border-red-600 placeholder:text-red-600 outline-red-600"
+              : "border-gray-300 outline-blue-500"
+          } transition duration-300 text-[16px]`}
         />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {/* {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} */}
       </div>
     );
   }
 );
-
-EmailInput.displayName = "EmailInput";
+export default EmailInput;
