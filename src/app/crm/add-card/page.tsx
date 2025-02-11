@@ -6,7 +6,7 @@ import AddCardCrm from "@/src/components/crm/AddCardCrm";
 export default function AddCardPage() {
   return (
     <>
-      <section className="">
+      <section className="w-[390px] mx-auto">
         {/* <HeaderCrm /> */}
         {/* <MenuDesktop /> */}
         <AddCardCrm />

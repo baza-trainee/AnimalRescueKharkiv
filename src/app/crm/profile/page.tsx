@@ -7,7 +7,7 @@ export default function ProfilePage() {
   return (
     <>
       <Header title="Профіль" />
-      <section className="w-[390px]">
+      <section className="w-[390px] mx-auto">
         {/* <MenuDesktop /> */}
         <div className="px-5">
           <ProfileCrm />
