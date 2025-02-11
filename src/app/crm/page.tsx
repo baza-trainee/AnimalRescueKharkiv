@@ -12,19 +12,18 @@ import DateRangePicker from "@/src/components/crm/Statistic";
 export default function CRMPage() {
   return (
     <>
-      {" "}
       <Header title="Статистика" />
       <main className="w-full flex-col">
-        <section className="">
+        <section className="pb-20">
           {/* <HeaderCrm /> */}
           {/* <MenuDesktop /> */}
           <DepartmentStatistic />
-          <DateRangePicker/>
+          <DateRangePicker />
           <CountryStatistic />
-          <LatesrAdd/>
+          <LatesrAdd />
         </section>
-        <FooterCrm />
       </main>
+      <FooterCrm />
     </>
   );
 }
