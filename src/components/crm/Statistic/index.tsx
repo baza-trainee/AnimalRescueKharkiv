@@ -26,7 +26,7 @@ const highlightDates = [
               <div className="--font-inter font-medium text-2xl leading-9 text-center text-mainBlue">342</div>          
           </div>
         
-      <h2 className="--font-inter font-medium text-2xl leading-9 text-crm-black text-center mb-4">Статистика по ARK</h2>
+      <h2 className="--font-inter w-[342px] ml-6 mr-6 font-medium text-2xl leading-9 text-crm-black text-center mb-4">Статистика по ARK</h2>
           <div className="flex justify-between w-[342px] mb-6 ml-6 mr-6 mt-4">
               <div className=" relative">
                   <p>З</p>
