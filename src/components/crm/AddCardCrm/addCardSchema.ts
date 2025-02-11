@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 
+const nameRegExp = /^[a-zA-Zа-яА-ЯґҐєЄіІїЇ'’\-\s]+$/;
+
 const animalTypes = [
   "Кіт/кішка",
   "Собака",
@@ -16,8 +18,9 @@ const genders = ["Самець", "Самка"];
 
 export const addCardSchema = Yup.object().shape({
   name: Yup.string()
+    .matches(nameRegExp, "Введіть коректне ім'я")
     .min(2, "Ім’я має бути не менше 2 символів")
-    .max(50, "Ім’я має бути не більше 50 символів")
+    .max(30, "Ім’я має бути не більше 30 символів")
     .required("Введіть ім’я"),
   files: Yup.mixed<FileList>()
     .test("fileFormat", "Тільки фото або відео", (value) => {
@@ -45,7 +48,16 @@ export const addCardSchema = Yup.object().shape({
   weight: Yup.string().max(50, "Не більше 50 символів").notRequired(),
   age: Yup.string().max(50, "Не більше 50 символів").notRequired(),
   specialMarks: Yup.string().max(200, "Не більше 200 символів").notRequired(),
-  arrivalDate: Yup.date().required("Дата прибуття обов’язкова"),
+  arrivalDate: Yup.date().nullable().required("Дата прибуття обов’язкова"),
+  currentLocation: Yup.string().required("Оберіть або введіть поточну локацію"),
+  currentDate: Yup.date().nullable().notRequired(),
+  locations: Yup.array().of(
+    Yup.object({
+      location: Yup.string().required("Оберіть або додайте локацію"),
+      date_from: Yup.date().required("Оберіть дату"),
+      date_to: Yup.date().nullable(),
+    })
+  ),
 });
 
 export type TypeAddCardSchema = Yup.InferType<typeof addCardSchema>;

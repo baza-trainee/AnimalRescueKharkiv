@@ -1,12 +1,13 @@
 import { forwardRef, useState } from "react";
 import DatePicker from "react-datepicker";
-// import { uk } from "date-fns/locale";
+import { uk } from "date-fns/locale";
 import "react-datepicker/dist/react-datepicker.css";
 import { ArrowLeftIcon } from "../icon/ArrowLeftIcon";
 import { ArrowRightIcon } from "../icon/ArrowRightIcon";
 import { ArrowUpIcon } from "../icon/ArrowUpIcon";
 import { ArrowDownIcon } from "../icon/ArrowDownIcon";
 import { ErrorMessage } from "../inputs/ErrorMessage";
+import { format } from "date-fns";
 
 interface PropsCustomDataPicker {
   selected: Date | null;
@@ -16,6 +17,7 @@ interface PropsCustomDataPicker {
   maxDate?: Date;
   label: string;
   errorMessage?: string;
+  labelStyles?: string;
 }
 
 interface PropsCustomInput {
@@ -72,65 +74,77 @@ const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
 export const CustomDatePicker = forwardRef<
   HTMLDivElement,
   PropsCustomDataPicker
->(({ selected, onChange, minDate, maxDate, label, errorMessage }, _ref) => {
-  const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
+>(
+  (
+    { selected, onChange, minDate, maxDate, label, errorMessage, labelStyles },
+    _ref
+  ) => {
+    const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
 
-  const handleCalendarOpen = () => {
-    setIsCalendarOpen(true);
-  };
+    const handleCalendarOpen = () => {
+      setIsCalendarOpen(true);
+    };
 
-  const handleCalendarClose = () => {
-    setIsCalendarOpen(false);
-  };
+    const handleCalendarClose = () => {
+      setIsCalendarOpen(false);
+    };
 
-  return (
-    <div ref={_ref} className="relative">
-      {label && (
-        <span
-          className={`${
-            !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
-          } text-[18px] font-medium leading-[27px] block mb-[4px]`}
-        >
-          {label}
-        </span>
-      )}
-      <DatePicker
-        customInput={
-          <CustomInput
-            errorMessage={errorMessage}
-            isCalendarOpen={isCalendarOpen}
-          />
-        }
-        selected={selected}
-        onChange={onChange}
-        dateFormat="dd.MM.yyyy"
-        minDate={minDate}
-        maxDate={maxDate}
-        onCalendarOpen={handleCalendarOpen}
-        onCalendarClose={handleCalendarClose}
-        showPopperArrow={false}
-        wrapperClassName="w-full"
-        calendarClassName="customCalendar"
-        popperClassName="react-datepicker-popper"
-        renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
-          <div className="flex justify-between text-[18px] font-sans font-medium leading-[27px] bg-[#FFFFFF]">
-            <button type="button" onClick={decreaseMonth}>
-              {<ArrowLeftIcon style="stroke-[#070600] w-[20px] h-[20px]" />}
-            </button>
-            <span>
-              {monthDate
-                .toLocaleString("uk", { month: "long" })
-                .charAt(0)
-                .toUpperCase() +
-                monthDate.toLocaleString("uk", { month: "long" }).slice(1)}{" "}
-              {monthDate.getFullYear()}
-            </span>
-            <button type="button" onClick={increaseMonth}>
-              {<ArrowRightIcon style="stroke-[#070600] w-[20px] h-[20px]" />}
-            </button>
-          </div>
+    return (
+      <div
+        ref={_ref}
+        className={`relative w-full ${errorMessage && "pb-[26px]"}`}
+      >
+        {label && (
+          <span
+            className={`${
+              !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
+            } font-medium leading-[27px] block mb-[4px] ${
+              labelStyles ? labelStyles : "text-[18px]"
+            }`}
+          >
+            {label}
+          </span>
         )}
-      />
-    </div>
-  );
-});
+        <DatePicker
+          customInput={
+            <CustomInput
+              errorMessage={errorMessage}
+              isCalendarOpen={isCalendarOpen}
+            />
+          }
+          selected={selected}
+          onChange={onChange}
+          dateFormat="dd.MM.yyyy"
+          minDate={minDate}
+          maxDate={maxDate}
+          onCalendarOpen={handleCalendarOpen}
+          onCalendarClose={handleCalendarClose}
+          showPopperArrow={false}
+          wrapperClassName="w-full"
+          calendarClassName="customCalendar"
+          popperClassName="react-datepicker-popper"
+          renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
+            <div className="flex justify-between text-[18px] font-sans font-medium leading-[27px] bg-[#FFFFFF]">
+              <button type="button" onClick={decreaseMonth}>
+                {<ArrowLeftIcon style="stroke-[#070600] w-[20px] h-[20px]" />}
+              </button>
+              <span>
+                {monthDate
+                  .toLocaleString("uk", { month: "long" })
+                  .charAt(0)
+                  .toUpperCase() +
+                  monthDate
+                    .toLocaleString("uk", { month: "long" })
+                    .slice(1)}{" "}
+                {monthDate.getFullYear()}
+              </span>
+              <button type="button" onClick={increaseMonth}>
+                {<ArrowRightIcon style="stroke-[#070600] w-[20px] h-[20px]" />}
+              </button>
+            </div>
+          )}
+        />
+      </div>
+    );
+  }
+);

@@ -1,61 +1,72 @@
 "use client";
 
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormClearErrors,
-  UseFormSetValue,
-} from "react-hook-form";
-import { TextInput } from "../../ui/inputs/TextInput";
+import { Control, Controller, FieldErrors } from "react-hook-form";
+import { TextInput } from "@/src/components/crm/AddCardForm/inputs/TextInput";
 import { TypeAddCardSchema } from "../AddCardCrm/addCardSchema";
 import { useState } from "react";
-import { useToggle } from "../../register/popUp/useToggle";
-import { AnimalType } from "../../register/popUp/AnimalType";
 import { PopupInput } from "../../ui/inputs/PopupInput";
-import { Genders } from "../../register/popUp/Genders";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
+import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
+
+const animalTypes = [
+  "Кіт/кішка",
+  "Собака",
+  "Кінь",
+  "Корова",
+  "Коза",
+  "Кролик",
+  "Птах",
+  "Лис",
+  "Інші",
+];
+
+const genders = ["Самець", "Самка"];
 
 interface PropsBasicInfoForm {
   control: Control<any>;
   errors: FieldErrors<TypeAddCardSchema>;
-  setValue?: UseFormSetValue<TypeAddCardSchema>;
-  clearErrors?: UseFormClearErrors<TypeAddCardSchema>;
+  fields: {
+    id: string;
+    location: string;
+    date_from: Date | any;
+    date_to: Date | any;
+  }[];
+  append: (value: {
+    location: string;
+    date_from: Date | any;
+    date_to: Date | any;
+  }) => void;
 }
 
 export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   control,
   errors,
-  setValue,
-  clearErrors,
+  fields,
+  append,
+  trigger,
 }) => {
-  const [selectedAnimalType, setSelectedAnimalType] = useState<string | null>(
-    null
-  );
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [openPopup, setOpenPopup] = useState<string | null>(null);
-  const [arrivalDate, setArrivalDate] = useState<Date | null>(null);
+  const [activeLocationPicker, setActiveLocationPicker] = useState<
+    string | null
+  >(null);
 
-  const handleToggleModal = (name: string) => {
+  const handleTogglePopup = (name: string) => {
     setOpenPopup((prev) => (prev === name ? null : name));
   };
 
-  const handleSelect = (
-    name: keyof TypeAddCardSchema,
-    value: string,
-    setter: (value: string) => void
-  ) => {
-    setter(value);
-    setValue && setValue(name, value, { shouldValidate: true });
-    clearErrors && clearErrors(name);
-    setOpenPopup(null);
+  const handleOpenLocationPicker = (id: string) => {
+    setActiveLocationPicker(id);
   };
 
-  const handleDate = (
-    date: Date | null,
-    setter: (date: Date | null) => void
-  ): void => {
-    setter(date);
+  const handleCloseLocationPicker = () => {
+    setActiveLocationPicker(null);
+  };
+
+  const handleAddLocation = async () => {
+    const isValid = await trigger("locations");
+    console.log(isValid);
+
+    if (isValid) append({ location: "", date_from: null, date_to: null });
   };
 
   return (
@@ -106,40 +117,42 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
         </div>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <PopupInput
-          name="animalType"
-          label="Тип тварини*"
-          placeholder="Оберіть тип тварини"
-          selectedValue={selectedAnimalType}
-          control={control}
-          errors={errors}
-          isOpen={openPopup === "animalType"}
-          onClose={() => handleToggleModal("animalType")}
-        >
-          <AnimalType
-            onClose={() => handleToggleModal("animalType")}
-            onSelect={(value: string) =>
-              handleSelect("animalType", value, setSelectedAnimalType)
-            }
+        <div className={errors.animalType?.message && "pb-[26px]"}>
+          <Controller
+            name="animalType"
+            control={control}
+            render={({ field }) => (
+              <PopupInput
+                label="Тип тварини*"
+                placeholder="Оберіть тип тварини"
+                value={field.value}
+                onChange={field.onChange}
+                errorMessage={errors.animalType?.message}
+                values={animalTypes}
+                isOpen={openPopup === "animalType"}
+                onClose={() => handleTogglePopup("animalType")}
+              />
+            )}
           />
-        </PopupInput>
-        <PopupInput
-          name="gender"
-          label="Стать*"
-          placeholder="Оберіть стать тварини"
-          selectedValue={selectedGender}
-          control={control}
-          errors={errors}
-          isOpen={openPopup === "gender"}
-          onClose={() => handleToggleModal("gender")}
-        >
-          <Genders
-            onClose={() => handleToggleModal("gender")}
-            onSelect={(value: string) =>
-              handleSelect("gender", value, setSelectedGender)
-            }
+        </div>
+        <div className={errors.gender?.message && "pb-[26px]"}>
+          <Controller
+            name="gender"
+            control={control}
+            render={({ field }) => (
+              <PopupInput
+                label="Стать*"
+                placeholder="Оберіть стать тварини"
+                value={field.value}
+                onChange={field.onChange}
+                errorMessage={errors.gender?.message}
+                values={genders}
+                isOpen={openPopup === "gender"}
+                onClose={() => handleTogglePopup("gender")}
+              />
+            )}
           />
-        </PopupInput>
+        </div>
         <div className={errors?.weight && "pb-[26px]"}>
           <Controller
             name="weight"
@@ -182,6 +195,112 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
             )}
           />
         </div>
+      </fieldset>
+      <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+        <Controller
+          name="currentLocation"
+          control={control}
+          render={({ field, fieldState }) => (
+            <LocationPicker
+              label="Поточна локація*"
+              value={field.value}
+              onChange={field.onChange}
+              errorMessage={fieldState.error?.message}
+              isOpen={activeLocationPicker === "currentLocation"}
+              onOpen={() => handleOpenLocationPicker("currentLocation")}
+              onClose={handleCloseLocationPicker}
+            />
+          )}
+        />
+        <div className={errors?.currentDate && "pb-[26px]"}>
+          <Controller
+            name="currentDate"
+            control={control}
+            render={({ field }) => (
+              <CustomDatePicker
+                {...field}
+                label="З"
+                selected={field.value}
+                onChange={(date) => field.onChange(date)}
+                errorMessage={errors?.currentDate?.message}
+                labelStyles="font-normal text-[14px]"
+              />
+            )}
+          />
+        </div>
+
+        <h3 className="text-[18px] text-[#212833] font-medium leading-[27px] mt-4">
+          Історія переміщень
+        </h3>
+
+        {fields.map((field, index) => {
+          const location = `locations.${index}.location`;
+          const date_from = `locations.${index}.date_from`;
+          const date_to = `locations.${index}.date_to`;
+
+          return (
+            <div key={field.id}>
+              <Controller
+                name={location}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <LocationPicker
+                    label={`Локація ${index + 1}`}
+                    value={field.value}
+                    onChange={field.onChange}
+                    errorMessage={fieldState.error?.message}
+                    isOpen={activeLocationPicker === location}
+                    onOpen={() => handleOpenLocationPicker(location)}
+                    onClose={handleCloseLocationPicker}
+                  />
+                )}
+              />
+
+              <div className="flex gap-[16px]">
+                <div className="flex-grow">
+                  <Controller
+                    name={date_from}
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <CustomDatePicker
+                        {...field}
+                        label="З"
+                        selected={field.value}
+                        onChange={(date) => field.onChange(date)}
+                        errorMessage={fieldState.error?.message}
+                        labelStyles="font-normal text-[14px]"
+                      />
+                    )}
+                  />
+                </div>
+                <div className="flex-grow">
+                  <Controller
+                    name={date_to}
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <CustomDatePicker
+                        {...field}
+                        label="По"
+                        selected={field.value}
+                        onChange={(date) => field.onChange(date)}
+                        errorMessage={fieldState.error?.message}
+                        labelStyles="font-normal text-[14px]"
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        <button
+          type="button"
+          onClick={handleAddLocation}
+          className="flex justify-center items-center w-full py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
+        >
+          Додати локацію
+        </button>
       </fieldset>
     </div>
   );

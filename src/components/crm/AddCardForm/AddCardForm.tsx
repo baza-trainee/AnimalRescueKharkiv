@@ -1,13 +1,13 @@
 "use client";
 
-import { TextInput } from "@/src/components/ui/inputs/TextInput";
+import { TextInput } from "@/src/components/crm/AddCardForm/inputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { addCardSchema, TypeAddCardSchema } from "../AddCardCrm/addCardSchema";
 import { FileInput } from "@/src/components/ui/inputs/FileInput";
 import { BasicInfoForm } from "../BasicInfoForm/BasicInfoForm";
 import { useToggle } from "../../register/popUp/useToggle";
-import { RequiredValues } from "../../register/popUp/RequiredValues";
+import { RequiredValues } from "../PopUp/RequiredValues";
 import { useState } from "react";
 import { MedicalInfoForm } from "../MedicalInfoForm/MedicalInfoForm";
 
@@ -22,6 +22,9 @@ const defaultValues = {
   age: "",
   specialMarks: "",
   arrivalDate: null,
+  currentLocation: "",
+  currentDate: null,
+  locations: [{ location: "", date_from: null, date_to: null }],
 };
 
 export const AddCardForm = () => {
@@ -29,14 +32,15 @@ export const AddCardForm = () => {
   const {
     control,
     handleSubmit,
-    setValue,
-    clearErrors,
+    trigger,
     formState: { errors, isValid, isSubmitted },
   } = useForm({
     defaultValues,
     mode: "onSubmit",
     resolver: yupResolver(addCardSchema),
   });
+  const { fields, append } = useFieldArray({ control, name: "locations" });
+
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
   const onSubmit = (data: TypeAddCardSchema) => {
@@ -45,7 +49,7 @@ export const AddCardForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="p-[24px]">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="flex flex-col gap-[24px]">
           <div
             className={`p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] ${
@@ -94,7 +98,7 @@ export const AddCardForm = () => {
               activeTab === "basic"
                 ? "bg-[#4855CC] text-[#EDEEFA]"
                 : "bg-transparent text-[#4855CC]"
-            } w-[171px] px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
+            } px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
           >
             Основна інформація
           </button>
@@ -105,7 +109,7 @@ export const AddCardForm = () => {
               activeTab === "medical"
                 ? "bg-[#4855CC] text-[#EDEEFA]"
                 : "bg-transparent text-[#4855CC]"
-            } w-[171px] px-[16px] py-[4px] border-[1px] border-l-0 border-[#4855CC] rounded-r-lg text-[24px] font-bold leading-[36px]`}
+            } px-[16px] py-[4px] border-[1px] border-l-0 border-[#4855CC] rounded-r-lg text-[24px] font-bold leading-[36px]`}
           >
             Медична інформація
           </button>
@@ -115,8 +119,9 @@ export const AddCardForm = () => {
             <BasicInfoForm
               control={control}
               errors={errors}
-              setValue={setValue}
-              clearErrors={clearErrors}
+              fields={fields}
+              append={append}
+              trigger={trigger}
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
@@ -126,7 +131,7 @@ export const AddCardForm = () => {
         <button
           type="submit"
           onClick={toggleModal}
-          className="flex justify-center items-center w-full py-[13px] rounded-[10px] text-[20px] text-[#EDEEFA] leading-[30px] bg-[#4855CC] hover:bg-[#B6BBEB] focus::bg-[#B6BBEB]"
+          className="flex justify-center items-center w-full py-[13px] rounded-[10px] text-[20px] text-[#EDEEFA] leading-[30px] bg-[#4855CC] transition duration-[350ms] hover:bg-[#B6BBEB] focus::bg-[#B6BBEB]"
         >
           Надіслати
         </button>

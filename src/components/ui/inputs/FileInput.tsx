@@ -55,7 +55,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
     };
 
     return (
-      <div className="relative">
+      <div className="w-[318px] relative">
         <label
           htmlFor={name}
           className="flex flex-col gap-8px] relative cursor-pointer"
