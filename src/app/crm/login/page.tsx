@@ -8,24 +8,20 @@ import { EmailInput } from "../../../components/ui/inputs/EmailInput";
 import { PasswordInput } from "../../../components/ui/inputs/PasswordInput";
 ;
 
-interface LoginProps {
-  onNext: (data: TypeLoginSchema) => void;
-  loginData: TypeLoginSchema;
-}
 
-export default function Login({ onNext, loginData }: LoginProps) {
+export default function Login() {
 
   const {
     handleSubmit,
     control
   
   } = useForm<TypeLoginSchema>({
-    defaultValues: loginData,
+     defaultValues: { email: "", password: "" }, 
     mode: "onSubmit",
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = (data: TypeLoginSchema) => onNext(data);
+  const onSubmit = (data: TypeLoginSchema) =>console.log(data); ;
 
   return (
     <>
