@@ -8,12 +8,11 @@ import EmailInput from "../../ui/inputs/EmailInput";
 import FilterIcon from "../CatalogCrm/CatalogCrmIcons/FilterIcon";
 import SetIcon from "../CatalogCrm/CatalogCrmIcons/Set";
 import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
-  
 
 const AccordionItem: React.FC<{
   title: string;
   children?: React.ReactNode;
-}> = ({ title, children }) => {   
+}> = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -71,7 +70,7 @@ const ProfileSettings: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto rounded-lg p-4 relative">
+    <div className="w-[342px] mx-auto rounded-lg relative">
       <AccordionItem title="Запросити нового користувача">
         {error && (
           <div className="text-red-600 text-center mb-4 w-[275px] mx-auto">
@@ -92,7 +91,8 @@ const ProfileSettings: React.FC = () => {
           placeholder="Введіть адресу"
           value={email} // Додаємо value
           onChange={(e) => setEmail(e.target.value)}
-          errorMessage={error} // Передаємо помилку
+          errorMessage={error}
+          className="border rounded-2xl"// Передаємо помилку
         />
         <label htmlFor="role-select" className="text-[18px] font-medium">
           Оберіть роль користувача
@@ -126,16 +126,16 @@ const ProfileSettings: React.FC = () => {
           <input
             type="text"
             placeholder="Введіть ім’я користувача або роль"
-            className="w-full focus:outline-none text-sm placeholder-color-Id bg-transparent"
+            className="w-full focus:outline-none text-sm placeholder-crm-secondary-blue bg-transparent"
           />
         </div>
-        <div className="w-full h-[44px] flex justify-between p-[4px]">
+        <div className="w-full h-[44px] flex justify-between p-[4px] mb-[16px]">
           <Link href="#" onClick={toggleFilterPopup}>
             <FilterIcon />
           </Link>
           {filterPopupVisible && (
             <div className="fixed w-full z-10 inset-0  flex flex-col content-center justify-start bg-white py-[16px] px-[24px] gap-[8px] overflow-auto">
-              <div className="w-full h-[24px] flex justify-end">
+              <div className="w-full flex justify-end">
                 <button onClick={toggleFilterPopup}>
                   <CloseBtb />
                 </button>
@@ -250,13 +250,17 @@ const ProfileSettings: React.FC = () => {
             </div>
           )}
         </div>
+        <div className="w-[342px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
+          p,[]
+        </div>
       </AccordionItem>
       <AccordionItem title="Налаштування ролей" />
       <AccordionItem title="Зміна паролю" />
-
-      <button className="w-full mt-4 border border-blue-600 text-blue-600 py-2 rounded-md hover:bg-blue-100 transition">
-        Вийти
-      </button>
+      <Link href="../../crm">
+        <button className="w-full mt-4 border border-blue-600 text-blue-600 py-2 rounded-md hover:bg-blue-100 transition">
+          Вийти
+        </button>
+      </Link>
     </div>
   );
 };

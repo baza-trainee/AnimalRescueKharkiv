@@ -8,10 +8,8 @@ export default function ProfilePage() {
     <>
       <Header title="Профіль" />
       <section className="w-[390px] mx-auto">
-        {/* <MenuDesktop /> */}
-        <div className="px-5">
+        
           <ProfileCrm />
-        </div>
       </section>
       <FooterCrm />
     </>
