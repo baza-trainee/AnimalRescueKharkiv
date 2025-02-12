@@ -32,7 +32,6 @@ const config: Config = {
         'crm-backgraund':" #f8f9fd",
         'crm-secondary-blue':"#b6bbeb",
         'crm-black':"#070600",
-        'color-Id': '#B6BBEB',
       },
     },
   },
