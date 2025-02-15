@@ -31,7 +31,8 @@ const slides = [
 export default () => {
   return (
     <div className="w-[342px] overflow-hidden mx-6 shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)] border-[1px] border-solid border-mainBlue rounded-[10px] px-[10px] relative mb-20">
-      <span className="absolute before:content-[''] before:mr-2 bg-crm-backgraund w-full z-10 h-2 right-0 bottom-0"></span>
+      <span className="absolute  bg-crm-backgraund w-full z-10 h-2 right-0 bottom-0"></span>
+      <span className="absolute  bg-crm-backgraund w-[6.3%] z-10 h-full left-0 bottom-0"></span>
 
       <h3 className="font-semibold text-2xl mb-3 px-3 pt-2">
         Останні поповнення:
