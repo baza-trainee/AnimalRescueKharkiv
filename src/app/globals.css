@@ -10,9 +10,9 @@ html {
 body {
   height: 100%;
   background-color: #f8f9fd;
+  font-family: "Inter", sans-serif;
 }
 .custom-calendar {
-  font-family: "Inter", sans-serif;
 
   z-index: 9999;
   border-radius: 13px;

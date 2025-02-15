@@ -9,8 +9,8 @@ const HeaderCrm: React.FC<{ title: string }> = ({ title }) => {
   const isProfilePage = pathname.includes("/crm/profile");
 
   return (
-    <header className="flex mx-auto justify-between w-[390px]  pt-[18px] pb-2 border-b border-lightBlue ">
-      <div className="w-[342px] mx-auto flex mx-auto items-center justify-between">
+    <header className="flex mx-auto justify-between w-[390px] pt-[18px] pb-2 border-b border-lightBlue ">
+      <div className="w-[347px] mx-auto flex mx-auto items-center justify-between">
         <h1
           className={`${inter.className} font-bold text-[24px] leading-[150%] text-mainBlue`}>
           {title}
