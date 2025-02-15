@@ -15,7 +15,11 @@ export const fetchCountryStats = async () => {
 export const fetchDepartmentStats = async () => {
   try {
     const response = await fetch(`${BASE_URL}/stats/departments`);
-    if (!response.ok) throw new Error("Дані не знайдені");
+    if (!response.ok) {
+      const errorText = await response.text(); // Получаем текст ошибки
+      console.error("Помилка при загрузці статистики:", errorText);
+      throw new Error("Дані не знайдені: " + errorText);
+    }
 
     return await response.json();
   } catch (error) {
