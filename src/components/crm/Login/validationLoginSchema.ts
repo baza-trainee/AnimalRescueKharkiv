@@ -6,8 +6,8 @@ export const loginSchema = Yup.object().shape({
     .email( "Введіть дійсний email")
     .required("Введіть email"),
   password: Yup.string()
-     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
-    message: "Пароль повинен містити одну велику літеру, одну малу літеру і одну цифру",
+     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*\s).+$/, {
+    message: "Пароль повинен містити одну велику літеру, одну малу літеру, одну цифру і один спец символ",
     excludeEmptyString: true,
   })
     .min(8, "Пароль має містити мінімум 8 символів")
