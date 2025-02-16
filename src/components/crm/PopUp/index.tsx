@@ -29,7 +29,7 @@ export const PopUp: FC<PropsPopUp> = ({ onClose, children, gap }) => {
 
   return (
     <div
-      className="relative z-10"
+      className="relative z-[25]"
       aria-labelledby="modal"
       role="dialog"
       aria-modal="true"

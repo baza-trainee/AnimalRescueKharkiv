@@ -1,20 +1,25 @@
-import { forwardRef } from "react";
 import { ErrorMessage } from "../inputs/ErrorMessage";
+import { forwardRef } from "react";
 
-interface PropsTextInput extends React.InputHTMLAttributes<HTMLInputElement> {
+interface PropsCommentInput
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   errorMessage?: string;
   label: string;
   styles?: string;
+  lableMargin?: boolean;
 }
 
-export const TextInput: React.FC<PropsTextInput> = forwardRef(
+export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
   (
-    { label, errorMessage, styles, name, ...rest },
-    _ref: React.ForwardedRef<HTMLInputElement>
+    { label, errorMessage, styles, name, lableMargin = true, ...rest },
+    _ref: React.ForwardedRef<HTMLTextAreaElement>
   ) => {
     return (
       <div className=" relative w-full">
-        <label htmlFor={name} className=" block mb-[4px]">
+        <label
+          htmlFor={name}
+          className={`${lableMargin ? "block mb-[4px]" : ""}`}
+        >
           <span
             className={`${
               !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
@@ -23,16 +28,15 @@ export const TextInput: React.FC<PropsTextInput> = forwardRef(
             {label}
           </span>
         </label>
-        <input
+        <textarea
           {...rest}
           ref={_ref}
-          type="text"
           id={name}
-          className={`w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent ${
+          className={`block w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent resize-none ${
             !!errorMessage
               ? "border-[#B00000] placeholder:text-[#B00000] outline-[#B00000]"
               : "placeholder:text-[#B6BBEB] border-[#B6BBEB] outline-[#4855CC]"
-          }  transition duration-[350ms]  outline-1 text-[#070600] text-[14px] font-normal ${styles}`}
+          }  transition duration-[350ms] outline-1 text-[#070600] text-[14px] font-normal ${styles}`}
         />
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </div>
@@ -40,4 +44,4 @@ export const TextInput: React.FC<PropsTextInput> = forwardRef(
   }
 );
 
-TextInput.displayName = "TextInput";
+CommentInput.displayName = "CommentInput";

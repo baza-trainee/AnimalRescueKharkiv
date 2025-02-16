@@ -4,9 +4,7 @@ const AddCardCrm = () => {
   return (
     <>
       <Header title="Нова картка" />
-      <div className="max-w-[390px] p-[24px] my-0 mx-auto">
-        <AddCardForm />
-      </div>
+      <AddCardForm />
     </>
   );
 };

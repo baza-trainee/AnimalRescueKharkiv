@@ -7,6 +7,7 @@ import { useState } from "react";
 import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
+import { CommentInput } from "../AddCardForm/inputs/CommentInput";
 
 const animalTypes = [
   "Кіт/кішка",
@@ -63,9 +64,10 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   };
 
   const handleAddLocation = async () => {
-    const isValid = await trigger("locations");
-    console.log(isValid);
+    const lastIndex = fields.length - 1;
+    const lastLocationField = `locations.${lastIndex}`;
 
+    const isValid = await trigger(lastLocationField);
     if (isValid) append({ location: "", date_from: null, date_to: null });
   };
 
@@ -116,7 +118,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           />
         </div>
       </fieldset>
-      <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <div className={errors.animalType?.message && "pb-[26px]"}>
           <Controller
             name="animalType"
@@ -196,7 +198,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           />
         </div>
       </fieldset>
-      <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
           name="currentLocation"
           control={control}
@@ -220,7 +222,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               <CustomDatePicker
                 {...field}
                 label="З"
-                selected={field.value}
+                selected={field.value || null}
                 onChange={(date) => field.onChange(date)}
                 errorMessage={errors?.currentDate?.message}
                 labelStyles="font-normal text-[14px]"
@@ -265,7 +267,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                       <CustomDatePicker
                         {...field}
                         label="З"
-                        selected={field.value}
+                        selected={field.value || null}
                         onChange={(date) => field.onChange(date)}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
@@ -281,7 +283,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                       <CustomDatePicker
                         {...field}
                         label="По"
-                        selected={field.value}
+                        selected={field.value || null}
                         onChange={(date) => field.onChange(date)}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
@@ -301,6 +303,39 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
         >
           Додати локацію
         </button>
+      </fieldset>
+      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+        <div className={errors?.owner__info && "pb-[26px]"}>
+          <Controller
+            name="owner__info"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                {...field}
+                label="Інформація про власника"
+                placeholder="Введіть інформацію"
+                errorMessage={errors?.owner__info?.message}
+              />
+            )}
+          />
+        </div>
+      </fieldset>
+      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[16px]">
+        <div className={errors?.comment__text?.message && "pb-[26px]"}>
+          <Controller
+            name="comment__text"
+            control={control}
+            render={({ field }) => (
+              <CommentInput
+                {...field}
+                label="Загальний коментар"
+                placeholder="Додайте інформацію, яку вважаєте важливою"
+                errorMessage={errors?.comment__text?.message}
+                styles="h-[66px]"
+              />
+            )}
+          />
+        </div>
       </fieldset>
     </div>
   );

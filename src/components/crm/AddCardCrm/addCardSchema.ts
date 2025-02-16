@@ -53,11 +53,19 @@ export const addCardSchema = Yup.object().shape({
   currentDate: Yup.date().nullable().notRequired(),
   locations: Yup.array().of(
     Yup.object({
-      location: Yup.string().required("Оберіть або додайте локацію"),
-      date_from: Yup.date().required("Оберіть дату"),
-      date_to: Yup.date().nullable(),
+      location: Yup.string().notRequired(),
+      date_from: Yup.date().notRequired(),
+      date_to: Yup.date()
+        .nullable()
+        .min(Yup.ref("date_from"), 'Не раніше дати "З"')
+        .notRequired(),
     })
   ),
+  owner__info: Yup.string().notRequired(),
+  comment__text: Yup.string().notRequired(),
+  sterilization__done: Yup.boolean().notRequired(),
+  sterilization__date: Yup.date().notRequired(),
+  sterilization__comment: Yup.string().notRequired(),
 });
 
 export type TypeAddCardSchema = Yup.InferType<typeof addCardSchema>;

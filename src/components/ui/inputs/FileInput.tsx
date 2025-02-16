@@ -1,7 +1,7 @@
 "use client";
 
 import React, { forwardRef, useRef, useState } from "react";
-import { ErrorMessage } from "./ErrorMessage";
+import { ErrorMessage } from "../../crm/AddCardForm/inputs/ErrorMessage";
 import { PlusIcon } from "../icon/PlusIcon";
 
 interface PropsFileInput extends React.InputHTMLAttributes<HTMLInputElement> {

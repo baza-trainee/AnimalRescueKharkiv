@@ -25,6 +25,11 @@ const defaultValues = {
   currentLocation: "",
   currentDate: null,
   locations: [{ location: "", date_from: null, date_to: null }],
+  owner__info: "Відсутня",
+  comment__text: "",
+  sterilization__done: false,
+  sterilization__date: null,
+  sterilization__comment: "",
 };
 
 export const AddCardForm = () => {
@@ -49,7 +54,10 @@ export const AddCardForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="p-[24px] pb-[112px] bg-[#F8F9FD]"
+      >
         <fieldset className="flex flex-col gap-[24px]">
           <div
             className={`p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] ${
@@ -125,7 +133,7 @@ export const AddCardForm = () => {
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
-            <MedicalInfoForm />
+            <MedicalInfoForm control={control} errors={errors} />
           </fieldset>
         </div>
         <button
