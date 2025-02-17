@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TextInput } from "@/src/components/crm/AddCardForm/inputs/TextInput";
+import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 
 interface PropsAddLocation {
   onAdd: (location: string) => void;

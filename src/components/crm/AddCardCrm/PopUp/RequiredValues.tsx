@@ -1,4 +1,4 @@
-import { PopUp } from "../../crm/PopUp/index";
+import { PopUp } from "./index";
 
 export const RequiredValues = ({ onClose }: { onClose: () => void }) => {
   return (

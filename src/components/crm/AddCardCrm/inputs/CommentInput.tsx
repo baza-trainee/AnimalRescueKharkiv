@@ -1,4 +1,4 @@
-import { ErrorMessage } from "../inputs/ErrorMessage";
+import { ErrorMessage } from "./ErrorMessage";
 import { forwardRef } from "react";
 
 interface PropsCommentInput
@@ -15,7 +15,7 @@ export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
     _ref: React.ForwardedRef<HTMLTextAreaElement>
   ) => {
     return (
-      <div className=" relative w-full">
+      <div className={`${errorMessage && "pb-[26px]"} relative w-full`}>
         <label
           htmlFor={name}
           className={`${lableMargin ? "block mb-[4px]" : ""}`}

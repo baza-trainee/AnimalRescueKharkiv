@@ -1,15 +1,15 @@
 "use client";
 
-import { TextInput } from "@/src/components/crm/AddCardForm/inputs/TextInput";
+import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { addCardSchema, TypeAddCardSchema } from "../AddCardCrm/addCardSchema";
+import { addCardSchema, TypeAddCardSchema } from "./addCardSchema";
 import { FileInput } from "@/src/components/ui/inputs/FileInput";
-import { BasicInfoForm } from "../BasicInfoForm/BasicInfoForm";
+import { BasicInfoForm } from "./BasicInfoForm";
 import { useToggle } from "../../register/popUp/useToggle";
-import { RequiredValues } from "../PopUp/RequiredValues";
+import { RequiredValues } from "./PopUp/RequiredValues";
 import { useState } from "react";
-import { MedicalInfoForm } from "../MedicalInfoForm/MedicalInfoForm";
+import { MedicalInfoForm } from "./MedicalInfoForm";
 
 const defaultValues = {
   name: "",
@@ -30,6 +30,17 @@ const defaultValues = {
   sterilization__done: false,
   sterilization__date: null,
   sterilization__comment: "",
+  microchipping__done: false,
+  microchipping__date: null,
+  microchipping__comment: "",
+  vaccinations: [
+    {
+      is_vaccinated: false,
+      vaccine_type: "",
+      date: "",
+      comment: "",
+    },
+  ],
 };
 
 export const AddCardForm = () => {
@@ -49,6 +60,14 @@ export const AddCardForm = () => {
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
   const onSubmit = (data: TypeAddCardSchema) => {
+    const vaccinationsArray = [
+      {
+        is_vaccinated: true,
+        vaccine_type: "string",
+        date: "string",
+        comment: "string",
+      },
+    ];
     console.log(data);
   };
 
@@ -133,7 +152,11 @@ export const AddCardForm = () => {
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
-            <MedicalInfoForm control={control} errors={errors} />
+            <MedicalInfoForm
+              control={control}
+              errors={errors}
+              defaultValues={defaultValues}
+            />
           </fieldset>
         </div>
         <button

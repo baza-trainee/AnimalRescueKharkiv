@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "../icon/ArrowLeftIcon";
 import { ArrowRightIcon } from "../icon/ArrowRightIcon";
 import { ArrowUpIcon } from "../icon/ArrowUpIcon";
 import { ArrowDownIcon } from "../icon/ArrowDownIcon";
-import { ErrorMessage } from "../../crm/AddCardForm/inputs/ErrorMessage";
+import { ErrorMessage } from "../../crm/AddCardCrm/inputs/ErrorMessage";
 import { format } from "date-fns";
 
 interface PropsCustomDataPicker {
@@ -34,7 +34,7 @@ const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
     return (
       <div className="relative">
         <span
-          className={`absolute top-[16px] right-[8px] z-[5] cursor-pointer ${
+          className={`absolute top-[14px] right-[8px] z-[5] cursor-pointer ${
             !!errorMessage ? "stroke-[#B00000]" : "stroke-[#B6BBEB]"
           }  transition duration-[350ms]`}
         >
@@ -48,7 +48,7 @@ const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
           type="button"
           onClick={onClick}
           ref={_ref}
-          className={`block w-full h-[45px] px-[8px] py-[12px] rounded-[10px] border-[1px] text-left transition duration-[350ms] outline-1 cursor-pointer ${
+          className={`flex justify-start items-center w-full h-[45px] px-[8px] py-[12px] rounded-[10px] border-[1px] text-left transition duration-[350ms] outline-1 cursor-pointer ${
             !!errorMessage
               ? "border-[#B00000] focus:outline-[#B00000]"
               : "border-[#B6BBEB] focus:outline-[#4855CC]"

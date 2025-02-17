@@ -1,13 +1,13 @@
 "use client";
 
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { TextInput } from "@/src/components/crm/AddCardForm/inputs/TextInput";
-import { TypeAddCardSchema } from "../AddCardCrm/addCardSchema";
+import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
+import { TypeAddCardSchema } from "./addCardSchema";
 import { useState } from "react";
 import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
-import { CommentInput } from "../AddCardForm/inputs/CommentInput";
+import { CommentInput } from "./inputs/CommentInput";
 
 const animalTypes = [
   "Кіт/кішка",
@@ -74,21 +74,19 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   return (
     <div className="flex flex-col gap-[16px]">
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <div className={errors?.arrivalDate && "pb-[26px]"}>
-          <Controller
-            name="arrivalDate"
-            control={control}
-            render={({ field }) => (
-              <CustomDatePicker
-                {...field}
-                label="Дата прибуття*"
-                selected={field.value}
-                onChange={(date) => field.onChange(date)}
-                errorMessage={errors?.arrivalDate?.message}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="arrivalDate"
+          control={control}
+          render={({ field }) => (
+            <CustomDatePicker
+              {...field}
+              label="Дата прибуття*"
+              selected={field.value}
+              onChange={(date) => field.onChange(date)}
+              errorMessage={errors?.arrivalDate?.message}
+            />
+          )}
+        />
         <div className={errors?.city && "pb-[26px]"}>
           <Controller
             name="city"
@@ -321,21 +319,19 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
         </div>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[16px]">
-        <div className={errors?.comment__text?.message && "pb-[26px]"}>
-          <Controller
-            name="comment__text"
-            control={control}
-            render={({ field }) => (
-              <CommentInput
-                {...field}
-                label="Загальний коментар"
-                placeholder="Додайте інформацію, яку вважаєте важливою"
-                errorMessage={errors?.comment__text?.message}
-                styles="h-[66px]"
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="comment__text"
+          control={control}
+          render={({ field }) => (
+            <CommentInput
+              {...field}
+              label="Загальний коментар"
+              placeholder="Додайте інформацію, яку вважаєте важливою"
+              errorMessage={errors?.comment__text?.message}
+              styles="h-[66px]"
+            />
+          )}
+        />
       </fieldset>
     </div>
   );

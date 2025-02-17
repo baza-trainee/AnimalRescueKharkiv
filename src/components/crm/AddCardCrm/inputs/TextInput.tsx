@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { ErrorMessage } from "../inputs/ErrorMessage";
+import { ErrorMessage } from "./ErrorMessage";
 
 interface PropsTextInput extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;

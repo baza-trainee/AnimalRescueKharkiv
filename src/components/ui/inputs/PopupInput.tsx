@@ -1,7 +1,7 @@
 import { ArrowUpIcon } from "../icon/ArrowUpIcon";
 import { ArrowDownIcon } from "../icon/ArrowDownIcon";
-import { TextInput } from "@/src/components/crm/AddCardForm/inputs/TextInput";
-import { PopUp } from "../../crm/PopUp/index";
+import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
+import { PopUp } from "../../crm/AddCardCrm/PopUp/index";
 
 interface PropsPopupInput {
   label: string;

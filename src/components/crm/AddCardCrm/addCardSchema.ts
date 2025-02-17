@@ -66,6 +66,19 @@ export const addCardSchema = Yup.object().shape({
   sterilization__done: Yup.boolean().notRequired(),
   sterilization__date: Yup.date().notRequired(),
   sterilization__comment: Yup.string().notRequired(),
+  microchipping__done: Yup.boolean().notRequired(),
+  microchipping__date: Yup.date().notRequired(),
+  microchipping__comment: Yup.string().notRequired(),
+  vaccinations: Yup.array()
+    .of(
+      Yup.object({
+        is_vaccinated: Yup.boolean().notRequired(),
+        vaccine_type: Yup.string().notRequired(),
+        date: Yup.string().notRequired(),
+        comment: Yup.string().notRequired(),
+      })
+    )
+    .notRequired(),
 });
 
 export type TypeAddCardSchema = Yup.InferType<typeof addCardSchema>;
