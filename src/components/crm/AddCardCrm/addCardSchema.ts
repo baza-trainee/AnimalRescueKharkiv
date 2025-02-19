@@ -79,6 +79,13 @@ export const addCardSchema = Yup.object().shape({
       })
     )
     .notRequired(),
+  diagnoses: Yup.array().of(
+    Yup.object({
+      name: Yup.string().notRequired(),
+      date: Yup.date().notRequired(),
+      comment: Yup.string().notRequired(),
+    })
+  ),
 });
 
 export type TypeAddCardSchema = Yup.InferType<typeof addCardSchema>;

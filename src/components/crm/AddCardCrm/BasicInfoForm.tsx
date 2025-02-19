@@ -1,6 +1,12 @@
 "use client";
 
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  FieldValues,
+  UseFormTrigger,
+} from "react-hook-form";
 import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { TypeAddCardSchema } from "./addCardSchema";
 import { useState } from "react";
@@ -37,6 +43,7 @@ interface PropsBasicInfoForm {
     date_from: Date | any;
     date_to: Date | any;
   }) => void;
+  trigger: UseFormTrigger<FieldValues>;
 }
 
 export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
@@ -87,114 +94,100 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
             />
           )}
         />
-        <div className={errors?.city && "pb-[26px]"}>
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                label="Звідки (місто)*"
-                placeholder="Введіть назву міста"
-                errorMessage={errors?.city?.message}
-                {...field}
-              />
-            )}
-          />
-        </div>
-        <div className={errors?.address && "pb-[26px]"}>
-          <Controller
-            name="address"
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                label="Адреса"
-                placeholder="Введіть назву вулиці та номер будинку"
-                errorMessage={errors?.address?.message}
-                {...field}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="city"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              label="Звідки (місто)*"
+              placeholder="Введіть назву міста"
+              errorMessage={errors?.city?.message}
+              {...field}
+            />
+          )}
+        />
+        <Controller
+          name="address"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              label="Адреса"
+              placeholder="Введіть назву вулиці та номер будинку"
+              errorMessage={errors?.address?.message}
+              {...field}
+            />
+          )}
+        />
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <div className={errors.animalType?.message && "pb-[26px]"}>
-          <Controller
-            name="animalType"
-            control={control}
-            render={({ field }) => (
-              <PopupInput
-                label="Тип тварини*"
-                placeholder="Оберіть тип тварини"
-                value={field.value}
-                onChange={field.onChange}
-                errorMessage={errors.animalType?.message}
-                values={animalTypes}
-                isOpen={openPopup === "animalType"}
-                onClose={() => handleTogglePopup("animalType")}
-              />
-            )}
-          />
-        </div>
-        <div className={errors.gender?.message && "pb-[26px]"}>
-          <Controller
-            name="gender"
-            control={control}
-            render={({ field }) => (
-              <PopupInput
-                label="Стать*"
-                placeholder="Оберіть стать тварини"
-                value={field.value}
-                onChange={field.onChange}
-                errorMessage={errors.gender?.message}
-                values={genders}
-                isOpen={openPopup === "gender"}
-                onClose={() => handleTogglePopup("gender")}
-              />
-            )}
-          />
-        </div>
-        <div className={errors?.weight && "pb-[26px]"}>
-          <Controller
-            name="weight"
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                label="Вага тварини"
-                placeholder="Введіть вагу"
-                errorMessage={errors?.weight?.message}
-                {...field}
-              />
-            )}
-          />
-        </div>
-        <div className={errors?.age && "pb-[26px]"}>
-          <Controller
-            name="age"
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                label="Вік тварини"
-                placeholder="Введіть вік"
-                errorMessage={errors?.age?.message}
-                {...field}
-              />
-            )}
-          />
-        </div>
-        <div className={errors?.address && "pb-[26px]"}>
-          <Controller
-            name="specialMarks"
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                label="Особливі прикмети"
-                placeholder="Напишіть особливі прикмети"
-                errorMessage={errors?.address?.message}
-                {...field}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="animalType"
+          control={control}
+          render={({ field }) => (
+            <PopupInput
+              label="Тип тварини*"
+              placeholder="Оберіть тип тварини"
+              value={field.value}
+              onChange={field.onChange}
+              errorMessage={errors.animalType?.message}
+              values={animalTypes}
+              isOpen={openPopup === "animalType"}
+              onClose={() => handleTogglePopup("animalType")}
+            />
+          )}
+        />
+        <Controller
+          name="gender"
+          control={control}
+          render={({ field }) => (
+            <PopupInput
+              label="Стать*"
+              placeholder="Оберіть стать тварини"
+              value={field.value}
+              onChange={field.onChange}
+              errorMessage={errors.gender?.message}
+              values={genders}
+              isOpen={openPopup === "gender"}
+              onClose={() => handleTogglePopup("gender")}
+            />
+          )}
+        />
+        <Controller
+          name="weight"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              label="Вага тварини"
+              placeholder="Введіть вагу"
+              errorMessage={errors?.weight?.message}
+              {...field}
+            />
+          )}
+        />
+        <Controller
+          name="age"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              label="Вік тварини"
+              placeholder="Введіть вік"
+              errorMessage={errors?.age?.message}
+              {...field}
+            />
+          )}
+        />
+        <Controller
+          name="specialMarks"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              label="Особливі прикмети"
+              placeholder="Напишіть особливі прикмети"
+              errorMessage={errors?.address?.message}
+              {...field}
+            />
+          )}
+        />
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
@@ -212,22 +205,20 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
             />
           )}
         />
-        <div className={errors?.currentDate && "pb-[26px]"}>
-          <Controller
-            name="currentDate"
-            control={control}
-            render={({ field }) => (
-              <CustomDatePicker
-                {...field}
-                label="З"
-                selected={field.value || null}
-                onChange={(date) => field.onChange(date)}
-                errorMessage={errors?.currentDate?.message}
-                labelStyles="font-normal text-[14px]"
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="currentDate"
+          control={control}
+          render={({ field }) => (
+            <CustomDatePicker
+              {...field}
+              label="З"
+              selected={field.value || null}
+              onChange={(date) => field.onChange(date)}
+              errorMessage={errors?.currentDate?.message}
+              labelStyles="font-normal text-[14px]"
+            />
+          )}
+        />
 
         <h3 className="text-[18px] text-[#212833] font-medium leading-[27px] mt-4">
           Історія переміщень
@@ -297,7 +288,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
         <button
           type="button"
           onClick={handleAddLocation}
-          className="flex justify-center items-center w-full py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
+          className="flex justify-center items-center w-full h-[56px] py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
         >
           Додати локацію
         </button>

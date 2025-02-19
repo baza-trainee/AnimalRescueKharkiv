@@ -1,13 +1,32 @@
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  FieldValues,
+  UseFormTrigger,
+} from "react-hook-form";
 import { TypeAddCardSchema } from "./addCardSchema";
 import { RadioInput } from "../../ui/inputs/RadioInput";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { CommentInput } from "./inputs/CommentInput";
 import { BooleanRadio } from "./BooleanRadio";
+import { TextInput } from "./inputs/TextInput";
 
 interface PropsMedicalInfoForm {
   control: Control<any>;
   errors: FieldErrors<TypeAddCardSchema>;
+  fields: {
+    id: string;
+    location: string;
+    date_from: Date | any;
+    date_to: Date | any;
+  }[];
+  append: (value: {
+    location: string;
+    date_from: Date | any;
+    date_to: Date | any;
+  }) => void;
+  trigger: UseFormTrigger<FieldValues>;
 }
 
 interface Vaccination {
@@ -21,7 +40,18 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   control,
   errors,
   defaultValues,
+  fields,
+  append,
+  trigger,
 }) => {
+  const handleAddDiagnosis = async () => {
+    const lastIndex = fields.length - 1;
+    const lastLocationField = `locations.${lastIndex}`;
+
+    const isValid = await trigger(lastLocationField);
+    if (isValid) append({ name: "", date: null, comment: "" });
+  };
+
   return (
     <div className="flex flex-col gap-[16px]">
       <fieldset className="flex flex-col gap-[16px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
@@ -119,7 +149,7 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         />
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Вакцинація
         </h3>
         {defaultValues.vaccinations.map((item: Vaccination, index: number) => {
@@ -179,6 +209,66 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
             </div>
           );
         })}
+      </fieldset>
+      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+          Хвороби і діагнози
+        </h3>
+        {fields.map((field, index) => {
+          const name = `diagnoses.${index}.name`;
+          const date = `diagnoses.${index}.date`;
+          const comment = `diagnoses.${index}.comment`;
+
+          return (
+            <div key={field.id} className="flex flex-col gap-[8px] h-[246px]">
+              <Controller
+                name={name}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <TextInput
+                    label={`Діагноз ${index + 1}`}
+                    placeholder="Впишіть діагноз"
+                    errorMessage={fieldState.error?.message}
+                    {...field}
+                  />
+                )}
+              />
+              <Controller
+                name={date}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <CustomDatePicker
+                    {...field}
+                    label="Дата постановки"
+                    selected={field.value}
+                    onChange={(date) => field.onChange(date)}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
+              />
+              <Controller
+                name={comment}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <CommentInput
+                    {...field}
+                    label="Рекомендації/коментар"
+                    placeholder="Залиште рекомендації"
+                    errorMessage={fieldState.error?.message}
+                    styles="h-[46px]"
+                  />
+                )}
+              />
+            </div>
+          );
+        })}
+        <button
+          type="button"
+          onClick={handleAddDiagnosis}
+          className="flex justify-center items-center w-full h-[56px] py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
+        >
+          Додати діагноз
+        </button>
       </fieldset>
     </div>
   );

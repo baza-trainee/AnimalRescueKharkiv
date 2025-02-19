@@ -41,6 +41,13 @@ const defaultValues = {
       comment: "",
     },
   ],
+  diagnoses: [
+    {
+      name: "",
+      date: null,
+      comment: "",
+    },
+  ],
 };
 
 export const AddCardForm = () => {
@@ -55,21 +62,38 @@ export const AddCardForm = () => {
     mode: "onSubmit",
     resolver: yupResolver(addCardSchema),
   });
-  const { fields, append } = useFieldArray({ control, name: "locations" });
 
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
+  const { fields: locationsFields, append: appendLocation } = useFieldArray({
+    control,
+    name: "locations",
+  });
+  const { fields: diagnosesFields, append: appendDiagnosis } = useFieldArray({
+    control,
+    name: "diagnoses",
+  });
+
   const onSubmit = (data: TypeAddCardSchema) => {
-    const vaccinationsArray = [
-      {
-        is_vaccinated: true,
-        vaccine_type: "string",
-        date: "string",
-        comment: "string",
-      },
-    ];
     console.log(data);
   };
+
+  const basicInfoErrorStyle =
+    errors.name ||
+    errors.files ||
+    errors.city ||
+    errors.address ||
+    errors.animalType ||
+    errors.gender ||
+    errors.weight ||
+    errors.age ||
+    errors.specialMarks ||
+    errors.arrivalDate ||
+    errors.currentLocation ||
+    errors.currentDate ||
+    errors.locations ||
+    errors.owner__info ||
+    errors.comment__text;
 
   return (
     <>
@@ -121,11 +145,13 @@ export const AddCardForm = () => {
           <button
             type="button"
             onClick={() => setActiveTab("basic")}
-            className={`${
-              activeTab === "basic"
-                ? "bg-[#4855CC] text-[#EDEEFA]"
-                : "bg-transparent text-[#4855CC]"
-            } px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
+            className={`px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px] ${
+              basicInfoErrorStyle
+                ? "bg-[#B00000] text-[#EDEEFA] border-[#B00000]"
+                : activeTab === "basic"
+                ? "bg-[#4855CC] text-[#EDEEFA] border-[#4855CC]"
+                : "bg-transparent text-[#4855CC] border-[#4855CC]"
+            }`}
           >
             Основна інформація
           </button>
@@ -146,8 +172,8 @@ export const AddCardForm = () => {
             <BasicInfoForm
               control={control}
               errors={errors}
-              fields={fields}
-              append={append}
+              fields={locationsFields}
+              append={appendLocation}
               trigger={trigger}
             />
           </fieldset>
@@ -156,6 +182,9 @@ export const AddCardForm = () => {
               control={control}
               errors={errors}
               defaultValues={defaultValues}
+              fields={diagnosesFields}
+              append={appendDiagnosis}
+              trigger={trigger}
             />
           </fieldset>
         </div>
