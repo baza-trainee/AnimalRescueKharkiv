@@ -24,7 +24,8 @@
     "rgba(232, 168, 56, 1)",
     "rgba(151, 227, 213, 1)",
     "rgba(244, 117, 96, 1)",
-  ];
+];
+  
 
   const CountryStatistic = () => {
     const { data: apiData, isLoading, isError } = useQuery<ApiResponse>({
@@ -62,7 +63,7 @@
               plugins: {
                 legend: {
                   position: "right" as const, 
-                  maxWidth: 100,
+                  maxWidth: 120,
               
                   align: "center",
                   labels: {
