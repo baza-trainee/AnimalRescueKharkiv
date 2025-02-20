@@ -27,6 +27,8 @@ const backgroundColors = [
   "rgba(244, 117, 96, 1)",
 ];
 
+
+
 const DepartmentStatistic = () => {
   const { data: apiData, isLoading, isError } = useQuery<ApiResponse>({
     queryKey: ["departmentChartData"],
@@ -64,13 +66,15 @@ const DepartmentStatistic = () => {
               legend: {
                 position: "right",
                 align: "center",
-                maxWidth: 100,
+                maxWidth: 120,
                 labels: {
                   usePointStyle: true,
                   pointStyle: "circle",
                   boxWidth: 20,
                   font: { weight: 400, size: 10 },
                   padding: 6,
+                  
+                
                 },
               },
               datalabels: {
