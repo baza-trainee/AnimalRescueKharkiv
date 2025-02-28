@@ -1,4 +1,4 @@
-  "use client";
+   "use client";
   import { useQuery } from "@tanstack/react-query";
   import { fetch } from "../../../utils/api";
   import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js/auto";

@@ -1,11 +1,13 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchInputIcon from "../CatalogCrm/CatalogCrmIcons/SearchInputIcon";
 import FilterIcon from "../CatalogCrm/CatalogCrmIcons/FilterIcon";
 import SetIcon from "../CatalogCrm/CatalogCrmIcons/Set";
 import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
 import { ICONS } from "../../../constants/icons/icons";
+import { features } from "process";
+import { fetch, remove } from "../../../utils/api";
 
 const roles = [
   "Волонтер",
@@ -19,40 +21,48 @@ interface User {
   name: string;
   email: string;
   role: string;
-  createdAt: Date;
+  photo: string;
 }
 
-const initialUsers: User[] = [
-  {
-    name: "Анна",
-    email: "Ann1987@example.com",
-    role: "Лікар",
-    createdAt: new Date("2024-02-10"),
-  },
-  {
-    name: "Іван",
-    email: "Ivan123@example.com",
-    role: "Водій",
-    createdAt: new Date("2024-02-15"),
-  },
-  {
-    name: "Марія",
-    email: "Maria89@example.com",
-    role: "Фотограф",
-    createdAt: new Date("2024-02-12"),
-  },
-];
-
-const ProfileSettings: React.FC = () => {
-  const [users, setUsers] = useState<User[]>(initialUsers);
+const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
+  const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterPopupVisible, setFilterPopupVisible] = useState(false);
   const [sortingPopupVisible, setSortingPopupVisible] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchUsers = async (domain: string) => {
+      try {
+        const usersPath = process.env.NEXT_PUBLIC_API_USERS_PATH?.replace(
+          "{domain}",
+          domain
+        );
+        if (usersPath === undefined) {
+          throw new Error(
+            "Missing NEXT_PUBLIC_API_USERS_PATH environment variable"
+          );
+        }
+        const data: User[] = await fetch(usersPath);
+        const transformedUsers: User[] = data.map((user: any) => ({
+          name: `${user.first_name} ${user.last_name}`,
+          email: user.email,
+          role: user.role?.title || "Не вказано",
+          photo: user.photo?.uri || "",
+        }));
+        setUsers(transformedUsers);
+      } catch (error) {
+        console.error("Не вдалося завантажити користувачів:", error);
+      }
+    };
+    fetchUsers(domain);
+  }, []);
   const [sorting, setSorting] = useState<{
     date?: "new" | "old";
     alphabet?: "az" | "za";
   }>({});
+
+  const [isOpen, setIsOpen] = useState<string | null>(null);
+  const [selectedRol, setSelectedRol] = useState("Ролі");
 
   const [confirmDelete, setConfirmDelete] = useState<{
     show: boolean;
@@ -68,55 +78,52 @@ const ProfileSettings: React.FC = () => {
     setSortingPopupVisible(false);
   };
 
-  let filteredUsers = selectedRole
-    ? users.filter((user) => user.role === selectedRole)
-    : users;
-
-  filteredUsers = filteredUsers.filter(
-    (user: User) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  if (sorting.date) {
-    filteredUsers = filteredUsers.sort((a, b) =>
-      sorting.date === "new"
-        ? b.createdAt.getTime() - a.createdAt.getTime()
-        : a.createdAt.getTime() - b.createdAt.getTime()
-    );
-  }
-
-  if (sorting.alphabet) {
-    filteredUsers = filteredUsers.sort((a, b) =>
-      sorting.alphabet === "az"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name)
-    );
-  }
-
   const deleteUser = async (email: string) => {
     try {
-      const response = await fetch(
-        "https://animalrescuekharkiv-backend.onrender.com/users/",
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "*/*",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify([{ email, domain: "string" }]),
-        }
-      );
+      await remove("/users/", [{ email, domain: "crm" }]);
 
-      if (!response.ok) {
-        throw new Error("Помилка при видаленні користувача");
-      }
-
-      setUsers(users.filter((user) => user.email !== confirmDelete.email));
+      setUsers((prevUsers) => prevUsers.filter((user) => user.email !== email));
       setConfirmDelete({ show: false, email: null });
     } catch (error) {
       console.error("Не вдалося видалити користувача:", error);
     }
+  };
+
+  const useFetchRoles = (domain: string) => {
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+      const fetchUsers = async () => {
+        try {
+          const usersPath = process.env.NEXT_PUBLIC_API_USERS_PATH?.replace(
+            "{domain}",
+            domain
+          );
+          if (!usersPath) throw new Error("API path is not defined");
+
+          const data: User[] = await fetch(usersPath);
+          const transformedUsers: User[] = data.map((user: any) => ({
+            name: `${user.first_name} ${user.last_name}`,
+            email: user.email,
+            role: user.role?.title || "Не вказано",
+            photo: user.photo?.uri || "",
+          }));
+
+          setUsers(transformedUsers);
+        } catch (error) {
+          setError("Не вдалося завантажити користувачів");
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchUsers();
+    }, [domain]);
+
+    return { users, loading, error };
   };
 
   return (
@@ -238,27 +245,68 @@ const ProfileSettings: React.FC = () => {
         )}
       </div>
       <div className="flex flex-col gap-4 mb-4">
-        {filteredUsers.length > 0 ? (
-          filteredUsers.map((user) => (
-            <div key={user.email} className="shadow-md p-4 rounded-lg bg-white">
-              <div className="flex flex-col items-center">
-                <ICONS.PROFILE_LOGO />
-                <p>{user.name}</p>
-                <p>{user.email}</p>
-                <p className="hidden">{user.role}</p>
-              </div>
-              <button
-                onClick={() =>
-                  setConfirmDelete({ show: true, email: user.email })
-                }
-                className="w-full mt-4 border bg-mainBlue text-white py-2 rounded-md hover:bg-blue-800 transition">
-                Видалити користувача
-              </button>
+        {users.map((user) => (
+          <div key={user.email} className="shadow-md p-4 rounded-lg bg-white">
+            <div className="flex flex-col items-center text-mainBlue">
+              <ICONS.PROFILE_LOGO />
+              <p>{user.name}</p>
+              <p>{user.email}</p>
+              <p className="hidden">{user.role}</p>
             </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-500">Немає користувачів</p>
-        )}
+
+            <label htmlFor="role-select" className="text-[18px] font-medium">
+              Оберіть роль користувача
+            </label>
+            <div className="relative w-full">
+              {/* Поле для вибору */}
+              <div
+                onClick={() =>
+                  setIsOpen(isOpen === user.email ? null : user.email)
+                }
+                className="w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] text-crm-secondary-blue">
+                <span>{user.role}</span>
+                {ICONS.ARROW_IN_CIRCLE && (
+                  <ICONS.ARROW_IN_CIRCLE className="absolute right-[8px] transform text-gray-500 cursor-pointer" />
+                )}
+              </div>
+              {/* Попап зі списком ролей */}
+              {isOpen === user.email && (
+                <div className="fixed inset-0 flex flex-col content-center justify-center z-10 -top-10 py-[16px] gap-[8px] overflow-auto h-full">
+                  <div className="bg-white py-3 px-6 w-[358px] rounded-[10px] mx-auto">
+                    <div className="w-full flex justify-end">
+                      <button onClick={() => setIsOpen(null)}>
+                        <CloseBtb />
+                      </button>
+                    </div>
+                    {roles.map((role) => (
+                      <div
+                        key={`${user.email}-${role}`}
+                        onClick={() => {
+                          setUsers((prevUsers) =>
+                            prevUsers.map((u) =>
+                              u.email === user.email ? { ...u, role } : u
+                            )
+                          );
+                          setIsOpen(null);
+                        }}
+                        className="pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue">
+                        {role}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={() =>
+                setConfirmDelete({ show: true, email: user.email })
+              }
+              className="w-full mt-4 border bg-mainBlue text-white py-2 rounded-md hover:bg-blue-800 transition">
+              Видалити користувача
+            </button>
+          </div>
+        ))}
       </div>
       {confirmDelete.show && (
         <div className="fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50">

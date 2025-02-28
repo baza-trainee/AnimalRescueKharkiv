@@ -8,6 +8,7 @@ import FilterIcon from "../CatalogCrm/CatalogCrmIcons/FilterIcon";
 import SetIcon from "../CatalogCrm/CatalogCrmIcons/Set";
 import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
 import UserSearchAndFilter from "./UserSearchAndFilter";
+import SettingsRole from "./SettingsRole";
 
 const ProfileSettings: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -58,10 +59,12 @@ const ProfileSettings: React.FC = () => {
         <EmailForm onSubmit={handleSubmit} />
       </AccordionItem>
       <AccordionItem title="Користувачі та доступи">
-        <UserSearchAndFilter />
+        <UserSearchAndFilter domain="crm"/>
       </AccordionItem>
-      <AccordionItem title="Налаштування ролей" />
-      <AccordionItem title="Зміна паролю" />
+      <AccordionItem title="Налаштування ролей">
+        <SettingsRole />
+      </AccordionItem>
+      <AccordionItem title="Зміна паролю">P0</AccordionItem>
       <Link href="../../crm">
         <button className="w-full mt-4 border border-blue-600 text-blue-600 py-2 rounded-md hover:bg-blue-100 transition">
           Вийти
