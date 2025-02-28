@@ -11,6 +11,7 @@ import setIcon from '../../../public/assets/icons/catalogCrm/set.svg'
 import closeBtn from '../../../public/assets/icons/catalogCrm/closebtn.svg'
 import downArrow from '../../../public/assets/icons/catalogCrm/down-arrow.svg'
 import arrowInCircle from '../../../public/assets/icons/catalogCrm/arrow_in_circle.svg'
+import arrowInColor from '../../../public/assets/icons/catalogCrm/arrow_in_circle_color.svg'
 
 
 
@@ -27,6 +28,7 @@ export const ICONS = {
     SET_ICON: setIcon,
     CLOSE_BTN: closeBtn,
     DOWN_ARROW: downArrow,
-    ARROW_IN_CIRCLE:arrowInCircle
+    ARROW_IN_CIRCLE:arrowInCircle,
+    ARROW_IN_COLOR:arrowInColor
     
 };
