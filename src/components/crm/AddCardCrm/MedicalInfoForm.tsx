@@ -2,31 +2,22 @@ import {
   Control,
   Controller,
   FieldErrors,
-  FieldValues,
+  useFieldArray,
   UseFormTrigger,
+  useWatch,
 } from "react-hook-form";
-import { TypeAddCardSchema } from "./addCardSchema";
-import { RadioInput } from "../../ui/inputs/RadioInput";
+import { TypeAddCardSchema } from "./schemas/addCardSchema";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { CommentInput } from "./inputs/CommentInput";
 import { BooleanRadio } from "./BooleanRadio";
 import { TextInput } from "./inputs/TextInput";
+import { AddCardFormValues } from "./AddCardForm";
 
 interface PropsMedicalInfoForm {
   control: Control<any>;
   errors: FieldErrors<TypeAddCardSchema>;
-  fields: {
-    id: string;
-    location: string;
-    date_from: Date | any;
-    date_to: Date | any;
-  }[];
-  append: (value: {
-    location: string;
-    date_from: Date | any;
-    date_to: Date | any;
-  }) => void;
-  trigger: UseFormTrigger<FieldValues>;
+  defaultValues: AddCardFormValues;
+  trigger: UseFormTrigger<AddCardFormValues>;
 }
 
 interface Vaccination {
@@ -40,16 +31,21 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   control,
   errors,
   defaultValues,
-  fields,
-  append,
   trigger,
 }) => {
-  const handleAddDiagnosis = async () => {
-    const lastIndex = fields.length - 1;
-    const lastLocationField = `locations.${lastIndex}`;
+  const { fields: diagnosesFields, append: appendDiagnosis } = useFieldArray({
+    control,
+    name: "diagnoses",
+  });
 
-    const isValid = await trigger(lastLocationField);
-    if (isValid) append({ name: "", date: null, comment: "" });
+  const diagnoses = useWatch({ control, name: "diagnoses" });
+
+  const handleAddDiagnosis = async () => {
+    const lastIndex = diagnosesFields.length - 1;
+    const lastDiagnosisField = `diagnoses.${lastIndex}`;
+
+    // const isValid = await trigger(lastDiagnosisField);
+    // if (isValid) appendDiagnosis({ name: "", date: null, comment: "" });
   };
 
   return (
@@ -152,69 +148,71 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Вакцинація
         </h3>
-        {defaultValues.vaccinations.map((item: Vaccination, index: number) => {
-          return (
-            <div key={index} className="flex flex-col gap-[8px]">
-              <Controller
-                name={`vaccinations[${index}].is_vaccinated`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <BooleanRadio
-                    {...field}
-                    name={`vaccinations[${index}].is_vaccinated`}
-                    errorMessage={fieldState.error?.message}
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-              <Controller
-                name={`vaccinations[${index}].vaccine_type`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <CommentInput
-                    {...field}
-                    label="Тип вакцини/препарат"
-                    placeholder="Від чого провакциновано та яким препаратом"
-                    errorMessage={fieldState.error?.message}
-                    styles="h-[66px]"
-                  />
-                )}
-              />
-              <Controller
-                name={`vaccinations[${index}].date`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <CustomDatePicker
-                    {...field}
-                    label="Дата проведення"
-                    selected={field.value}
-                    onChange={(date) => field.onChange(date)}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
-              <Controller
-                name={`vaccinations[${index}].comment`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <CommentInput
-                    {...field}
-                    label="Рекомендації/коментар"
-                    placeholder="Залиште рекомендації"
-                    errorMessage={fieldState.error?.message}
-                    styles="h-[46px]"
-                  />
-                )}
-              />
-            </div>
-          );
-        })}
+        {(defaultValues.vaccinations ?? []).map(
+          (item: Vaccination, index: number) => {
+            return (
+              <div key={index} className="flex flex-col gap-[8px]">
+                <Controller
+                  name={`vaccinations[${index}].is_vaccinated`}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <BooleanRadio
+                      {...field}
+                      name={`vaccinations[${index}].is_vaccinated`}
+                      errorMessage={fieldState.error?.message}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+                <Controller
+                  name={`vaccinations[${index}].vaccine_type`}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <CommentInput
+                      {...field}
+                      label="Тип вакцини/препарат"
+                      placeholder="Від чого провакциновано та яким препаратом"
+                      errorMessage={fieldState.error?.message}
+                      styles="h-[66px]"
+                    />
+                  )}
+                />
+                <Controller
+                  name={`vaccinations[${index}].date`}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <CustomDatePicker
+                      {...field}
+                      label="Дата проведення"
+                      selected={field.value}
+                      onChange={(date) => field.onChange(date)}
+                      errorMessage={fieldState.error?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name={`vaccinations[${index}].comment`}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <CommentInput
+                      {...field}
+                      label="Рекомендації/коментар"
+                      placeholder="Залиште рекомендації"
+                      errorMessage={fieldState.error?.message}
+                      styles="h-[46px]"
+                    />
+                  )}
+                />
+              </div>
+            );
+          }
+        )}
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Хвороби і діагнози
         </h3>
-        {fields.map((field, index) => {
+        {diagnosesFields.map((field, index) => {
           const name = `diagnoses.${index}.name`;
           const date = `diagnoses.${index}.date`;
           const comment = `diagnoses.${index}.comment`;

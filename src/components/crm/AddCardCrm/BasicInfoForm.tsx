@@ -4,16 +4,18 @@ import {
   Control,
   Controller,
   FieldErrors,
-  FieldValues,
+  useFieldArray,
   UseFormTrigger,
+  useWatch,
 } from "react-hook-form";
 import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
-import { TypeAddCardSchema } from "./addCardSchema";
+import { TypeAddCardSchema } from "./schemas/addCardSchema";
 import { useState } from "react";
 import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
 import { CommentInput } from "./inputs/CommentInput";
+import { AddCardFormValues } from "./AddCardForm";
 
 const animalTypes = [
   "Кіт/кішка",
@@ -32,25 +34,12 @@ const genders = ["Самець", "Самка"];
 interface PropsBasicInfoForm {
   control: Control<any>;
   errors: FieldErrors<TypeAddCardSchema>;
-  fields: {
-    id: string;
-    location: string;
-    date_from: Date | any;
-    date_to: Date | any;
-  }[];
-  append: (value: {
-    location: string;
-    date_from: Date | any;
-    date_to: Date | any;
-  }) => void;
-  trigger: UseFormTrigger<FieldValues>;
+  trigger: UseFormTrigger<AddCardFormValues>;
 }
 
 export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   control,
   errors,
-  fields,
-  append,
   trigger,
 }) => {
   const [openPopup, setOpenPopup] = useState<string | null>(null);
@@ -70,12 +59,27 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
     setActiveLocationPicker(null);
   };
 
-  const handleAddLocation = async () => {
-    const lastIndex = fields.length - 1;
-    const lastLocationField = `locations.${lastIndex}`;
+  const { fields: locationsFields, append: appendLocation } = useFieldArray({
+    control,
+    name: "locations",
+  });
 
-    const isValid = await trigger(lastLocationField);
-    if (isValid) append({ location: "", date_from: null, date_to: null });
+  const locations = useWatch({ control, name: "locations" });
+
+  const handleAddLocation = () => {
+    const lastField = locations[locations.length - 1];
+    const hasDate = lastField.date_from && lastField.date_to;
+    const isValidDate = lastField.date_to > lastField.date_from;
+
+    if (
+      !lastField.location ||
+      !lastField.date_from ||
+      (lastField.date_to && !lastField.date_from) ||
+      (hasDate && !isValidDate)
+    )
+      return;
+
+    appendLocation({ location: "", date_from: null, date_to: null });
   };
 
   return (
@@ -224,7 +228,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           Історія переміщень
         </h3>
 
-        {fields.map((field, index) => {
+        {locationsFields?.map((field, index) => {
           const location = `locations.${index}.location`;
           const date_from = `locations.${index}.date_from`;
           const date_to = `locations.${index}.date_to`;
@@ -238,7 +242,12 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                   <LocationPicker
                     label={`Локація ${index + 1}`}
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger(`locations.${index}.location`);
+                      trigger(`locations.${index}.date_from`);
+                      trigger(`locations.${index}.date_to`);
+                    }}
                     errorMessage={fieldState.error?.message}
                     isOpen={activeLocationPicker === location}
                     onOpen={() => handleOpenLocationPicker(location)}
@@ -257,7 +266,12 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                         {...field}
                         label="З"
                         selected={field.value || null}
-                        onChange={(date) => field.onChange(date)}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          trigger(`locations.${index}.location`);
+                          trigger(`locations.${index}.date_from`);
+                          trigger(`locations.${index}.date_to`);
+                        }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
                       />
@@ -273,7 +287,12 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                         {...field}
                         label="По"
                         selected={field.value || null}
-                        onChange={(date) => field.onChange(date)}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          trigger(`locations.${index}.location`);
+                          trigger(`locations.${index}.date_from`);
+                          trigger(`locations.${index}.date_to`);
+                        }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
                       />

@@ -90,6 +90,7 @@ export const CustomDatePicker = forwardRef<
     _ref
   ) => {
     const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
+    const [startDate, setStartDate] = useState(selected || new Date());
 
     const handleCalendarOpen = () => {
       setIsCalendarOpen(true);

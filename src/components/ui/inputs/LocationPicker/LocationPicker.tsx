@@ -24,7 +24,7 @@ export const LocationPicker: React.FC<PropsLocationPicker> = ({
   onClose,
 }) => {
   return (
-    <div className={`${errorMessage && "pb-[26px]"} relative`}>
+    <div className="relative">
       <div>
         <span
           className={`absolute top-[46px] right-[8px] z-[5] cursor-pointer ${

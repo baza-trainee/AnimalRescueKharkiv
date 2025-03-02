@@ -3,7 +3,7 @@
 import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { addCardSchema, TypeAddCardSchema } from "./addCardSchema";
+import { addCardSchema, TypeAddCardSchema } from "./schemas/addCardSchema";
 import { FileInput } from "@/src/components/ui/inputs/FileInput";
 import { BasicInfoForm } from "./BasicInfoForm";
 import { useToggle } from "../../register/popUp/useToggle";
@@ -11,7 +11,7 @@ import { RequiredValues } from "./PopUp/RequiredValues";
 import { useState } from "react";
 import { MedicalInfoForm } from "./MedicalInfoForm";
 
-const defaultValues = {
+export const defaultValues: TypeAddCardSchema = {
   name: "",
   files: null,
   city: "",
@@ -21,7 +21,7 @@ const defaultValues = {
   weight: "",
   age: "",
   specialMarks: "",
-  arrivalDate: null,
+  arrivalDate: "",
   currentLocation: "",
   currentDate: null,
   locations: [{ location: "", date_from: null, date_to: null }],
@@ -48,7 +48,9 @@ const defaultValues = {
       comment: "",
     },
   ],
-};
+} as const;
+
+export type AddCardFormValues = typeof defaultValues;
 
 export const AddCardForm = () => {
   const { isOpen, toggleModal } = useToggle();
@@ -57,7 +59,7 @@ export const AddCardForm = () => {
     handleSubmit,
     trigger,
     formState: { errors, isValid, isSubmitted },
-  } = useForm({
+  } = useForm<TypeAddCardSchema>({
     defaultValues,
     mode: "onSubmit",
     resolver: yupResolver(addCardSchema),
@@ -65,16 +67,15 @@ export const AddCardForm = () => {
 
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
-  const { fields: locationsFields, append: appendLocation } = useFieldArray({
-    control,
-    name: "locations",
-  });
-  const { fields: diagnosesFields, append: appendDiagnosis } = useFieldArray({
-    control,
-    name: "diagnoses",
-  });
-
   const onSubmit = (data: TypeAddCardSchema) => {
+    // const filteredLocations = locations.filter(
+    //   (location) => location.location || location.date_from || location.date_to
+    // );
+
+    // if (filteredLocations.length === 0) {
+    //   setValue("locations", null); // Оновлення значення на null
+    // }
+
     console.log(data);
   };
 
@@ -172,8 +173,6 @@ export const AddCardForm = () => {
             <BasicInfoForm
               control={control}
               errors={errors}
-              fields={locationsFields}
-              append={appendLocation}
               trigger={trigger}
             />
           </fieldset>
@@ -182,8 +181,6 @@ export const AddCardForm = () => {
               control={control}
               errors={errors}
               defaultValues={defaultValues}
-              fields={diagnosesFields}
-              append={appendDiagnosis}
               trigger={trigger}
             />
           </fieldset>

@@ -48,17 +48,37 @@ export const addCardSchema = Yup.object().shape({
   weight: Yup.string().max(50, "Не більше 50 символів").notRequired(),
   age: Yup.string().max(50, "Не більше 50 символів").notRequired(),
   specialMarks: Yup.string().max(200, "Не більше 200 символів").notRequired(),
-  arrivalDate: Yup.date().nullable().required("Дата прибуття обов’язкова"),
+  arrivalDate: Yup.string().required("Дата прибуття обов’язкова"),
   currentLocation: Yup.string().required("Оберіть або введіть поточну локацію"),
   currentDate: Yup.date().nullable().notRequired(),
   locations: Yup.array().of(
-    Yup.object({
-      location: Yup.string().notRequired(),
-      date_from: Yup.date().notRequired(),
+    Yup.object().shape({
+      location: Yup.string().when(["date_from", "date_to"], {
+        is: (date_from: Date | null, date_to: Date | null) =>
+          !!date_from || !!date_to,
+        then: (schema) => schema.required("Оберіть локацію"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+      date_from: Yup.date()
+        .nullable()
+        .test("required-date-from", "Оберіть дату 'З'", function (value) {
+          const { location } = this.parent;
+          if (location && !value) {
+            return this.createError({ message: "Оберіть дату 'З'" });
+          }
+          return true;
+        }),
       date_to: Yup.date()
         .nullable()
-        .min(Yup.ref("date_from"), 'Не раніше дати "З"')
-        .notRequired(),
+        .test("date-to-after-from", 'Не раніше дати "З"', function (value) {
+          const { date_from } = this.parent;
+
+          if (!date_from || !value) {
+            return true;
+          }
+
+          return value >= date_from;
+        }),
     })
   ),
   owner__info: Yup.string().notRequired(),
@@ -78,7 +98,8 @@ export const addCardSchema = Yup.object().shape({
         comment: Yup.string().notRequired(),
       })
     )
-    .notRequired(),
+    .notRequired()
+    .default([]),
   diagnoses: Yup.array().of(
     Yup.object({
       name: Yup.string().notRequired(),
