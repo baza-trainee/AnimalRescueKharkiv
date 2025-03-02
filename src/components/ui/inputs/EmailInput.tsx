@@ -18,11 +18,11 @@ export const EmailInput: FC<PropsEmailInput> = forwardRef(
           type="email"
           id={name}
           ref={_ref}
-          className={`w-full px-3 py-2 mb-2 rounded border ${
+          className={`w-full px-3 py-2 mb-4 rounded-xl bg-transparent  placeholder-crm-secondary-blue border ${
             errorMessage
               ? "border-red-600 placeholder:text-red-600 outline-red-600"
-              : "border-gray-300 outline-blue-500"
-          } transition duration-300 text-[16px]`}
+              : "border-gray-300 outline-crm-secondary-blue"
+          } transition duration-300 text-[14px]`}
         />
         {/* {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} */}
       </div>

@@ -15,16 +15,16 @@ export default function CRMPage() {
       {" "}
       <Header title="Статистика" />
       <main className="w-full flex flex-col justify-items-center">
-        <section className="mx-auto">
+        <section className="w-[390px] mx-auto">
           {/* <HeaderCrm /> */}
           {/* <MenuDesktop /> */}
           <DepartmentStatistic />
-          <DateRangePicker/>
+          <DateRangePicker />
           <CountryStatistic />
-          <LatesrAdd/>
+          <LatesrAdd />
         </section>
-        <FooterCrm />
       </main>
+      <FooterCrm />
     </>
   );
 }

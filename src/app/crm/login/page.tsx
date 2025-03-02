@@ -1,9 +1,10 @@
-export default function Login() {
+import Login from "../../../components/crm/Login";
+
+export default function LoginPage() {
+  const domain = "crm";
   return (
-      <div className="flex flex-col justify-items-center">
-      <h1 className="mx-auto text-center mt-20 mb-36 font-bold text-2xl text-black" > Сторінка Login</h1>
-     <a href="../crm/statistic" className="mx-auto w-50 h-12 p-1 rounded-md bg-slate-500 text-center mt-20 mb-36 font-bold text-2xl text-black"> Сторінка статистики</a>
-      </div>
-    
-  )
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <Login domain={domain} />
+    </div>
+  );
 }
