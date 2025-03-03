@@ -9,13 +9,10 @@ import { ICONS } from "../../../constants/icons/icons";
 import { features } from "process";
 import { fetch, remove } from "../../../utils/api";
 
-const roles = [
-  "Волонтер",
-  "Водій",
-  "Адміністратор клініки",
-  "Лікар",
-  "Фотограф",
-];
+interface Role {
+  id: string;
+  title: string;
+}
 
 interface User {
   name: string;
@@ -26,6 +23,7 @@ interface User {
 
 const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
   const [users, setUsers] = useState<User[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterPopupVisible, setFilterPopupVisible] = useState(false);
   const [sortingPopupVisible, setSortingPopupVisible] = useState(false);
@@ -54,6 +52,18 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
         console.error("Не вдалося завантажити користувачів:", error);
       }
     };
+
+    const fetchRoles = async () => {
+      try {
+        const rolesPath = `/roles/${domain}`;
+        const data: Role[] = await fetch(rolesPath);
+        setRoles(data);
+      } catch (error) {
+        console.error("Не вдалося завантажити ролі:", error);
+      }
+    };
+
+    fetchRoles();
     fetchUsers(domain);
   }, []);
   const [sorting, setSorting] = useState<{
@@ -110,7 +120,6 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
             role: user.role?.title || "Не вказано",
             photo: user.photo?.uri || "",
           }));
-
           setUsers(transformedUsers);
         } catch (error) {
           setError("Не вдалося завантажити користувачів");
@@ -119,9 +128,8 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
           setLoading(false);
         }
       };
-
       fetchUsers();
-    }, [domain]);
+    }, [searchQuery, selectedRole, sorting, domain]);
 
     return { users, loading, error };
   };
@@ -135,7 +143,7 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
           placeholder="Введіть ім’я користувача або роль"
           className="w-full focus:outline-none text-sm placeholder-crm-secondary-blue bg-transparent"
           value={searchQuery}
-          onChange={handleSearch} // Додаємо обробник події
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
       <div className="w-full h-[44px] flex justify-between p-[4px] mb-[16px]">
@@ -152,15 +160,15 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
             <div className="w-full flex flex-col items-start">
               {roles.map((role) => (
                 <div
-                  key={role}
+                  key={role.id}
                   onClick={() => {
-                    setSelectedRole(role === selectedRole ? null : role);
+                    setSelectedRole(role.title === selectedRole ? null : role.title);
                     setFilterPopupVisible(false);
                   }}
                   className={`pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue w-full ${
-                    selectedRole === role ? "bg-gray-200" : ""
+                    selectedRole === role.title ? "bg-gray-200" : ""
                   }`}>
-                  {role}
+                  {role.title}
                 </div>
               ))}
             </div>
@@ -284,13 +292,13 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                         onClick={() => {
                           setUsers((prevUsers) =>
                             prevUsers.map((u) =>
-                              u.email === user.email ? { ...u, role } : u
+                              u.email === user.email ? { ...u, role: role.title } : u
                             )
                           );
                           setIsOpen(null);
                         }}
                         className="pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue">
-                        {role}
+                        {role.title}
                       </div>
                     ))}
                   </div>
