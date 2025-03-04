@@ -47,7 +47,10 @@ export const LocationPicker: React.FC<PropsLocationPicker> = ({
         />
       </div>
       {isOpen && (
-        <PopUp onClose={onClose} gap="8px">
+        <PopUp
+          onClose={onClose}
+          gap="8px"
+        >
           <CurrentLocation onChange={onChange} onClose={onClose} />
         </PopUp>
       )}

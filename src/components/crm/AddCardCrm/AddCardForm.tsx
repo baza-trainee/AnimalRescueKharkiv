@@ -10,6 +10,8 @@ import { useToggle } from "../../register/popUp/useToggle";
 import { RequiredValues } from "./PopUp/RequiredValues";
 import { useState } from "react";
 import { MedicalInfoForm } from "./MedicalInfoForm";
+import { useQuery } from "@tanstack/react-query";
+import { fetch } from "@/src/utils/api";
 
 export const defaultValues: TypeAddCardSchema = {
   name: "",
@@ -54,6 +56,8 @@ export type AddCardFormValues = typeof defaultValues;
 
 export const AddCardForm = () => {
   const { isOpen, toggleModal } = useToggle();
+  const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
+
   const {
     control,
     handleSubmit,
@@ -64,8 +68,6 @@ export const AddCardForm = () => {
     mode: "onSubmit",
     resolver: yupResolver(addCardSchema),
   });
-
-  const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
   const onSubmit = (data: TypeAddCardSchema) => {
     // const filteredLocations = locations.filter(
