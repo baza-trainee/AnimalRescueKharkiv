@@ -5,22 +5,24 @@ import { PopUp } from "../../crm/AddCardCrm/PopUp/index";
 
 interface PropsPopupInput {
   label: string;
+  data?: { id: number; name: string }[];
+  values?: string[];
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
   errorMessage?: string;
-  values: string[];
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const PopupInput: React.FC<PropsPopupInput> = ({
   label,
+  values,
+  data,
   placeholder,
   value,
   onChange,
   errorMessage,
-  values,
   isOpen,
   onClose,
 }) => {
@@ -56,17 +58,29 @@ export const PopupInput: React.FC<PropsPopupInput> = ({
         {isOpen && (
           <PopUp onClose={onClose} gap="8px">
             <ul className="flex flex-col gap-[8px] w-[310px] font-medium text-[18px]">
-              {values.map((value) => (
-                <li
-                  key={value}
-                  onClick={() => {
-                    handleSelectValue(value);
-                  }}
-                  className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"
-                >
-                  {value}
-                </li>
-              ))}
+              {data
+                ? data?.map((value) => (
+                    <li
+                      key={value.id}
+                      onClick={() => {
+                        handleSelectValue(value.name);
+                      }}
+                      className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"
+                    >
+                      {value.name}
+                    </li>
+                  ))
+                : values?.map((value) => (
+                    <li
+                      key={value}
+                      onClick={() => {
+                        handleSelectValue(value);
+                      }}
+                      className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"
+                    >
+                      {value}
+                    </li>
+                  ))}
             </ul>
           </PopUp>
         )}

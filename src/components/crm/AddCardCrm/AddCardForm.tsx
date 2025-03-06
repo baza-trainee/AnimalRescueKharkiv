@@ -22,6 +22,11 @@ export interface Location {
   name: string;
 }
 
+export interface AnimalTypes {
+  id: number;
+  name: string;
+}
+
 export const defaultValues: TypeAddCardSchema = {
   name: "",
   files: null,
@@ -78,14 +83,24 @@ export const AddCardForm = () => {
     resolver: yupResolver(addCardSchema),
   });
 
-  const {
-    data: locationsData,
-    isLoading,
-    isError,
-  } = useQuery<Location[]>({
-    queryKey: ["locationsData"],
-    queryFn: () => fetch(`${API_CRM_PATH}${API_LOCATIONS_PATH}`),
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["locationsData"],
+        queryFn: () => fetch(`${API_CRM_PATH}${API_LOCATIONS_PATH}`),
+      },
+      {
+        queryKey: ["animalTypesData"],
+        queryFn: () => fetch(`${API_CRM_PATH}${API_ANIMAL_TYPES_PATH}`),
+      },
+    ],
   });
+
+  const locationsData = results[0].data || [];
+  const animalTypesData = results[1].data || [];
+
+  const isLoading = results.some((result) => result.isLoading);
+  const isError = results.some((result) => result.isError);
 
   if (isLoading) return <p>Завантаження даних...</p>;
   if (isError) return <p>Помилка завантаження даних</p>;
@@ -197,7 +212,8 @@ export const AddCardForm = () => {
               control={control}
               errors={errors}
               trigger={trigger}
-              locationsData={locationsData || []}
+              locationsData={(locationsData as Location[]) || []}
+              animalTypesData={(animalTypesData as Location[]) || []}
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>

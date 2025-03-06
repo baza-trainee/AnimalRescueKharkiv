@@ -15,7 +15,7 @@ import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
 import { CommentInput } from "./inputs/CommentInput";
-import { AddCardFormValues, Location } from "./AddCardForm";
+import { AddCardFormValues, AnimalTypes, Location } from "./AddCardForm";
 
 const animalTypes = [
   "Кіт/кішка",
@@ -33,6 +33,7 @@ const genders = ["Самець", "Самка"];
 
 interface PropsBasicInfoForm {
   locationsData: Location[];
+  animalTypesData: AnimalTypes[];
   control: Control<any>;
   errors: FieldErrors<TypeAddCardSchema>;
   trigger: UseFormTrigger<AddCardFormValues>;
@@ -43,6 +44,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   errors,
   trigger,
   locationsData,
+  animalTypesData,
 }) => {
   const [openPopup, setOpenPopup] = useState<string | null>(null);
   const [activeLocationPicker, setActiveLocationPicker] = useState<
@@ -132,11 +134,11 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           render={({ field }) => (
             <PopupInput
               label="Тип тварини*"
+              data={animalTypesData}
               placeholder="Оберіть тип тварини"
               value={field.value}
               onChange={field.onChange}
               errorMessage={errors.animalType?.message}
-              values={animalTypes}
               isOpen={openPopup === "animalType"}
               onClose={() => handleTogglePopup("animalType")}
             />
@@ -148,11 +150,11 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           render={({ field }) => (
             <PopupInput
               label="Стать*"
+              values={genders}
               placeholder="Оберіть стать тварини"
               value={field.value}
               onChange={field.onChange}
               errorMessage={errors.gender?.message}
-              values={genders}
               isOpen={openPopup === "gender"}
               onClose={() => handleTogglePopup("gender")}
             />
