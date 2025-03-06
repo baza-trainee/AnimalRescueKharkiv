@@ -3,9 +3,11 @@ import { ArrowDownIcon } from "../../icon/ArrowDownIcon";
 import { ArrowUpIcon } from "../../icon/ArrowUpIcon";
 import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { CurrentLocation } from "../../../crm/AddCardCrm/PopUp/CurrentLocation";
+import { Location } from "@/src/components/crm/AddCardCrm/AddCardForm";
 
 interface PropsLocationPicker {
   label: string;
+  locationsData: Location[];
   value: string;
   onChange: (value: string) => void;
   errorMessage?: string;
@@ -16,6 +18,7 @@ interface PropsLocationPicker {
 
 export const LocationPicker: React.FC<PropsLocationPicker> = ({
   label,
+  locationsData,
   value,
   onChange,
   errorMessage,
@@ -47,11 +50,12 @@ export const LocationPicker: React.FC<PropsLocationPicker> = ({
         />
       </div>
       {isOpen && (
-        <PopUp
-          onClose={onClose}
-          gap="8px"
-        >
-          <CurrentLocation onChange={onChange} onClose={onClose} />
+        <PopUp onClose={onClose} gap="8px">
+          <CurrentLocation
+            locationsData={locationsData}
+            onChange={onChange}
+            onClose={onClose}
+          />
         </PopUp>
       )}
     </div>

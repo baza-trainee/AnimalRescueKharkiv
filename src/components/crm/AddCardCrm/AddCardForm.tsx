@@ -10,8 +10,17 @@ import { useToggle } from "../../register/popUp/useToggle";
 import { RequiredValues } from "./PopUp/RequiredValues";
 import { useState } from "react";
 import { MedicalInfoForm } from "./MedicalInfoForm";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { fetch } from "@/src/utils/api";
+
+const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
+const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
+const API_ANIMAL_TYPES_PATH = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
+
+export interface Location {
+  id: number;
+  name: string;
+}
 
 export const defaultValues: TypeAddCardSchema = {
   name: "",
@@ -68,6 +77,18 @@ export const AddCardForm = () => {
     mode: "onSubmit",
     resolver: yupResolver(addCardSchema),
   });
+
+  const {
+    data: locationsData,
+    isLoading,
+    isError,
+  } = useQuery<Location[]>({
+    queryKey: ["locationsData"],
+    queryFn: () => fetch(`${API_CRM_PATH}${API_LOCATIONS_PATH}`),
+  });
+
+  if (isLoading) return <p>Завантаження даних...</p>;
+  if (isError) return <p>Помилка завантаження даних</p>;
 
   const onSubmit = (data: TypeAddCardSchema) => {
     // const filteredLocations = locations.filter(
@@ -176,6 +197,7 @@ export const AddCardForm = () => {
               control={control}
               errors={errors}
               trigger={trigger}
+              locationsData={locationsData || []}
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>

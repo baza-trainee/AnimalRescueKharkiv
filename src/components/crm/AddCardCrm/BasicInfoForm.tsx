@@ -15,7 +15,7 @@ import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
 import { CommentInput } from "./inputs/CommentInput";
-import { AddCardFormValues } from "./AddCardForm";
+import { AddCardFormValues, Location } from "./AddCardForm";
 
 const animalTypes = [
   "Кіт/кішка",
@@ -32,6 +32,7 @@ const animalTypes = [
 const genders = ["Самець", "Самка"];
 
 interface PropsBasicInfoForm {
+  locationsData: Location[];
   control: Control<any>;
   errors: FieldErrors<TypeAddCardSchema>;
   trigger: UseFormTrigger<AddCardFormValues>;
@@ -41,6 +42,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   control,
   errors,
   trigger,
+  locationsData,
 }) => {
   const [openPopup, setOpenPopup] = useState<string | null>(null);
   const [activeLocationPicker, setActiveLocationPicker] = useState<
@@ -200,6 +202,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           render={({ field, fieldState }) => (
             <LocationPicker
               label="Поточна локація*"
+              locationsData={locationsData}
               value={field.value}
               onChange={field.onChange}
               errorMessage={fieldState.error?.message}
@@ -241,6 +244,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                 render={({ field, fieldState }) => (
                   <LocationPicker
                     label={`Локація ${index + 1}`}
+                    locationsData={locationsData}
                     value={field.value}
                     onChange={(e) => {
                       field.onChange(e);
