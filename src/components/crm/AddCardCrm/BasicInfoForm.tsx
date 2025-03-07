@@ -17,18 +17,6 @@ import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
 import { CommentInput } from "./inputs/CommentInput";
 import { AddCardFormValues, AnimalTypes, Location } from "./AddCardForm";
 
-const animalTypes = [
-  "Кіт/кішка",
-  "Собака",
-  "Кінь",
-  "Корова",
-  "Коза",
-  "Кролик",
-  "Птах",
-  "Лис",
-  "Інші",
-];
-
 const genders = ["Самець", "Самка"];
 
 interface PropsBasicInfoForm {

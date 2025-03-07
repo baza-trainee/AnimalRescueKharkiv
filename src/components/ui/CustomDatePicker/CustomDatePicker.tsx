@@ -7,7 +7,6 @@ import { ArrowRightIcon } from "../icon/ArrowRightIcon";
 import { ArrowUpIcon } from "../icon/ArrowUpIcon";
 import { ArrowDownIcon } from "../icon/ArrowDownIcon";
 import { ErrorMessage } from "../../crm/AddCardCrm/inputs/ErrorMessage";
-import { format } from "date-fns";
 
 interface PropsCustomDataPicker {
   selected: Date | null;
@@ -90,7 +89,6 @@ export const CustomDatePicker = forwardRef<
     _ref
   ) => {
     const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
-    const [startDate, setStartDate] = useState(selected || new Date());
 
     const handleCalendarOpen = () => {
       setIsCalendarOpen(true);
@@ -125,14 +123,17 @@ export const CustomDatePicker = forwardRef<
           }
           selected={selected}
           onChange={onChange}
+          locale={uk}
           dateFormat="dd.MM.yyyy"
           minDate={minDate}
           maxDate={maxDate}
           onCalendarOpen={handleCalendarOpen}
           onCalendarClose={handleCalendarClose}
           showPopperArrow={false}
+          withPortal
+          portalId="root-portal"
           wrapperClassName="w-full"
-          calendarClassName="customCalendar"
+          calendarClassName="custom-calendar"
           popperClassName="react-datepicker-popper"
           renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
             <div className="flex justify-between text-[18px] font-sans font-medium leading-[27px] bg-[#FFFFFF]">
