@@ -99,6 +99,19 @@ export const fetch = async <T>(path: string, params?: Record<string, any>): Prom
   const response = await apiClient.get<T>(path, config);
   return response.data;
 };
+
+export const post = async <T>(path: string, data?: unknown): Promise<T | null> => {
+  try {
+    const response = await apiClient.post<T>(path, data, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("POST request failed:", error);
+    throw error;
+  }
+};
+
 export const remove = async <T>(path: string, data?: unknown): Promise<T | null> => {
   try {
     const response = await apiClient.delete<T>(path, { data });
