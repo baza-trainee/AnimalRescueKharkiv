@@ -6,11 +6,11 @@
 import { sendInvitation } from "../../../utils/invite";
   import { useRoles } from "@/src/context/RolesContext";
 
-  // interface EmailFormProps {
-  //   onSubmit: (email: string) => void;
-  // }
+  interface EmailFormProps {
+    onSubmit: (email: string) => void;
+  }
 
-const EmailForm: React.FC = () => {
+const EmailForm: React.FC<EmailFormProps> = ({onSubmit}) => {
     const { roles, loading, error } = useRoles();
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");  
