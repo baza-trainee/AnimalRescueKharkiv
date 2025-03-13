@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import ReactQueryProvider from "../QueryClientProvider";
-
+import { AuthProvider } from '../context/AuthContext';
 import './globals.css';
 
 
@@ -23,9 +23,10 @@ export default function RootLayout({
       <body>
         
         <ReactQueryProvider>
+<AuthProvider>
           
             {children} {/* Here the pages will be injected */}
-           
+ </AuthProvider>          
         </ReactQueryProvider>
       </body>
     </html>
