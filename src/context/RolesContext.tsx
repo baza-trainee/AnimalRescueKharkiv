@@ -27,23 +27,24 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
 
     const fetchRoles = async () => {
-      if(userRole === "admin"){  try {
-       const data = await fetch<Role[]>("/roles/crm");
-      setRoles(data);
-      } catch (err) {
-        setError("Не вдалося завантажити ролі.");
-      } finally {
-        setLoading(false);
+      if (userRole === "admin") {
+        try {
+          const data = await fetch<Role[]>("/roles/crm");
+          setRoles(data);
+        } catch (err) {
+          setError("Не вдалося завантажити ролі.");
+        } finally {
+          setLoading(false);
+        }    
       }
-    };
-
-    fetchRoles();}
-    
+    }
+       fetchRoles();
   }, [userRole]);
    
   if (userRole !== "admin") {
-    return null;
-  }
+   
+  return null;
+}
     
 
   return (

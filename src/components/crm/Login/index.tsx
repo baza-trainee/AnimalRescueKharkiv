@@ -25,7 +25,6 @@ type LoginProps = {
     });
   
     const { login } = useAuth() || {};
-  
     const [credentials, setCredentials] = useState({ email: "", password: "" });
 
     console.log(errors);

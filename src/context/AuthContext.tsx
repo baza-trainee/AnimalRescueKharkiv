@@ -1,6 +1,8 @@
+"use client"
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
+
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -28,7 +30,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setAccessToken(storedAccessToken);
       try {
         const decodedToken: JwtPayload = jwtDecode(storedAccessToken);
-        setUserRole(decodedToken.role||null);
+        setUserRole(decodedToken.role || null);     
     }
     catch (error) { console.error("Помилка розбору токена:", error) }
     }
