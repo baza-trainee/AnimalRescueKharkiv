@@ -25,27 +25,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userRole, setUserRole] = useState<string | null>(null);
   useEffect(() => {
     const storedAccessToken = Cookies.get("access_token");
+    const storedUserRole = Cookies.get("user_role");
 
     if (storedAccessToken) {
       setAccessToken(storedAccessToken);
-      try {
-        const decodedToken: JwtPayload = jwtDecode(storedAccessToken);
-        setUserRole(decodedToken.role || null);     
+      if (storedUserRole) {
+        setUserRole(storedUserRole);
+      } else {
+        try {
+          const decoded: any = jwtDecode(storedAccessToken);
+          const role = decoded.role || null;
+          setUserRole(role);
+          Cookies.set("user_role", role, { secure: true, sameSite: "Strict" });
+        }
+        catch (error) { console.error("Failed to decode role from token:", error) }
+      }
     }
-    catch (error) { console.error("Помилка розбору токена:", error) }
-    }
-  
   }, []);
 
   const login = (newAccessToken: string) => {
     setAccessToken(newAccessToken);
     Cookies.set("access_token", newAccessToken, { secure: true, sameSite: "Strict" });
  try {
-        const decodedToken: JwtPayload = jwtDecode(newAccessToken);
-   setUserRole(decodedToken.role || null);
-   Cookies.set("user_role", decodedToken.role || "", { secure: true, sameSite: "Strict" });
+   const decoded: any = jwtDecode(newAccessToken);
+   const role = decoded.role || null;
+   setUserRole(role);
+   Cookies.set("user_role", role, { secure: true, sameSite: "Strict" });
     }
-    catch (error) { console.error("Помилка розбору токена:", error) } 
+    catch (error) { console.error("Failed to decode role from token:", error) } 
   };
 
   const logout = () => {
@@ -53,7 +60,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUserRole(null);
     Cookies.remove("access_token");
     Cookies.remove("user_role");
-
     window.location.href = "/login";
   };
 

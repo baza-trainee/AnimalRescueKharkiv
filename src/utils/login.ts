@@ -1,5 +1,4 @@
 import apiClient from "./api";
-import Cookies from "js-cookie";
 
 export const handleLogin = async (
   data: { email: string; password: string },
@@ -19,9 +18,6 @@ export const handleLogin = async (
       },
       withCredentials: true,
     });
-
-    Cookies.set("access_token", response.data.access_token, { secure: true, sameSite: "Strict" });
-    Cookies.set("token_type", response.data.token_type, { secure: true, sameSite: "Strict" });
 
     if (login) {
       login(response.data.access_token);
