@@ -40,7 +40,7 @@ const CatalogCrm: React.FC = () => {
         {
             title: "Тип тварин",
             content: (
-                <div className="w-full flex flex-wrap gap-[16px] font-medium">
+                <div className="w-full flex flex-wrap gap-4 font-medium">
                     <label className="w-100 flex items-center gap-[8px] text-lg">
                         <input
                             type="checkbox"
@@ -143,7 +143,7 @@ const CatalogCrm: React.FC = () => {
         {
             title: "Поточна локація",
             content: (
-                <div className="w-full flex flex-wrap gap-[16px] font-medium">
+                <div className="w-full flex flex-wrap gap-4 font-medium my-3">
                     <label className="w-100 flex items-center gap-[8px] text-lg">
                         <input
                             type="checkbox"
@@ -256,32 +256,37 @@ const CatalogCrm: React.FC = () => {
             ),
         },
         {
-            title: "Смерть",
+            title: "Статус",
             content: (
-                <div className="w-full flex flex-col items-center justify-start gap-[16px]  font-medium">
-                    <div className="w-full flex text-lg">
-                        <label className="w-full flex items-center gap-[4px]">
-                            Так
+                <div className="w-full flex flex-col items-center justify-start gap-4  font-medium">
+                    <div className="w-full flex flex-col gap-4 text-lg my-3">
+                        <label className="w-full flex items-center gap-1">
+                            Активні
                             <input
                                 type="radio"
-                                name="death"
-                                value="yes"
+                                name="status"
+                                value="active"
                                 className="size-[20px] "
                             />
                         </label>
-                        <label className="w-full flex items-center gap-[4px]">
-                            Ні
+                        <label className="w-full flex items-center gap-1">
+                            Померлі
                             <input
                                 type="radio"
-                                name="death"
-                                value="no"
+                                name="status"
+                                value="death"
                                 className="size-[20px]"
                             />
                         </label>
-                    </div>
-                    <div className="w-full flex flex-col justify-start">
-                        <span className="text-lg">Дата</span>
-                        <DateInput selectedDate={deathDate} onChange={setDeathDate} />
+                        <label className="w-full flex items-center gap-1">
+                            Прилаштовані
+                            <input
+                                type="radio"
+                                name="status"
+                                value="placed"
+                                className="size-[20px]"
+                            />
+                        </label>
                     </div>
                 </div>
             ),
@@ -289,7 +294,7 @@ const CatalogCrm: React.FC = () => {
         {
             title: "Чіпування",
             content: (
-                <div className="w-full flex flex-col items-center justify-start gap-[16px]  font-medium">
+                <div className="w-full flex flex-col items-center justify-start gap-4  font-medium">
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Проведено?</span>
                         <div className="w-full flex text-lg">
@@ -323,7 +328,7 @@ const CatalogCrm: React.FC = () => {
         {
             title: "Стерелізація/кастрація",
             content: (
-                <div className="w-full flex flex-col items-center justify-start gap-[16px]  font-medium">
+                <div className="w-full flex flex-col items-center justify-start gap-4  font-medium">
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Проведено?</span>
                         <div className="w-full flex text-lg">
@@ -360,7 +365,7 @@ const CatalogCrm: React.FC = () => {
         {
             title: "Вакцинація",
             content: (
-                <div className="w-full flex flex-col items-center justify-start gap-[16px]  font-medium">
+                <div className="w-full flex flex-col items-center justify-start gap-4  font-medium">
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Проведено?</span>
                         <div className="w-full flex text-lg">
@@ -471,7 +476,7 @@ const CatalogCrm: React.FC = () => {
                                         ))}
                                     </div>
                                     <div className="w-full flex flex-col gap-[8px] mt-[8px] text-xl">
-                                        <button className="w-full h-[56px] border border-mainBlue rounded-[10px] font-normal text-mainBlue">
+                                        <button type="reset" className="w-full h-[56px] border border-mainBlue rounded-[10px] font-normal text-mainBlue">
                                             Скинути фільтри
                                         </button>
                                         <button className="w-full h-[56px] border border-mainBlue rounded-[10px] font-normal text-white bg-mainBlue">
@@ -492,7 +497,7 @@ const CatalogCrm: React.FC = () => {
                                             <CloseBtb />
                                         </button>
                                     </div>
-                                    <div className="w-full flex flex-col justify-center gap-[16px]">
+                                    <div className="w-full flex flex-col justify-center gap-4">
                                         <div className="w-full flex flex-col justify-start gap-[11px]">
                                             <h3 className="text-2xl font-semibold">Датою</h3>
                                             <label
@@ -500,7 +505,7 @@ const CatalogCrm: React.FC = () => {
                                 ">
                                                 <input
                                                     type="radio"
-                                                    name="sortingdate"
+                                                    name="sorting-date"
                                                     value="new"
                                                     className="size-[20px] "
                                                 />
@@ -511,7 +516,7 @@ const CatalogCrm: React.FC = () => {
                                 ">
                                                 <input
                                                     type="radio"
-                                                    name="sortingdate"
+                                                    name="sorting-date"
                                                     value="old"
                                                     className="size-[20px] "
                                                 />
@@ -525,7 +530,7 @@ const CatalogCrm: React.FC = () => {
                                 ">
                                                 <input
                                                     type="radio"
-                                                    name="sortingalphabet"
+                                                    name="sorting-alphabet"
                                                     value="az"
                                                     className="size-[20px] "
                                                 />
@@ -536,7 +541,7 @@ const CatalogCrm: React.FC = () => {
                                 ">
                                                 <input
                                                     type="radio"
-                                                    name="sortingalphabet"
+                                                    name="sorting-alphabet"
                                                     value="za"
                                                     className="size-[20px] "
                                                 />
