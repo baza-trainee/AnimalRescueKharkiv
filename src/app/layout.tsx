@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ReactQueryProvider from "../QueryClientProvider";
+import { AuthProvider } from '../context/AuthContext';
 import './globals.css';
 
 
@@ -20,8 +21,12 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="16x16" />
       </head>
       <body>
+        
         <ReactQueryProvider>
-          {children} {/* Here the pages will be injected */}
+<AuthProvider>
+          
+            {children} {/* Here the pages will be injected */}
+ </AuthProvider>          
         </ReactQueryProvider>
       </body>
     </html>
