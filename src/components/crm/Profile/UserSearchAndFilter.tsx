@@ -81,9 +81,7 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
 
   const toggleFilterPopup = () => setFilterPopupVisible(!filterPopupVisible);
   const toggleSortingPopup = () => setSortingPopupVisible(!sortingPopupVisible);
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setSearchQuery(event.target.value); // Функція обробки пошуку
-
+  
   const applySorting = () => {
     setSortingPopupVisible(false);
   };

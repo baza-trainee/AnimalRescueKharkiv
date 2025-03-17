@@ -42,16 +42,6 @@ const ProfileSettings: React.FC = () => {
     setSortingPopupVisible(!sortingPopupVisible);
   };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("Ролі");
-
-  const roles = [
-    "Волонтер",
-    "Водій",
-    "Адміністратор клініки",
-    "Лікар",
-    "Фотограф",
-  ];
 
   return (
     <div className="w-[342px] mx-auto rounded-lg relative">
