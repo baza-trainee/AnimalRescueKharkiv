@@ -81,7 +81,7 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
 
   const toggleFilterPopup = () => setFilterPopupVisible(!filterPopupVisible);
   const toggleSortingPopup = () => setSortingPopupVisible(!sortingPopupVisible);
-  
+
   const applySorting = () => {
     setSortingPopupVisible(false);
   };
@@ -160,7 +160,9 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                 <div
                   key={role.id}
                   onClick={() => {
-                    setSelectedRole(role.title === selectedRole ? null : role.title);
+                    setSelectedRole(
+                      role.title === selectedRole ? null : role.title
+                    );
                     setFilterPopupVisible(false);
                   }}
                   className={`pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue w-full ${
@@ -251,68 +253,76 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
         )}
       </div>
       <div className="flex flex-col gap-4 mb-4">
-        {users.map((user) => (
-          <div key={user.email} className="shadow-md p-4 rounded-lg bg-white">
-            <div className="flex flex-col items-center text-mainBlue">
-              <ICONS.PROFILE_LOGO />
-              <p>{user.name}</p>
-              <p>{user.email}</p>
-              <p className="hidden">{user.role}</p>
-            </div>
+        {users
+          .filter(
+            (user) =>
+              user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              user.role.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .map((user) => (
+            <div key={user.email} className="shadow-md p-4 rounded-lg bg-white">
+              <div className="flex flex-col items-center text-mainBlue">
+                <ICONS.PROFILE_LOGO />
+                <p>{user.name}</p>
+                <p>{user.email}</p>
+                <p className="hidden">{user.role}</p>
+              </div>
 
-            <label htmlFor="role-select" className="text-[18px] font-medium">
-              Оберіть роль користувача
-            </label>
-            <div className="relative w-full">
-              {/* Поле для вибору */}
-              <div
-                onClick={() =>
-                  setIsOpen(isOpen === user.email ? null : user.email)
-                }
-                className="w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] text-crm-secondary-blue">
-                <span>{user.role}</span>
-                {ICONS.ARROW_IN_CIRCLE && (
-                  <ICONS.ARROW_IN_CIRCLE className="absolute right-[8px] transform text-gray-500 cursor-pointer" />
+              <label htmlFor="role-select" className="text-[18px] font-medium">
+                Оберіть роль користувача
+              </label>
+              <div className="relative w-full">
+                {/* Поле для вибору */}
+                <div
+                  onClick={() =>
+                    setIsOpen(isOpen === user.email ? null : user.email)
+                  }
+                  className="w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] text-crm-secondary-blue">
+                  <span>{user.role}</span>
+                  {ICONS.ARROW_IN_CIRCLE && (
+                    <ICONS.ARROW_IN_CIRCLE className="absolute right-[8px] transform text-gray-500 cursor-pointer" />
+                  )}
+                </div>
+                {/* Попап зі списком ролей */}
+                {isOpen === user.email && (
+                  <div className="fixed inset-0 flex flex-col content-center justify-center z-10 -top-10 py-[16px] gap-[8px] overflow-auto h-full">
+                    <div className="bg-white py-3 px-6 w-[358px] rounded-[10px] mx-auto">
+                      <div className="w-full flex justify-end">
+                        <button onClick={() => setIsOpen(null)}>
+                          <CloseBtb />
+                        </button>
+                      </div>
+                      {roles.map((role) => (
+                        <div
+                          key={`${user.email}-${role}`}
+                          onClick={() => {
+                            setUsers((prevUsers) =>
+                              prevUsers.map((u) =>
+                                u.email === user.email
+                                  ? { ...u, role: role.title }
+                                  : u
+                              )
+                            );
+                            setIsOpen(null);
+                          }}
+                          className="pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue">
+                          {role.title}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
-              {/* Попап зі списком ролей */}
-              {isOpen === user.email && (
-                <div className="fixed inset-0 flex flex-col content-center justify-center z-10 -top-10 py-[16px] gap-[8px] overflow-auto h-full">
-                  <div className="bg-white py-3 px-6 w-[358px] rounded-[10px] mx-auto">
-                    <div className="w-full flex justify-end">
-                      <button onClick={() => setIsOpen(null)}>
-                        <CloseBtb />
-                      </button>
-                    </div>
-                    {roles.map((role) => (
-                      <div
-                        key={`${user.email}-${role}`}
-                        onClick={() => {
-                          setUsers((prevUsers) =>
-                            prevUsers.map((u) =>
-                              u.email === user.email ? { ...u, role: role.title } : u
-                            )
-                          );
-                          setIsOpen(null);
-                        }}
-                        className="pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue">
-                        {role.title}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
 
-            <button
-              onClick={() =>
-                setConfirmDelete({ show: true, email: user.email })
-              }
-              className="w-full mt-4 border bg-mainBlue text-white py-2 rounded-md hover:bg-blue-800 transition">
-              Видалити користувача
-            </button>
-          </div>
-        ))}
+              <button
+                onClick={() =>
+                  setConfirmDelete({ show: true, email: user.email })
+                }
+                className="w-full mt-4 border bg-mainBlue text-white py-2 rounded-md hover:bg-blue-800 transition">
+                Видалити користувача
+              </button>
+            </div>
+          ))}
       </div>
       {confirmDelete.show && (
         <div className="fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50">
