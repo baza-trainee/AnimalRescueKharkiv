@@ -17,6 +17,7 @@ interface PropsFirstStep {
 
 export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
   const { isOpen, toggleModal } = useToggle();
+  
   const {
     handleSubmit,
     control,
@@ -37,14 +38,14 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
       >
         <div className=" flex flex-col gap-[35px] items-center">
           <Controller
-            name="login"
+            name="email"
             control={control}
             render={({ field }) => (
               <EmailInput
                 {...field}
                 label="Логін (Email) *"
                 placeholder="arh@gmail.com"
-                errorMessage={!isOpen ? errors.login?.message : ""}
+                errorMessage={!isOpen ? errors.email?.message : ""}
               />
             )}
           />

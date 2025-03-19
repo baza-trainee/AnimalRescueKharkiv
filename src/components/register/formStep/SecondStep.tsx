@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,8 +20,8 @@ interface PropsFirstStep {
 }
 
 const defaultValues: TypeStep2Schema = {
-  firstName: "",
-  lastName: "",
+  first_name: "",
+  last_name: "",
   phone: "",
   agreeTerms: false,
   agreeDataProcessing: false,
@@ -31,58 +31,75 @@ export const SecondStep: FC<PropsFirstStep> = ({
   handleFinalForm,
   isSuccess,
 }) => {
-  const { isOpen, toggleModal } = useToggle();
+  const { isOpen,  openModal, closeModal} = useToggle();
   const router = useRouter();
+
+  useEffect(() => {
+    if (isSuccess) {
+       openModal(); 
+    }
+  }, [isSuccess]); 
 
   const {
     handleSubmit,
     control,
     getValues,
-    formState: { errors, isSubmitted, isDirty },
+    formState: { errors,  isDirty },
   } = useForm<TypeStep2Schema>({
     defaultValues,
     mode: "onSubmit",
     resolver: yupResolver(step2Schema),
   });
 
-  const { agreeTerms, agreeDataProcessing, firstName, lastName, phone } =
+  const { agreeTerms, agreeDataProcessing, first_name, last_name, phone } =
     getValues();
 
-  const isValue = !!firstName && !!lastName && !!phone;
+  const isValue = !!first_name && !!last_name && !!phone;
 
+ 
   const closeModalSuccess = () => {
-    toggleModal();
-    if (isSuccess) router.push("/mainlogo");
+    closeModal();
+    if (isSuccess) {
+      setTimeout(() => {
+        router.push("/");
+      }, 500);
+    }
+  };
+
+  
+  const onSubmit = async (data: TypeStep2Schema) => {
+    handleFinalForm(data); 
+    openModal(); 
   };
 
   return (
     <>
       <form
-        onSubmit={handleSubmit(handleFinalForm)}
+        onSubmit={handleSubmit(onSubmit)}
         className=" md:w-[343px] w-[320px] max-w-full"
       >
         <div className=" flex flex-col gap-[35px] items-center">
           <Controller
-            name="firstName"
+            name="first_name"
             control={control}
             render={({ field }) => (
               <TextInput
                 {...field}
                 label="Ім’я *"
                 placeholder="Введіть ім’я"
-                errorMessage={errors.firstName?.message}
+                errorMessage={errors.first_name?.message}
               />
             )}
           />
           <Controller
-            name="lastName"
+            name="last_name"
             control={control}
             render={({ field }) => (
               <TextInput
                 {...field}
                 label="Прізвище *"
                 placeholder="Введіть прізвище"
-                errorMessage={errors.lastName?.message}
+                errorMessage={errors.last_name?.message}
               />
             )}
           />
@@ -123,21 +140,21 @@ export const SecondStep: FC<PropsFirstStep> = ({
         </div>
         <button
           type="submit"
-          onClick={toggleModal}
-          disabled={isSubmitted && !isValue}
+          
+          disabled={!isDirty}
           className=" block bg-[#4855CC] transition duration-[350ms] hover:bg-[#3442c7] focus:bg-[#3442c7] outline-none rounded-[10px] py-[13px] w-full disabled:bg-[#0E265D] disabled:opacity-[40%] text-[#EDF7FF] mt-[32px] mx-auto"
         >
           Зареєструватись
         </button>
       </form>
-      {isOpen && isSubmitted && (
+      {isOpen && (
         <>
           {!isDirty ? (
-            <EmptyValues onClose={toggleModal} />
+            <EmptyValues onClose={closeModal} />
           ) : !isValue ? (
-            <IncorrectValues onClose={toggleModal} />
+            <IncorrectValues onClose={closeModal} />
           ) : !agreeTerms || !agreeDataProcessing ? (
-            <NotGivenConsent onClose={toggleModal} />
+            <NotGivenConsent onClose={closeModal} />
           ) : (
             <RegisterSuccess onClose={closeModalSuccess} />
           )}
