@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense  } from "react";
 
 import {post} from "../../utils/api"
 import { SecondStep } from "./formStep/SecondStep";
@@ -9,7 +9,7 @@ import { TypeStep1Schema, TypeStep2Schema } from "./validationSchema";
 import { useSearchParams, useRouter } from "next/navigation";
 
 
-export const RegisterForm = () => {
+const RegisterFormComponent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -77,3 +77,9 @@ export const RegisterForm = () => {
     </section>
   );
 };
+
+export const RegisterForm = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <RegisterFormComponent />
+  </Suspense>
+);
