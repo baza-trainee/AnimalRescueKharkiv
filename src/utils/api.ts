@@ -100,9 +100,15 @@ export const fetch = async <T>(path: string, params?: Record<string, any>): Prom
   return response.data;
 };
 
-export const post = async <T>(path: string, data?: unknown): Promise<T | null> => {
+export const post = async <T>(
+  path: string,
+  data?: unknown,
+  params?: Record<string, any> ): Promise<T | null> => {
   try {
-    const response = await apiClient.post<T>(path, data, {
+    const queryString = params
+      ? "?" + new URLSearchParams(params as Record<string, string>).toString()
+      : "";
+    const response = await apiClient.post<T>(`${path}${queryString}`, data, {
       headers: { "Content-Type": "application/json" },
     });
     return response.data;

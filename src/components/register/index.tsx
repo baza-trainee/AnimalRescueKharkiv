@@ -47,8 +47,8 @@ const RegisterFormComponent = () => {
   
     setIsLoading(true);
     try {
-    const url = `/auth/register?token=${encodeURIComponent(token || "")}`;
-    const response = await post<{ success: boolean }>(url, filteredData);
+   const response = await post<{ success: boolean }>("/auth/register",filteredData,{ token }
+);
 
     if (response?.success) {
       setIsSuccess(true);
