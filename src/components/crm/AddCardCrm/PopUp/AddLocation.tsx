@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
+import { Location } from "../AddCardForm";
 
 interface PropsAddLocation {
-  onAdd: (location: string) => void;
+  onAdd: (location: Location) => void;
 }
 
 export const AddLocation = ({ onAdd }: PropsAddLocation) => {

@@ -50,7 +50,7 @@ export const PopupInput: React.FC<PropsPopupInput> = ({
           label={label}
           placeholder={placeholder}
           errorMessage={errorMessage}
-          value={value}
+          value={value?.name || ""}
           onChange={(e) => onChange(e.target.value)}
           onClick={onClose}
           readOnly
@@ -63,7 +63,7 @@ export const PopupInput: React.FC<PropsPopupInput> = ({
                     <li
                       key={value.id}
                       onClick={() => {
-                        handleSelectValue(value.name);
+                        handleSelectValue(value);
                       }}
                       className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"
                     >

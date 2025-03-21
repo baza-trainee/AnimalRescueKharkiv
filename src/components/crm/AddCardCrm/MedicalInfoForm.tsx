@@ -41,11 +41,11 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   const diagnoses = useWatch({ control, name: "diagnoses" });
 
   const handleAddDiagnosis = async () => {
-    const lastIndex = diagnosesFields.length - 1;
-    const lastDiagnosisField = `diagnoses.${lastIndex}`;
+    appendDiagnosis({ name: "", date: "", comment: "" });
+    // const lastField = diagnoses[diagnoses.length - 1];
 
-    // const isValid = await trigger(lastDiagnosisField);
-    // if (isValid) appendDiagnosis({ name: "", date: null, comment: "" });
+    // const isValid = await trigger(lastField);
+    // if (isValid) appendDiagnosis({ name: "", date: "", comment: "" });
   };
 
   return (
@@ -263,6 +263,66 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <button
           type="button"
           onClick={handleAddDiagnosis}
+          className="flex justify-center items-center w-full h-[56px] py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
+        >
+          Додати діагноз
+        </button>
+      </fieldset>
+      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+          Процедури
+        </h3>
+        {diagnosesFields.map((field, index) => {
+          const name = `procedures.${index}.name`;
+          const date = `procedures.${index}.date`;
+          const comment = `procedures.${index}.comment`;
+
+          return (
+            <div key={field.id} className="flex flex-col gap-[8px] h-[246px]">
+              <Controller
+                name={name}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <TextInput
+                    label={`Процедура ${index + 1}`}
+                    placeholder="Впишіть назву проведеної процедури"
+                    errorMessage={fieldState.error?.message}
+                    {...field}
+                  />
+                )}
+              />
+              <Controller
+                name={date}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <CustomDatePicker
+                    {...field}
+                    label="Дата проведення"
+                    selected={field.value}
+                    onChange={(date) => field.onChange(date)}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
+              />
+              <Controller
+                name={comment}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <CommentInput
+                    {...field}
+                    label="Рекомендації/коментар"
+                    placeholder="Залиште рекомендації"
+                    errorMessage={fieldState.error?.message}
+                    styles="h-[46px]"
+                  />
+                )}
+              />
+            </div>
+          );
+        })}
+        <button
+          type="button"
+          onClick={(e) => console.log("1")}
           className="flex justify-center items-center w-full h-[56px] py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
         >
           Додати діагноз

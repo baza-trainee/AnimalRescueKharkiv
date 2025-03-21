@@ -10,7 +10,7 @@ import {
 } from "react-hook-form";
 import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { TypeAddCardSchema } from "./schemas/addCardSchema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
@@ -31,6 +31,8 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   control,
   errors,
   trigger,
+  getValues,
+  setValue,
   locationsData,
   animalTypesData,
 }) => {
@@ -58,27 +60,32 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
 
   const locations = useWatch({ control, name: "locations" });
 
-  const handleAddLocation = () => {
+  const optionalUsers = locationsFields.slice(1);
+
+  const handleAddLocation = async () => {
     const lastField = locations[locations.length - 1];
     const hasDate = lastField.date_from && lastField.date_to;
     const isValidDate = lastField.date_to > lastField.date_from;
 
+    const isValid = await trigger("locations");
+
     if (
+      !isValid ||
       !lastField.location ||
       !lastField.date_from ||
       (lastField.date_to && !lastField.date_from) ||
       (hasDate && !isValidDate)
-    )
+    ) {
       return;
+    }
 
-    appendLocation({ location: "", date_from: null, date_to: null });
+    appendLocation({ location: { id: null }, date_from: "", date_to: null });
   };
-
   return (
     <div className="flex flex-col gap-[16px]">
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
-          name="arrivalDate"
+          name="origin__arrival_date"
           control={control}
           render={({ field }) => (
             <CustomDatePicker
@@ -86,30 +93,31 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               label="Дата прибуття*"
               selected={field.value}
               onChange={(date) => field.onChange(date)}
-              errorMessage={errors?.arrivalDate?.message}
+              errorMessage={errors?.origin__arrival_date?.message}
             />
           )}
         />
         <Controller
-          name="city"
+          name="origin__city"
           control={control}
           render={({ field }) => (
             <TextInput
               label="Звідки (місто)*"
               placeholder="Введіть назву міста"
-              errorMessage={errors?.city?.message}
+              errorMessage={errors?.origin__city?.message}
               {...field}
             />
           )}
         />
         <Controller
-          name="address"
+          name="origin__address"
           control={control}
           render={({ field }) => (
             <TextInput
               label="Адреса"
               placeholder="Введіть назву вулиці та номер будинку"
-              errorMessage={errors?.address?.message}
+              errorMessage={errors?.origin__address?.message}
+              value={field.value ?? ""}
               {...field}
             />
           )}
@@ -117,16 +125,22 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
-          name="animalType"
+          name="general__animal_type"
           control={control}
           render={({ field }) => (
             <PopupInput
               label="Тип тварини*"
               data={animalTypesData}
               placeholder="Оберіть тип тварини"
-              value={field.value}
-              onChange={field.onChange}
-              errorMessage={errors.animalType?.message}
+              // value={field.value}
+              // onChange={field.onChange}
+              value={
+                animalTypesData.find((type) => type.id === field.value) || null
+              }
+              onChange={(type) => {
+                field.onChange(type.id);
+              }}
+              errorMessage={errors.general__animal_type?.message}
               isOpen={openPopup === "animalType"}
               onClose={() => handleTogglePopup("animalType")}
             />
@@ -179,7 +193,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
             <TextInput
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
-              errorMessage={errors?.address?.message}
+              errorMessage={errors?.specialMarks?.message}
               {...field}
             />
           )}
@@ -187,14 +201,21 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
-          name="currentLocation"
+          name="locations.0.location.id"
           control={control}
           render={({ field, fieldState }) => (
             <LocationPicker
               label="Поточна локація*"
               locationsData={locationsData}
-              value={field.value}
-              onChange={field.onChange}
+              value={
+                locationsData.find((location) => location.id === field.value) ||
+                null
+              }
+              onChange={(location) => {
+                field.onChange(location.id);
+                trigger(`locations.0.location`);
+                trigger(`locations.0.date_from`);
+              }}
               errorMessage={fieldState.error?.message}
               isOpen={activeLocationPicker === "currentLocation"}
               onOpen={() => handleOpenLocationPicker("currentLocation")}
@@ -203,15 +224,19 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           )}
         />
         <Controller
-          name="currentDate"
+          name="locations.0.date_from"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <CustomDatePicker
               {...field}
               label="З"
               selected={field.value || null}
-              onChange={(date) => field.onChange(date)}
-              errorMessage={errors?.currentDate?.message}
+              onChange={(date) => {
+                field.onChange(date);
+                trigger(`locations.0.location`);
+                trigger(`locations.0.date_from`);
+              }}
+              errorMessage={fieldState.error?.message}
               labelStyles="font-normal text-[14px]"
             />
           )}
@@ -221,10 +246,11 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           Історія переміщень
         </h3>
 
-        {locationsFields?.map((field, index) => {
-          const location = `locations.${index}.location`;
-          const date_from = `locations.${index}.date_from`;
-          const date_to = `locations.${index}.date_to`;
+        {optionalUsers?.map((field, index) => {
+          const locIndex = index + 1;
+          const location = `locations.${locIndex}.location.id`;
+          const date_from = `locations.${locIndex}.date_from`;
+          const date_to = `locations.${locIndex}.date_to`;
 
           return (
             <div key={field.id}>
@@ -233,14 +259,28 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                 control={control}
                 render={({ field, fieldState }) => (
                   <LocationPicker
-                    label={`Локація ${index + 1}`}
+                    label={`Локація ${locIndex}`}
                     locationsData={locationsData}
-                    value={field.value}
+                    // value={field.value || null}
+                    value={
+                      locationsData.find(
+                        (location) => location.id === field.value
+                      ) || null
+                    }
+                    // value={
+                    //   locationsData.find((location) => {
+                    //     console.log(field.value);
+
+                    //     location.id === field.value;
+                    //   }) || null
+                    // }
                     onChange={(e) => {
-                      field.onChange(e);
-                      trigger(`locations.${index}.location`);
-                      trigger(`locations.${index}.date_from`);
-                      trigger(`locations.${index}.date_to`);
+                      field.onChange(e.id);
+                      trigger([
+                        `locations.${locIndex}.location`,
+                        `locations.${locIndex}.date_from`,
+                        `locations.${locIndex}.date_to`,
+                      ]);
                     }}
                     errorMessage={fieldState.error?.message}
                     isOpen={activeLocationPicker === location}
@@ -262,9 +302,11 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                         selected={field.value || null}
                         onChange={(e) => {
                           field.onChange(e);
-                          trigger(`locations.${index}.location`);
-                          trigger(`locations.${index}.date_from`);
-                          trigger(`locations.${index}.date_to`);
+                          trigger([
+                            `locations.${locIndex}.location`,
+                            `locations.${locIndex}.date_from`,
+                            `locations.${locIndex}.date_to`,
+                          ]);
                         }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
@@ -283,9 +325,11 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                         selected={field.value || null}
                         onChange={(e) => {
                           field.onChange(e);
-                          trigger(`locations.${index}.location`);
-                          trigger(`locations.${index}.date_from`);
-                          trigger(`locations.${index}.date_to`);
+                          trigger([
+                            `locations.${locIndex}.location`,
+                            `locations.${locIndex}.date_from`,
+                            `locations.${locIndex}.date_to`,
+                          ]);
                         }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"

@@ -29,6 +29,7 @@ export const TextInput: React.FC<PropsTextInput> = forwardRef(
             ref={_ref}
             type="text"
             id={name}
+            value={rest.value ?? ""}
             className={`w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent ${
               !!errorMessage
                 ? "border-[#B00000] placeholder:text-[#B00000] outline-[#B00000]"

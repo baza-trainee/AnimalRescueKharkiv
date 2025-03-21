@@ -8,10 +8,11 @@ import { FileInput } from "@/src/components/ui/inputs/FileInput";
 import { BasicInfoForm } from "./BasicInfoForm";
 import { useToggle } from "../../register/popUp/useToggle";
 import { RequiredValues } from "./PopUp/RequiredValues";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MedicalInfoForm } from "./MedicalInfoForm";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { fetch } from "@/src/utils/api";
+import { format } from "date-fns";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
@@ -29,18 +30,15 @@ export interface AnimalTypes {
 
 export const defaultValues: TypeAddCardSchema = {
   name: "",
-  files: null,
-  city: "",
-  address: "",
-  animalType: "",
+  origin__arrival_date: "",
+  origin__city: "",
+  origin__address: null,
+  general__animal_type: { id: null },
   gender: "",
   weight: "",
   age: "",
   specialMarks: "",
-  arrivalDate: "",
-  currentLocation: "",
-  currentDate: null,
-  locations: [{ location: "", date_from: null, date_to: null }],
+  locations: [{ location: { id: null }, date_from: "", date_to: null }],
   owner__info: "Відсутня",
   comment__text: "",
   sterilization__done: false,
@@ -49,21 +47,22 @@ export const defaultValues: TypeAddCardSchema = {
   microchipping__done: false,
   microchipping__date: null,
   microchipping__comment: "",
-  vaccinations: [
+  vaccinations: [{ vaccine_type: "", date: "", comment: "" }],
+  diagnoses: [
     {
-      is_vaccinated: false,
-      vaccine_type: "",
+      name: "",
       date: "",
       comment: "",
     },
   ],
-  diagnoses: [
+  procedures: [
     {
       name: "",
-      date: null,
+      date: "",
       comment: "",
     },
   ],
+  files: null,
 } as const;
 
 export type AddCardFormValues = typeof defaultValues;
@@ -76,6 +75,8 @@ export const AddCardForm = () => {
     control,
     handleSubmit,
     trigger,
+    getValues,
+    setValue,
     formState: { errors, isValid, isSubmitted },
   } = useForm<TypeAddCardSchema>({
     defaultValues,
@@ -106,14 +107,6 @@ export const AddCardForm = () => {
   if (isError) return <p>Помилка завантаження даних</p>;
 
   const onSubmit = (data: TypeAddCardSchema) => {
-    // const filteredLocations = locations.filter(
-    //   (location) => location.location || location.date_from || location.date_to
-    // );
-
-    // if (filteredLocations.length === 0) {
-    //   setValue("locations", null); // Оновлення значення на null
-    // }
-
     console.log(data);
   };
 
@@ -127,9 +120,7 @@ export const AddCardForm = () => {
     errors.weight ||
     errors.age ||
     errors.specialMarks ||
-    errors.arrivalDate ||
-    errors.currentLocation ||
-    errors.currentDate ||
+    errors.origin__arrival_date ||
     errors.locations ||
     errors.owner__info ||
     errors.comment__text;
@@ -212,6 +203,8 @@ export const AddCardForm = () => {
               control={control}
               errors={errors}
               trigger={trigger}
+              getValues={getValues}
+              setValue={setValue}
               locationsData={(locationsData as Location[]) || []}
               animalTypesData={(animalTypesData as Location[]) || []}
             />

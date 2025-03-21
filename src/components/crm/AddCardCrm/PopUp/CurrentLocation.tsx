@@ -6,7 +6,7 @@ import { Location } from "../AddCardForm";
 
 interface PropsCurrentLocation {
   locationsData: Location[];
-  onChange: (value: string) => void;
+  onChange: (value: Location) => void;
   onClose: () => void;
 }
 
@@ -17,12 +17,11 @@ export const CurrentLocation: React.FC<PropsCurrentLocation> = ({
 }) => {
   const [isAddingLocation, setIsAddingLocation] = useState(false);
 
-  const handleSelectLocation = (location: string) => {
+  const handleSelectLocation = (location: Location) => {
     onChange(location);
     setIsAddingLocation(false);
     onClose();
   };
-
   return (
     <>
       {isAddingLocation ? (
@@ -36,7 +35,7 @@ export const CurrentLocation: React.FC<PropsCurrentLocation> = ({
                 if (location.name === "Інше") {
                   setIsAddingLocation(true);
                 } else {
-                  handleSelectLocation(location.name);
+                  handleSelectLocation(location);
                 }
               }}
               className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"

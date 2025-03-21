@@ -8,8 +8,8 @@ import { Location } from "@/src/components/crm/AddCardCrm/AddCardForm";
 interface PropsLocationPicker {
   label: string;
   locationsData: Location[];
-  value: string;
-  onChange: (value: string) => void;
+  value: Location | null;
+  onChange: (value: Location) => void;
   errorMessage?: string;
   isOpen: boolean;
   onOpen: () => void;
@@ -44,8 +44,8 @@ export const LocationPicker: React.FC<PropsLocationPicker> = ({
           label={label}
           placeholder="Оберіть локацію"
           errorMessage={errorMessage}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          value={value?.name || ""}
+          onChange={() => {}}
           onClick={isOpen ? onClose : onOpen}
         />
       </div>
