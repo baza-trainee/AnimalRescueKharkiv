@@ -6,7 +6,7 @@ const emailRegexp =
 const phonePattern = /^\+380 \d{2} \d{3} \d{2} \d{2}$/;
 
 export const step1Schema = Yup.object().shape({
-  login: Yup.string()
+  email: Yup.string()
     .matches(emailRegexp, "Введіть дійсний email")
     .required("Введіть email"),
   password: Yup.string()
@@ -16,14 +16,15 @@ export const step1Schema = Yup.object().shape({
   doublePassword: Yup.string()
     .oneOf([Yup.ref("password")], "Введені паролі не співпадають")
     .required("Введіть пароль"),
+  
 });
 
 export const step2Schema = Yup.object().shape({
-  firstName: Yup.string()
+  first_name: Yup.string()
     .min(2, "Ім’я повинно мати не менше 2 знаків")
     .max(50, "Ім’я повинно бути не більше 50 знаків")
     .required("Введіть ім’я"),
-  lastName: Yup.string()
+  last_name: Yup.string()
     .min(2, "Прізвище повинно мати не менше 2 знаків")
     .max(50, "Прізвище повинно бути не більше 50 знаків")
     .required("Введіть прізвище"),
