@@ -2,12 +2,12 @@
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useState } from "react";
-import SearchInputIcon from "../CatalogCrm/CatalogCrmIcons/SearchInputIcon";
-import FilterIcon from "../CatalogCrm/CatalogCrmIcons/FilterIcon";
-import SetIcon from "../CatalogCrm/CatalogCrmIcons/Set";
-import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
 import { ICONS } from "../../../constants/icons/icons";
 import { fetch, remove } from "../../../utils/api";
+import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
+import FilterIcon from "../CatalogCrm/CatalogCrmIcons/FilterIcon";
+import SearchInputIcon from "../CatalogCrm/CatalogCrmIcons/SearchInputIcon";
+import SetIcon from "../CatalogCrm/CatalogCrmIcons/Set";
 
 interface Role {
   id: string;
@@ -21,35 +21,30 @@ interface User {
   photo: string;
 }
 
-// Змінюємо функцію searchUsers
+// Змінюємо функцію searchUsers, додаємо параметр сортування
 const searchUsers = async (
   domain: string,
   query?: string,
-  roles?: string | null
+  roles?: string | null,
+  sortParam?: string
 ) => {
   try {
-    let usersPath = `/users/${domain}/search`;
+    const usersPath = `/users/${domain}/search`;
 
     const params = new URLSearchParams();
     if (query) params.append("query", query);
 
-    // Спробуйте різні варіанти передачі параметра roles
+    // Додаємо параметр ролі
     if (roles) {
-      // Варіант 1: Просто як рядок (як у вас зараз)
       params.append("roles", roles);
-
-      // Варіант 2: Як масив з одним елементом
-      // params.append('roles[]', roles);
-
-      // Варіант 3: Без URL-кодування
-      // usersPath += `&roles=${roles}`;
     }
 
-    const queryString = params.toString();
-    if (queryString) {
-      usersPath += `?${queryString}`;
+    // Додаємо параметр сортування
+    if (sortParam) {
+      params.append("sort", sortParam);
     }
-    const data: User[] = await fetch(usersPath);
+
+    const data: User[] = await fetch(usersPath, params);
 
     return data.map((user: any) => ({
       name: `${user.first_name} ${user.last_name}`,
@@ -65,6 +60,7 @@ const searchUsers = async (
     return [];
   }
 };
+
 const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -79,6 +75,20 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
     alphabet?: "az" | "za";
   }>({});
 
+  // Функція для отримання параметра сортування на основі вибраних опцій
+  const getSortParam = (): string | undefined => {
+    if (sorting.date === "new") {
+      return "created_at|desc";
+    } else if (sorting.date === "old") {
+      return "created_at|asc";
+    } else if (sorting.alphabet === "az") {
+      return "first_name|asc";
+    } else if (sorting.alphabet === "za") {
+      return "first_name|desc";
+    }
+    return undefined;
+  };
+
   const [isOpen, setIsOpen] = useState<string | null>(null);
   const [selectedRol, setSelectedRol] = useState("Ролі");
 
@@ -91,7 +101,16 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const data = await searchUsers(domain, searchQuery, selectedRole);
+      // Отримуємо параметр сортування
+      const sortParam = getSortParam();
+
+      // Передаємо параметр сортування у функцію пошуку
+      const data = await searchUsers(
+        domain,
+        searchQuery,
+        selectedRole,
+        sortParam
+      );
       setUsers(data);
     } catch (error) {
       console.error("Помилка при завантаженні користувачів:", error);
@@ -199,7 +218,9 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                       name="sortingdate"
                       value="new"
                       checked={sorting.date === "new"}
-                      onChange={() => setSorting({ ...sorting, date: "new" })}
+                      onChange={() =>
+                        setSorting({ date: "new", alphabet: undefined })
+                      }
                       className="size-[20px]"
                     />
                     Від найновіших
@@ -210,7 +231,9 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                       name="sortingdate"
                       value="old"
                       checked={sorting.date === "old"}
-                      onChange={() => setSorting({ ...sorting, date: "old" })}
+                      onChange={() =>
+                        setSorting({ date: "old", alphabet: undefined })
+                      }
                       className="size-[20px]"
                     />
                     Від найстарших
@@ -227,7 +250,7 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                       value="az"
                       checked={sorting.alphabet === "az"}
                       onChange={() =>
-                        setSorting({ ...sorting, alphabet: "az" })
+                        setSorting({ alphabet: "az", date: undefined })
                       }
                       className="size-[20px]"
                     />
@@ -240,7 +263,7 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                       value="za"
                       checked={sorting.alphabet === "za"}
                       onChange={() =>
-                        setSorting({ ...sorting, alphabet: "za" })
+                        setSorting({ alphabet: "za", date: undefined })
                       }
                       className="size-[20px]"
                     />
