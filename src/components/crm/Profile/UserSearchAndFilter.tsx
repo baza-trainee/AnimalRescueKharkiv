@@ -82,9 +82,9 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
     } else if (sorting.date === "old") {
       return "created_at|asc";
     } else if (sorting.alphabet === "az") {
-      return "first_name|asc";
+      return "first_name+last_name|asc";
     } else if (sorting.alphabet === "za") {
-      return "first_name|desc";
+      return "first_name+last_name|desc";
     }
     return undefined;
   };
