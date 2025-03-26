@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,Suspense } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { resetPasswordSchema, TypeResetSchema } from "./validationResetPassword";
@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { PasswordInput } from "../../ui/inputs/PasswordInput";
 import { ResetSuccess } from "./SuccessResetPopUp";
 
-export default function ResetPassword() {
+const ResetPasswordComponent=()=> {
     const searchParams = useSearchParams();
     const token = searchParams.get("token"); 
   const {
@@ -85,3 +85,8 @@ export default function ResetPassword() {
       
   );
 }
+export const ResetPassword = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <ResetPasswordComponent />
+  </Suspense>
+);
