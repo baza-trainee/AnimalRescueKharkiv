@@ -18,7 +18,7 @@ export const EmailInput: FC<PropsEmailInput> = forwardRef(
           type="email"
           id={name}
           ref={_ref}
-          className={`w-full px-3 py-2 mb-4 rounded-xl bg-transparent  placeholder-crm-secondary-blue border ${
+          className={`w-full px-3 py-2 rounded-[10px] bg-transparent  placeholder-crm-secondary-blue border ${
             errorMessage
               ? "border-red-600 placeholder:text-red-600 outline-red-600"
               : "border-gray-300 outline-crm-secondary-blue"

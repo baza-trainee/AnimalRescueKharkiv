@@ -1,0 +1,87 @@
+"use client";
+
+import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { resetPasswordSchema, TypeResetSchema } from "./validationResetPassword";
+import { post } from "../../../utils/api"; 
+import { useSearchParams } from "next/navigation";
+import { PasswordInput } from "../../ui/inputs/PasswordInput";
+import { ResetSuccess } from "./SuccessResetPopUp";
+
+export default function ResetPassword() {
+    const searchParams = useSearchParams();
+    const token = searchParams.get("token"); 
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<TypeResetSchema>({
+    defaultValues: { password: "" ,doublePassword:""},
+    mode: "onSubmit",
+    resolver: yupResolver(resetPasswordSchema),
+  });
+
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+    
+  const onSubmit = async (data: TypeResetSchema) => {
+    setIsLoading(true);
+      try {
+          await post(`/auth/password/reset?token=${token}`, {password_new: data.password });
+        setIsSuccess(true);
+        setIsPopupOpen(true);
+    } catch (error) {
+      console.error("Ошибка восстановления пароля:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <section className="flex flex-col items-center pt-20 pb-10 px-6">
+          <h2 className="text-2xl font-bold mb-[68px] text-black">Відновлення паролю</h2>
+                  
+      
+        <form onSubmit={handleSubmit(onSubmit)} className="w-96 flex flex-col gap-4">
+          <Controller
+                      control={control}
+                      name="password"
+                      render={({ field }) => (
+                        <PasswordInput
+                          {...field}
+                          label="Новий пароль * "
+                          placeholder="********"
+                          errorMessage={errors.password?.message}
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="doublePassword"
+                      render={({ field }) => (
+                        <PasswordInput
+                          {...field}
+                          label="Підтвердити пароль *"
+                          placeholder="********"
+                          errorMessage={errors.doublePassword?.message }
+                        />
+                      )}
+                    />
+         
+
+          <button
+            type="submit"
+            className="block bg-[#4855CC] transition duration-[350ms] hover:bg-[#3442c7] focus:bg-[#3442c7] outline-none rounded-[10px] py-[13px] w-full disabled:bg-[#0E265D] disabled:opacity-[40%] text-[#EDF7FF] font-normal text-[20px] mb-8 mt-[63px] mx-auto"
+            disabled={isLoading}
+          >
+            {isLoading ? "Зачекайте..." : "Зберегти"}
+          </button>
+        </form>
+          
+           {isPopupOpen && <ResetSuccess onClose={() => setIsPopupOpen(false)} />}
+      </section>
+      
+  );
+}
