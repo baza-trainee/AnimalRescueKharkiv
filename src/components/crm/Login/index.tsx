@@ -74,7 +74,7 @@ type LoginProps = {
           Увійти
         </button>
         <p className="font-medium text-lg text-center text-crm-black">Забули пароль? </p>
-        <a href="" className="font-medium text-lg text-center text-mainBlue mb-1">Відновити</a>
+        <a href="/crm/forgot-password" className="font-medium text-lg text-center text-mainBlue mb-1">Відновити</a>
        
       </form>
     </>
