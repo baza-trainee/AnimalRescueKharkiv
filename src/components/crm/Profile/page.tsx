@@ -10,13 +10,15 @@ import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
 import UserSearchAndFilter from "./UserSearchAndFilter";
 import SettingsRole from "./SettingsRole";
 import { post } from "../../../utils/api"; 
-import { useRouter } from "next/navigation";
+import { useAuth } from "../../../context/AuthContext";
+
 
 const ProfileSettings: React.FC = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const router = useRouter(); 
+  const { logout } = useAuth();
+ 
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,9 +38,10 @@ const ProfileSettings: React.FC = () => {
   };
 
    const handleLogout = async () => {
-    try {
+     try {
       await post("/auth/logout"); 
-      router.push("/login"); 
+      logout(); 
+      
     } catch (error) {
       console.error("Помилка виходу:", error);
     }

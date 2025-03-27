@@ -1,7 +1,8 @@
 "use client"
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
 
 
 interface AuthContextType {
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+    const router = useRouter(); 
   useEffect(() => {
     const storedAccessToken = Cookies.get("access_token");
 
@@ -54,7 +56,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     Cookies.remove("access_token");
     Cookies.remove("user_role");
 
-    window.location.href = "/login";
+    router.push("/login");
   };
 
   return (
@@ -65,5 +67,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+   const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
