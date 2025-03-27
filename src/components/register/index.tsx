@@ -55,7 +55,7 @@ const RegisterFormComponent = () => {
      
     }
   } catch (error) {
-    console.error("Registration failed", error);
+    console.error("Помилка реєстрації:", error);
   } finally {
     setIsLoading(false);
   }

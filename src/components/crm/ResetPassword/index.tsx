@@ -29,11 +29,11 @@ const ResetPasswordComponent=()=> {
   const onSubmit = async (data: TypeResetSchema) => {
     setIsLoading(true);
       try {
-          await post(`/auth/password/reset?token=${token}`, {password_new: data.password });
+          await post("/auth/password/reset", {password_new: data.password },{token});
         setIsSuccess(true);
         setIsPopupOpen(true);
     } catch (error) {
-      console.error("Ошибка восстановления пароля:", error);
+      console.error("Помилка відновлення паролю:", error);
     } finally {
       setIsLoading(false);
     }
