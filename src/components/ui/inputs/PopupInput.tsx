@@ -5,11 +5,11 @@ import { PopUp } from "../../crm/AddCardCrm/PopUp/index";
 
 interface PropsPopupInput {
   label: string;
-  data?: { id: number; name: string }[];
+  data?: any;
   values?: string[];
   placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
+  value: any;
+  onChange: (value: any) => void;
   errorMessage?: string;
   isOpen: boolean;
   onClose: () => void;
@@ -59,9 +59,9 @@ export const PopupInput: React.FC<PropsPopupInput> = ({
           <PopUp onClose={onClose} gap="8px">
             <ul className="flex flex-col gap-[8px] w-[310px] font-medium text-[18px]">
               {data
-                ? data?.map((value) => (
+                ? data?.map((value: any, index: number) => (
                     <li
-                      key={value.id}
+                      key={value.id || index}
                       onClick={() => {
                         handleSelectValue(value);
                       }}

@@ -38,14 +38,40 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
     name: "diagnoses",
   });
 
+  const { fields: proceduresFields, append: appendProcedure } = useFieldArray({
+    control,
+    name: "procedures",
+  });
+
   const diagnoses = useWatch({ control, name: "diagnoses" });
+  const procedures = useWatch({ control, name: "procedures" });
 
   const handleAddDiagnosis = async () => {
-    appendDiagnosis({ name: "", date: "", comment: "" });
-    // const lastField = diagnoses[diagnoses.length - 1];
+    const lastField = diagnoses[diagnoses.length - 1];
 
-    // const isValid = await trigger(lastField);
-    // if (isValid) appendDiagnosis({ name: "", date: "", comment: "" });
+    const isValid = await trigger("diagnoses");
+
+    if (
+      isValid &&
+      lastField &&
+      (lastField.name || lastField.date || lastField.comment)
+    ) {
+      appendDiagnosis({ name: null, date: null, comment: null });
+    }
+  };
+
+  const handleAddProcedure = async () => {
+    const lastField = procedures[procedures.length - 1];
+
+    const isValid = await trigger("procedures");
+
+    if (
+      isValid &&
+      lastField &&
+      (lastField.name || lastField.date || lastField.comment)
+    ) {
+      appendProcedure({ name: null, date: null, comment: null });
+    }
   };
 
   return (
@@ -90,6 +116,7 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
+              value={field.value || ""}
               errorMessage={errors?.sterilization__comment?.message}
               styles="h-[46px]"
               lableMargin={false}
@@ -137,6 +164,7 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
+              value={field.value || ""}
               errorMessage={errors?.microchipping__comment?.message}
               styles="h-[46px]"
               lableMargin={false}
@@ -172,6 +200,7 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                       {...field}
                       label="Тип вакцини/препарат"
                       placeholder="Від чого провакциновано та яким препаратом"
+                      value={field.value || ""}
                       errorMessage={fieldState.error?.message}
                       styles="h-[66px]"
                     />
@@ -198,6 +227,7 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                       {...field}
                       label="Рекомендації/коментар"
                       placeholder="Залиште рекомендації"
+                      value={field.value || ""}
                       errorMessage={fieldState.error?.message}
                       styles="h-[46px]"
                     />
@@ -218,16 +248,20 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
           const comment = `diagnoses.${index}.comment`;
 
           return (
-            <div key={field.id} className="flex flex-col gap-[8px] h-[246px]">
+            <div key={field.id} className="flex flex-col gap-[8px]">
               <Controller
                 name={name}
                 control={control}
                 render={({ field, fieldState }) => (
                   <TextInput
+                    {...field}
                     label={`Діагноз ${index + 1}`}
                     placeholder="Впишіть діагноз"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger("diagnoses");
+                    }}
                     errorMessage={fieldState.error?.message}
-                    {...field}
                   />
                 )}
               />
@@ -239,7 +273,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label="Дата постановки"
                     selected={field.value}
-                    onChange={(date) => field.onChange(date)}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      trigger("diagnoses");
+                    }}
                     errorMessage={fieldState.error?.message}
                   />
                 )}
@@ -252,6 +289,11 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
+                    value={field.value || ""}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger("diagnoses");
+                    }}
                     errorMessage={fieldState.error?.message}
                     styles="h-[46px]"
                   />
@@ -272,22 +314,26 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Процедури
         </h3>
-        {diagnosesFields.map((field, index) => {
+        {proceduresFields.map((field, index) => {
           const name = `procedures.${index}.name`;
           const date = `procedures.${index}.date`;
           const comment = `procedures.${index}.comment`;
 
           return (
-            <div key={field.id} className="flex flex-col gap-[8px] h-[246px]">
+            <div key={field.id} className="flex flex-col gap-[8px]">
               <Controller
                 name={name}
                 control={control}
                 render={({ field, fieldState }) => (
                   <TextInput
+                    {...field}
                     label={`Процедура ${index + 1}`}
                     placeholder="Впишіть назву проведеної процедури"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger("procedures");
+                    }}
                     errorMessage={fieldState.error?.message}
-                    {...field}
                   />
                 )}
               />
@@ -299,7 +345,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label="Дата проведення"
                     selected={field.value}
-                    onChange={(date) => field.onChange(date)}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      trigger("procedures");
+                    }}
                     errorMessage={fieldState.error?.message}
                   />
                 )}
@@ -312,6 +361,11 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
+                    value={field.value || ""}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger("procedures");
+                    }}
                     errorMessage={fieldState.error?.message}
                     styles="h-[46px]"
                   />
@@ -322,10 +376,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         })}
         <button
           type="button"
-          onClick={(e) => console.log("1")}
+          onClick={handleAddProcedure}
           className="flex justify-center items-center w-full h-[56px] py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
         >
-          Додати діагноз
+          Додати процедуру
         </button>
       </fieldset>
     </div>

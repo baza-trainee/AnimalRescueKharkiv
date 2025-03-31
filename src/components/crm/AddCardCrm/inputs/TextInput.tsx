@@ -14,7 +14,7 @@ export const TextInput: React.FC<PropsTextInput> = forwardRef(
   ) => {
     return (
       <div className={errorMessage && "pb-[26px]"}>
-        <div className={`relative w-full `}>
+        <div className="relative w-full">
           <label htmlFor={name} className=" block mb-[4px]">
             <span
               className={`${

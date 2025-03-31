@@ -15,13 +15,13 @@ export const BooleanRadio: React.FC<PropsBooleanRadio> = forwardRef(
   ) => {
     return (
       <div className="text-[18px] font-medium leading-[27px]">
-        <span
+        <h4
           className={`block mb-[8px] ${
             !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
           }`}
         >
           Проведено?
-        </span>
+        </h4>
         <div className="flex">
           <RadioInput
             label="Так"

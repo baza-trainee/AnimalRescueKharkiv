@@ -30,23 +30,23 @@ export interface AnimalTypes {
 
 export const defaultValues: TypeAddCardSchema = {
   name: "",
-  origin__arrival_date: "",
+  origin__arrival_date: null,
   origin__city: "",
   origin__address: null,
   general__animal_type: { id: null },
-  gender: "",
-  weight: "",
-  age: "",
-  specialMarks: "",
+  general__gender: "",
+  general__weight: null,
+  general__age: null,
+  general__specials: null,
+  owner__info: null,
+  comment__text: null,
   locations: [{ location: { id: null }, date_from: "", date_to: null }],
-  owner__info: "Відсутня",
-  comment__text: "",
   sterilization__done: false,
   sterilization__date: null,
-  sterilization__comment: "",
+  sterilization__comment: null,
   microchipping__done: false,
   microchipping__date: null,
-  microchipping__comment: "",
+  microchipping__comment: null,
   vaccinations: [{ vaccine_type: "", date: "", comment: "" }],
   diagnoses: [
     {
@@ -75,8 +75,6 @@ export const AddCardForm = () => {
     control,
     handleSubmit,
     trigger,
-    getValues,
-    setValue,
     formState: { errors, isValid, isSubmitted },
   } = useForm<TypeAddCardSchema>({
     defaultValues,
@@ -107,23 +105,26 @@ export const AddCardForm = () => {
   if (isError) return <p>Помилка завантаження даних</p>;
 
   const onSubmit = (data: TypeAddCardSchema) => {
-    console.log(data);
-  };
+    const hasFilledDiagnosis = data.diagnoses?.some(
+      (diag) =>
+        diag.name?.trim() !== "" || diag.date || diag.comment?.trim() !== ""
+    );
 
-  const basicInfoErrorStyle =
-    errors.name ||
-    errors.files ||
-    errors.city ||
-    errors.address ||
-    errors.animalType ||
-    errors.gender ||
-    errors.weight ||
-    errors.age ||
-    errors.specialMarks ||
-    errors.origin__arrival_date ||
-    errors.locations ||
-    errors.owner__info ||
-    errors.comment__text;
+    const hasFilledProcedures = data.procedures?.some(
+      (procedure) =>
+        procedure.name?.trim() !== "" ||
+        procedure.date ||
+        procedure.comment?.trim() !== ""
+    );
+
+    const payload = {
+      ...data,
+      diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
+      procedures: hasFilledProcedures ? data.procedures : null,
+    };
+
+    console.log(payload);
+  };
 
   return (
     <>
@@ -175,13 +176,11 @@ export const AddCardForm = () => {
           <button
             type="button"
             onClick={() => setActiveTab("basic")}
-            className={`px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px] ${
-              basicInfoErrorStyle
-                ? "bg-[#B00000] text-[#EDEEFA] border-[#B00000]"
-                : activeTab === "basic"
-                ? "bg-[#4855CC] text-[#EDEEFA] border-[#4855CC]"
-                : "bg-transparent text-[#4855CC] border-[#4855CC]"
-            }`}
+            className={`${
+              activeTab === "basic"
+                ? "bg-[#4855CC] text-[#EDEEFA]"
+                : "bg-transparent text-[#4855CC]"
+            } px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
           >
             Основна інформація
           </button>
@@ -203,8 +202,6 @@ export const AddCardForm = () => {
               control={control}
               errors={errors}
               trigger={trigger}
-              getValues={getValues}
-              setValue={setValue}
               locationsData={(locationsData as Location[]) || []}
               animalTypesData={(animalTypesData as Location[]) || []}
             />
@@ -223,7 +220,7 @@ export const AddCardForm = () => {
           onClick={toggleModal}
           className="flex justify-center items-center w-full py-[13px] rounded-[10px] text-[20px] text-[#EDEEFA] leading-[30px] bg-[#4855CC] transition duration-[350ms] hover:bg-[#B6BBEB] focus::bg-[#B6BBEB]"
         >
-          Надіслати
+          Зберегти картку
         </button>
       </form>
       {isOpen && isSubmitted && (

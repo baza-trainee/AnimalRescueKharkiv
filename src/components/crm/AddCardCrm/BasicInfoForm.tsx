@@ -16,8 +16,12 @@ import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
 import { CommentInput } from "./inputs/CommentInput";
 import { AddCardFormValues, AnimalTypes, Location } from "./AddCardForm";
+import { NumberInput } from "./inputs/NumberInput";
 
-const genders = ["Самець", "Самка"];
+const genderOptions = [
+  { name: "Самець", value: "male" },
+  { name: "Самка", value: "female" },
+];
 
 interface PropsBasicInfoForm {
   locationsData: Location[];
@@ -31,8 +35,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
   control,
   errors,
   trigger,
-  getValues,
-  setValue,
   locationsData,
   animalTypesData,
 }) => {
@@ -81,6 +83,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
 
     appendLocation({ location: { id: null }, date_from: "", date_to: null });
   };
+
   return (
     <div className="flex flex-col gap-[16px]">
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
@@ -114,86 +117,91 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           control={control}
           render={({ field }) => (
             <TextInput
+              {...field}
               label="Адреса"
               placeholder="Введіть назву вулиці та номер будинку"
               errorMessage={errors?.origin__address?.message}
               value={field.value ?? ""}
-              {...field}
             />
           )}
         />
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
-          name="general__animal_type"
+          name="general__animal_type.id"
           control={control}
           render={({ field }) => (
             <PopupInput
               label="Тип тварини*"
-              data={animalTypesData}
+              data={animalTypesData as { id: number; name: string }[]}
               placeholder="Оберіть тип тварини"
               // value={field.value}
               // onChange={field.onChange}
               value={
                 animalTypesData.find((type) => type.id === field.value) || null
               }
-              onChange={(type) => {
+              onChange={(type: { id: number; name: string }) => {
                 field.onChange(type.id);
               }}
-              errorMessage={errors.general__animal_type?.message}
+              errorMessage={errors.general__animal_type?.id?.message}
               isOpen={openPopup === "animalType"}
               onClose={() => handleTogglePopup("animalType")}
             />
           )}
         />
         <Controller
-          name="gender"
+          name="general__gender"
           control={control}
           render={({ field }) => (
             <PopupInput
               label="Стать*"
-              values={genders}
+              data={genderOptions as { name: string; value: string }[]}
               placeholder="Оберіть стать тварини"
-              value={field.value}
-              onChange={field.onChange}
-              errorMessage={errors.gender?.message}
+              value={
+                genderOptions.find((gender) => gender.value === field.value) ||
+                null
+              }
+              onChange={(gender: { name: string; value: string }) => {
+                field.onChange(gender.value);
+              }}
+              errorMessage={errors.general__gender?.message}
               isOpen={openPopup === "gender"}
               onClose={() => handleTogglePopup("gender")}
             />
           )}
         />
         <Controller
-          name="weight"
+          name="general__weight"
           control={control}
           render={({ field }) => (
-            <TextInput
+            <NumberInput
               label="Вага тварини"
               placeholder="Введіть вагу"
-              errorMessage={errors?.weight?.message}
+              errorMessage={errors?.general__weight?.message}
               {...field}
             />
           )}
         />
         <Controller
-          name="age"
+          name="general__age"
           control={control}
           render={({ field }) => (
-            <TextInput
+            <NumberInput
               label="Вік тварини"
               placeholder="Введіть вік"
-              errorMessage={errors?.age?.message}
+              errorMessage={errors?.general__age?.message}
               {...field}
             />
           )}
         />
         <Controller
-          name="specialMarks"
+          name="general__specials"
           control={control}
           render={({ field }) => (
             <TextInput
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
-              errorMessage={errors?.specialMarks?.message}
+              errorMessage={errors?.general__specials?.message}
               {...field}
             />
           )}
@@ -213,8 +221,8 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               }
               onChange={(location) => {
                 field.onChange(location.id);
-                trigger(`locations.0.location`);
-                trigger(`locations.0.date_from`);
+                trigger("locations.0.location");
+                trigger("locations.0.date_from");
               }}
               errorMessage={fieldState.error?.message}
               isOpen={activeLocationPicker === "currentLocation"}
@@ -274,13 +282,9 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                     //     location.id === field.value;
                     //   }) || null
                     // }
-                    onChange={(e) => {
-                      field.onChange(e.id);
-                      trigger([
-                        `locations.${locIndex}.location`,
-                        `locations.${locIndex}.date_from`,
-                        `locations.${locIndex}.date_to`,
-                      ]);
+                    onChange={(location) => {
+                      field.onChange(location.id);
+                      trigger("locations");
                     }}
                     errorMessage={fieldState.error?.message}
                     isOpen={activeLocationPicker === location}
@@ -302,11 +306,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                         selected={field.value || null}
                         onChange={(e) => {
                           field.onChange(e);
-                          trigger([
-                            `locations.${locIndex}.location`,
-                            `locations.${locIndex}.date_from`,
-                            `locations.${locIndex}.date_to`,
-                          ]);
+                          trigger("locations");
                         }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
@@ -325,11 +325,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                         selected={field.value || null}
                         onChange={(e) => {
                           field.onChange(e);
-                          trigger([
-                            `locations.${locIndex}.location`,
-                            `locations.${locIndex}.date_from`,
-                            `locations.${locIndex}.date_to`,
-                          ]);
+                          trigger("locations");
                         }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
@@ -341,7 +337,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
             </div>
           );
         })}
-
         <button
           type="button"
           onClick={handleAddLocation}
@@ -360,6 +355,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                 {...field}
                 label="Інформація про власника"
                 placeholder="Введіть інформацію"
+                value={field.value ?? "Відсутня"}
                 errorMessage={errors?.owner__info?.message}
               />
             )}
@@ -375,6 +371,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               {...field}
               label="Загальний коментар"
               placeholder="Додайте інформацію, яку вважаєте важливою"
+              value={field.value ?? ""}
               errorMessage={errors?.comment__text?.message}
               styles="h-[66px]"
             />
