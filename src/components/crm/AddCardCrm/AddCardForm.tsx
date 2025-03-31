@@ -30,7 +30,7 @@ export interface AnimalTypes {
 
 export const defaultValues: TypeAddCardSchema = {
   name: "",
-  origin__arrival_date: null,
+  origin__arrival_date: null as unknown as string,
   origin__city: "",
   origin__address: null,
   general__animal_type: { id: null },
@@ -40,26 +40,39 @@ export const defaultValues: TypeAddCardSchema = {
   general__specials: null,
   owner__info: null,
   comment__text: null,
-  locations: [{ location: { id: null }, date_from: "", date_to: null }],
-  sterilization__done: false,
+  locations: [
+    {
+      location: { id: null },
+      date_from: "",
+      date_to: null,
+    },
+  ],
+  sterilization__done: null,
   sterilization__date: null,
   sterilization__comment: null,
-  microchipping__done: false,
+  microchipping__done: null,
   microchipping__date: null,
   microchipping__comment: null,
-  vaccinations: [{ vaccine_type: "", date: "", comment: "" }],
+  vaccinations: [
+    {
+      is_vaccinated: null as unknown as boolean,
+      vaccine_type: null,
+      date: null,
+      comment: null,
+    },
+  ],
   diagnoses: [
     {
-      name: "",
-      date: "",
-      comment: "",
+      name: null,
+      date: null,
+      comment: null,
     },
   ],
   procedures: [
     {
-      name: "",
-      date: "",
-      comment: "",
+      name: null,
+      date: null,
+      comment: null,
     },
   ],
   files: null,

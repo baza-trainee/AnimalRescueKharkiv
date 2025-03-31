@@ -14,10 +14,10 @@ export const addCardSchema = Yup.object().shape({
     .max(30, "Ім’я має бути не більше 30 символів")
     .required("Введіть ім’я"),
   origin__arrival_date: Yup.mixed()
+    .nullable()
     .transform((value) =>
       value instanceof Date ? format(value, "dd/MM/yyyy") : value
     )
-    .nullable()
     .required("Дата прибуття обов’язкова")
     .test(
       "no-later-than-today",
@@ -105,7 +105,7 @@ export const addCardSchema = Yup.object().shape({
         return true;
       }
     ),
-  sterilization__done: Yup.boolean().notRequired(),
+  sterilization__done: Yup.boolean().nullable().notRequired(),
   sterilization__date: Yup.mixed()
     .nullable()
     .transform((value) =>
@@ -122,9 +122,10 @@ export const addCardSchema = Yup.object().shape({
     )
     .notRequired(),
   sterilization__comment: Yup.string()
+    .nullable()
     .max(500, "Коментар не може бути більше 500 символів")
     .notRequired(),
-  microchipping__done: Yup.boolean().notRequired(),
+  microchipping__done: Yup.boolean().nullable().notRequired(),
   microchipping__date: Yup.mixed()
     .nullable()
     .transform((value) =>
@@ -141,13 +142,17 @@ export const addCardSchema = Yup.object().shape({
     )
     .notRequired(),
   microchipping__comment: Yup.string()
+    .nullable()
     .max(500, "Коментар не може бути більше 500 символів")
     .notRequired(),
   vaccinations: Yup.array()
     .of(
-      Yup.object({
-        is_vaccinated: Yup.boolean().notRequired(),
-        vaccine_type: Yup.string().notRequired(),
+      Yup.object().shape({
+        is_vaccinated: Yup.boolean()
+          .nullable()
+          .oneOf([true, false], "Обов'язкове поле")
+          .required("Обов'язкове поле"),
+        vaccine_type: Yup.string().nullable().notRequired(),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>
@@ -164,21 +169,23 @@ export const addCardSchema = Yup.object().shape({
           )
           .notRequired(),
         comment: Yup.string()
+          .nullable()
           .max(500, "Коментар не може бути більше 500 символів")
           .notRequired(),
       })
     )
-    .notRequired()
-    .default([]),
+    .notRequired(),
   diagnoses: Yup.array()
     .of(
-      Yup.object({
-        name: Yup.string().when(["date", "comment"], {
-          is: (date: string, comment: string) =>
-            date?.trim() !== "" || comment?.trim() !== "",
-          then: (schema) => schema.required("Введіть назву діагнозу"),
-          otherwise: (schema) => schema,
-        }),
+      Yup.object().shape({
+        name: Yup.string()
+          .nullable()
+          .when(["date", "comment"], {
+            is: (date: string, comment: string) =>
+              date !== null || comment !== null,
+            then: (schema) => schema.required("Введіть назву діагнозу"),
+            otherwise: (schema) => schema,
+          }),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>
@@ -195,6 +202,7 @@ export const addCardSchema = Yup.object().shape({
           )
           .notRequired(),
         comment: Yup.string()
+          .nullable()
           .max(500, "Коментар не може бути більше 500 символів")
           .notRequired(),
       })
@@ -202,13 +210,15 @@ export const addCardSchema = Yup.object().shape({
     .notRequired(),
   procedures: Yup.array()
     .of(
-      Yup.object({
-        name: Yup.string().when(["date", "comment"], {
-          is: (date: string, comment: string) =>
-            date?.trim() !== "" || comment?.trim() !== "",
-          then: (schema) => schema.required("Введіть назву процедури"),
-          otherwise: (schema) => schema,
-        }),
+      Yup.object().shape({
+        name: Yup.string()
+          .nullable()
+          .when(["date", "comment"], {
+            is: (date: string, comment: string) =>
+              date !== null || comment !== null,
+            then: (schema) => schema.required("Введіть назву діагнозу"),
+            otherwise: (schema) => schema,
+          }),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>
@@ -225,6 +235,7 @@ export const addCardSchema = Yup.object().shape({
           )
           .notRequired(),
         comment: Yup.string()
+          .nullable()
           .max(500, "Коментар не може бути більше 500 символів")
           .notRequired(),
       })

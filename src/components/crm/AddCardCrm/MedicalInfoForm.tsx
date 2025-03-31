@@ -20,19 +20,18 @@ interface PropsMedicalInfoForm {
   trigger: UseFormTrigger<AddCardFormValues>;
 }
 
-interface Vaccination {
-  is_vaccinated: boolean;
-  vaccine_type: string;
-  date: string;
-  comment?: string;
-}
-
 export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   control,
   errors,
   defaultValues,
   trigger,
 }) => {
+  const { fields: vaccinationsFields, append: appendVaccination } =
+    useFieldArray({
+      control,
+      name: "vaccinations",
+    });
+
   const { fields: diagnosesFields, append: appendDiagnosis } = useFieldArray({
     control,
     name: "diagnoses",
@@ -43,6 +42,7 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
     name: "procedures",
   });
 
+  const vaccinations = useWatch({ control, name: "vaccinations" });
   const diagnoses = useWatch({ control, name: "diagnoses" });
   const procedures = useWatch({ control, name: "procedures" });
 
@@ -102,7 +102,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Дата проведення"
               selected={field.value}
-              onChange={(date) => field.onChange(date)}
+              onChange={(date) => {
+                field.onChange(date);
+                trigger("sterilization__date");
+              }}
               errorMessage={errors?.sterilization__date?.message}
               lableMargin={false}
             />
@@ -117,6 +120,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
+              onChange={(e) => {
+                field.onChange(e);
+                trigger("sterilization__comment");
+              }}
               errorMessage={errors?.sterilization__comment?.message}
               styles="h-[46px]"
               lableMargin={false}
@@ -150,7 +157,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Дата проведення"
               selected={field.value}
-              onChange={(date) => field.onChange(date)}
+              onChange={(date) => {
+                field.onChange(date);
+                trigger("microchipping__date");
+              }}
               errorMessage={errors?.microchipping__date?.message}
               lableMargin={false}
             />
@@ -165,6 +175,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
+              onChange={(e) => {
+                field.onChange(e);
+                trigger("microchipping__comment");
+              }}
               errorMessage={errors?.microchipping__comment?.message}
               styles="h-[46px]"
               lableMargin={false}
@@ -176,67 +190,75 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Вакцинація
         </h3>
-        {(defaultValues.vaccinations ?? []).map(
-          (item: Vaccination, index: number) => {
-            return (
-              <div key={index} className="flex flex-col gap-[8px]">
-                <Controller
-                  name={`vaccinations[${index}].is_vaccinated`}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <BooleanRadio
-                      {...field}
-                      name={`vaccinations[${index}].is_vaccinated`}
-                      errorMessage={fieldState.error?.message}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-                <Controller
-                  name={`vaccinations[${index}].vaccine_type`}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <CommentInput
-                      {...field}
-                      label="Тип вакцини/препарат"
-                      placeholder="Від чого провакциновано та яким препаратом"
-                      value={field.value || ""}
-                      errorMessage={fieldState.error?.message}
-                      styles="h-[66px]"
-                    />
-                  )}
-                />
-                <Controller
-                  name={`vaccinations[${index}].date`}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <CustomDatePicker
-                      {...field}
-                      label="Дата проведення"
-                      selected={field.value}
-                      onChange={(date) => field.onChange(date)}
-                      errorMessage={fieldState.error?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name={`vaccinations[${index}].comment`}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <CommentInput
-                      {...field}
-                      label="Рекомендації/коментар"
-                      placeholder="Залиште рекомендації"
-                      value={field.value || ""}
-                      errorMessage={fieldState.error?.message}
-                      styles="h-[46px]"
-                    />
-                  )}
-                />
-              </div>
-            );
-          }
-        )}
+        {vaccinationsFields.map((field, index) => {
+          return (
+            <div key={field.id} className="flex flex-col gap-[8px]">
+              <Controller
+                name={`vaccinations.${index}.is_vaccinated`}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <BooleanRadio
+                    {...field}
+                    name={`vaccinations.${index}.is_vaccinated`}
+                    errorMessage={fieldState.error?.message}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger("vaccinations");
+                    }}
+                  />
+                )}
+              />
+              <Controller
+                name={`vaccinations.${index}.vaccine_type`}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <CommentInput
+                    {...field}
+                    label="Тип вакцини/препарат"
+                    placeholder="Від чого провакциновано та яким препаратом"
+                    value={field.value || ""}
+                    errorMessage={fieldState.error?.message}
+                    styles="h-[66px]"
+                  />
+                )}
+              />
+              <Controller
+                name={`vaccinations.${index}.date`}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <CustomDatePicker
+                    {...field}
+                    label="Дата проведення"
+                    selected={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      trigger("vaccinations");
+                    }}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
+              />
+              <Controller
+                name={`vaccinations.${index}.comment`}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <CommentInput
+                    {...field}
+                    label="Рекомендації/коментар"
+                    placeholder="Залиште рекомендації"
+                    value={field.value || ""}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      trigger("vaccinations");
+                    }}
+                    errorMessage={fieldState.error?.message}
+                    styles="h-[46px]"
+                  />
+                )}
+              />
+            </div>
+          );
+        })}
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
