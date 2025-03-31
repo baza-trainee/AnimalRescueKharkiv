@@ -24,7 +24,7 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
     formState: { errors, isValid, isSubmitted, isDirty },
   } = useForm<TypeStep1Schema>({
     defaultValues: step1Data,
-    mode: "onSubmit",
+    mode: "onBlur",
     resolver: yupResolver(step1Schema),
   });
 
@@ -57,7 +57,7 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
                 {...field}
                 label="Введіть пароль * "
                 placeholder="********"
-                errorMessage={!isOpen ? errors.password?.message : ""}
+                errorMessage={errors.password?.message}
               />
             )}
           />
@@ -69,7 +69,7 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
                 {...field}
                 label="Підтвердьте  пароль *"
                 placeholder="********"
-                errorMessage={!isOpen ? errors.doublePassword?.message : ""}
+                errorMessage={errors.doublePassword?.message }
               />
             )}
           />

@@ -20,7 +20,7 @@ type LoginProps = {
       formState: { errors },
     } = useForm<TypeLoginSchema>({
       defaultValues: { email: "", password: "" },
-      mode: "onSubmit",
+       mode: "onBlur",
       resolver: yupResolver(loginSchema),
     });
   
@@ -52,6 +52,8 @@ type LoginProps = {
                 {...field}
                 label="Логін (Email) *"
                 placeholder="email@gmail.com"
+                errorMessage={errors.email?.message}
+              
               />
             )}
           />
@@ -63,6 +65,8 @@ type LoginProps = {
                 {...field}
                 label="Введіть пароль *"
                 placeholder="********"
+                errorMessage={errors.password?.message}
+     
               />
             )}
           />
