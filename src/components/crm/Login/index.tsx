@@ -39,9 +39,9 @@ type LoginProps = {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-[342px] mx-auto flex flex-col justify-items-center"
+        className="w-[342px] mx-auto  flex flex-col justify-items-center"
       >
-        <h2 className="mt-20 mb-[14px] text-center font-bold text-2xl text-crm-black">Вхід до CRM</h2>
+        <h2 className="mb-[14px] text-center font-bold text-2xl text-crm-black">Вхід до CRM</h2>
         <h2 className="text-center font-bold text-2xl text-crm-black mb-10">Animal Rescue Kharkiv</h2>
         <div className="flex flex-col gap-[35px] items-center">
           <Controller
@@ -78,7 +78,7 @@ type LoginProps = {
           Увійти
         </button>
         <p className="font-medium text-lg text-center text-crm-black">Забули пароль? </p>
-        <a href="/crm/forgot-password" className="font-medium text-lg text-center text-mainBlue mb-1">Відновити</a>
+        <a href="/crm/forgot-password" className="w-fit m-auto font-medium text-lg text-center text-mainBlue mb-1">Відновити</a>
        
       </form>
     </>
