@@ -1,21 +1,18 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import SearchInputIcon from "../CatalogCrm/CatalogCrmIcons/SearchInputIcon";
-import FilterIcon from "../CatalogCrm/CatalogCrmIcons/FilterIcon";
-import SetIcon from "../CatalogCrm/CatalogCrmIcons/Set";
-import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { ICONS } from "../../../constants/icons/icons";
-import { features } from "process";
 import { fetch, remove } from "../../../utils/api";
+import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
+import FilterIcon from "../CatalogCrm/CatalogCrmIcons/FilterIcon";
+import SearchInputIcon from "../CatalogCrm/CatalogCrmIcons/SearchInputIcon";
+import SetIcon from "../CatalogCrm/CatalogCrmIcons/Set";
 
-const roles = [
-  "Волонтер",
-  "Водій",
-  "Адміністратор клініки",
-  "Лікар",
-  "Фотограф",
-];
+interface Role {
+  id: string;
+  title: string;
+}
 
 interface User {
   name: string;
@@ -24,42 +21,73 @@ interface User {
   photo: string;
 }
 
+// Змінюємо функцію searchUsers, додаємо параметр сортування
+const searchUsers = async (
+  domain: string,
+  query?: string,
+  roles?: string | null,
+  sortParam?: string
+) => {
+  try {
+    const usersPath = `/users/${domain}/search`;
+
+    const params = new URLSearchParams();
+    if (query) params.append("query", query);
+
+    // Додаємо параметр ролі
+    if (roles) {
+      params.append("roles", roles);
+    }
+
+    // Додаємо параметр сортування
+    if (sortParam) {
+      params.append("sort", sortParam);
+    }
+
+    const data: User[] = await fetch(usersPath, params);
+
+    return data.map((user: any) => ({
+      name: `${user.first_name} ${user.last_name}`,
+      email: user.email,
+      role: user.role?.title || "Не вказано",
+      photo: user.photo?.uri || "",
+    }));
+  } catch (error) {
+    console.error(
+      "Не вдалося завантажити користувачів:",
+      error instanceof Error ? error.message : String(error)
+    );
+    return [];
+  }
+};
+
 const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
   const [users, setUsers] = useState<User[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterPopupVisible, setFilterPopupVisible] = useState(false);
   const [sortingPopupVisible, setSortingPopupVisible] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  useEffect(() => {
-    const fetchUsers = async (domain: string) => {
-      try {
-        const usersPath = process.env.NEXT_PUBLIC_API_USERS_PATH?.replace(
-          "{domain}",
-          domain
-        );
-        if (usersPath === undefined) {
-          throw new Error(
-            "Missing NEXT_PUBLIC_API_USERS_PATH environment variable"
-          );
-        }
-        const data: User[] = await fetch(usersPath);
-        const transformedUsers: User[] = data.map((user: any) => ({
-          name: `${user.first_name} ${user.last_name}`,
-          email: user.email,
-          role: user.role?.title || "Не вказано",
-          photo: user.photo?.uri || "",
-        }));
-        setUsers(transformedUsers);
-      } catch (error) {
-        console.error("Не вдалося завантажити користувачів:", error);
-      }
-    };
-    fetchUsers(domain);
-  }, []);
+  const [loading, setLoading] = useState(false);
+
   const [sorting, setSorting] = useState<{
     date?: "new" | "old";
     alphabet?: "az" | "za";
   }>({});
+
+  // Функція для отримання параметра сортування на основі вибраних опцій
+  const getSortParam = (): string | undefined => {
+    if (sorting.date === "new") {
+      return "created_at|desc";
+    } else if (sorting.date === "old") {
+      return "created_at|asc";
+    } else if (sorting.alphabet === "az") {
+      return "first_name+last_name|asc";
+    } else if (sorting.alphabet === "za") {
+      return "first_name+last_name|desc";
+    }
+    return undefined;
+  };
 
   const [isOpen, setIsOpen] = useState<string | null>(null);
   const [selectedRol, setSelectedRol] = useState("Ролі");
@@ -69,61 +97,65 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
     email: string | null;
   }>({ show: false, email: null });
 
+  // Функція для завантаження користувачів
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      // Отримуємо параметр сортування
+      const sortParam = getSortParam();
+
+      // Передаємо параметр сортування у функцію пошуку
+      const data = await searchUsers(
+        domain,
+        searchQuery,
+        selectedRole,
+        sortParam
+      );
+      setUsers(data);
+    } catch (error) {
+      console.error("Помилка при завантаженні користувачів:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Завантаження ролей
+  const fetchRoles = async () => {
+    try {
+      const rolesPath = `/roles/${domain}`;
+      const data: Role[] = await fetch(rolesPath);
+      setRoles(data);
+    } catch (error) {
+      console.error("Не вдалося завантажити ролі:", error);
+    }
+  };
+
+  // Ефект для завантаження даних при зміні параметрів
+  useEffect(() => {
+    fetchUsers();
+  }, [domain, searchQuery, selectedRole, sorting]);
+
+  // Ефект для завантаження ролей при монтуванні компонента
+  useEffect(() => {
+    fetchRoles();
+  }, [domain]);
+
   const toggleFilterPopup = () => setFilterPopupVisible(!filterPopupVisible);
   const toggleSortingPopup = () => setSortingPopupVisible(!sortingPopupVisible);
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setSearchQuery(event.target.value); // Функція обробки пошуку
 
   const applySorting = () => {
     setSortingPopupVisible(false);
+    fetchUsers(); // Оновлюємо список після зміни сортування
   };
 
   const deleteUser = async (email: string) => {
     try {
-      await remove("/users/", [{ email, domain: "crm" }]);
-
+      await remove("/users/", [{ email, domain }]);
       setUsers((prevUsers) => prevUsers.filter((user) => user.email !== email));
       setConfirmDelete({ show: false, email: null });
     } catch (error) {
       console.error("Не вдалося видалити користувача:", error);
     }
-  };
-
-  const useFetchRoles = (domain: string) => {
-    const [users, setUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-      const fetchUsers = async () => {
-        try {
-          const usersPath = process.env.NEXT_PUBLIC_API_USERS_PATH?.replace(
-            "{domain}",
-            domain
-          );
-          if (!usersPath) throw new Error("API path is not defined");
-
-          const data: User[] = await fetch(usersPath);
-          const transformedUsers: User[] = data.map((user: any) => ({
-            name: `${user.first_name} ${user.last_name}`,
-            email: user.email,
-            role: user.role?.title || "Не вказано",
-            photo: user.photo?.uri || "",
-          }));
-
-          setUsers(transformedUsers);
-        } catch (error) {
-          setError("Не вдалося завантажити користувачів");
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchUsers();
-    }, [domain]);
-
-    return { users, loading, error };
   };
 
   return (
@@ -132,10 +164,10 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
         <SearchInputIcon />
         <input
           type="text"
-          placeholder="Введіть ім’я користувача або роль"
+          placeholder="Введіть ім'я користувача або роль"
           className="w-full focus:outline-none text-sm placeholder-crm-secondary-blue bg-transparent"
           value={searchQuery}
-          onChange={handleSearch} // Додаємо обробник події
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
       <div className="w-full h-[44px] flex justify-between p-[4px] mb-[16px]">
@@ -152,15 +184,15 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
             <div className="w-full flex flex-col items-start">
               {roles.map((role) => (
                 <div
-                  key={role}
+                  key={role.id}
                   onClick={() => {
-                    setSelectedRole(role === selectedRole ? null : role);
+                    setSelectedRole(role.id === selectedRole ? null : role.id);
                     setFilterPopupVisible(false);
                   }}
                   className={`pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue w-full ${
-                    selectedRole === role ? "bg-gray-200" : ""
+                    selectedRole === role.id ? "bg-gray-200" : ""
                   }`}>
-                  {role}
+                  {role.title}
                 </div>
               ))}
             </div>
@@ -186,7 +218,9 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                       name="sortingdate"
                       value="new"
                       checked={sorting.date === "new"}
-                      onChange={() => setSorting({ ...sorting, date: "new" })}
+                      onChange={() =>
+                        setSorting({ date: "new", alphabet: undefined })
+                      }
                       className="size-[20px]"
                     />
                     Від найновіших
@@ -197,7 +231,9 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                       name="sortingdate"
                       value="old"
                       checked={sorting.date === "old"}
-                      onChange={() => setSorting({ ...sorting, date: "old" })}
+                      onChange={() =>
+                        setSorting({ date: "old", alphabet: undefined })
+                      }
                       className="size-[20px]"
                     />
                     Від найстарших
@@ -214,7 +250,7 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                       value="az"
                       checked={sorting.alphabet === "az"}
                       onChange={() =>
-                        setSorting({ ...sorting, alphabet: "az" })
+                        setSorting({ alphabet: "az", date: undefined })
                       }
                       className="size-[20px]"
                     />
@@ -227,7 +263,7 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                       value="za"
                       checked={sorting.alphabet === "za"}
                       onChange={() =>
-                        setSorting({ ...sorting, alphabet: "za" })
+                        setSorting({ alphabet: "za", date: undefined })
                       }
                       className="size-[20px]"
                     />
@@ -244,70 +280,90 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-4 mb-4">
-        {users.map((user) => (
-          <div key={user.email} className="shadow-md p-4 rounded-lg bg-white">
-            <div className="flex flex-col items-center text-mainBlue">
-              <ICONS.PROFILE_LOGO />
-              <p>{user.name}</p>
-              <p>{user.email}</p>
-              <p className="hidden">{user.role}</p>
-            </div>
 
-            <label htmlFor="role-select" className="text-[18px] font-medium">
-              Оберіть роль користувача
-            </label>
-            <div className="relative w-full">
-              {/* Поле для вибору */}
+      {loading ? (
+        <div className="flex justify-center items-center py-8">
+          <p>Завантаження...</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4 mb-4">
+          {users.length > 0 ? (
+            users.map((user) => (
               <div
-                onClick={() =>
-                  setIsOpen(isOpen === user.email ? null : user.email)
-                }
-                className="w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] text-crm-secondary-blue">
-                <span>{user.role}</span>
-                {ICONS.ARROW_IN_CIRCLE && (
-                  <ICONS.ARROW_IN_CIRCLE className="absolute right-[8px] transform text-gray-500 cursor-pointer" />
-                )}
-              </div>
-              {/* Попап зі списком ролей */}
-              {isOpen === user.email && (
-                <div className="fixed inset-0 flex flex-col content-center justify-center z-10 -top-10 py-[16px] gap-[8px] overflow-auto h-full">
-                  <div className="bg-white py-3 px-6 w-[358px] rounded-[10px] mx-auto">
-                    <div className="w-full flex justify-end">
-                      <button onClick={() => setIsOpen(null)}>
-                        <CloseBtb />
-                      </button>
-                    </div>
-                    {roles.map((role) => (
-                      <div
-                        key={`${user.email}-${role}`}
-                        onClick={() => {
-                          setUsers((prevUsers) =>
-                            prevUsers.map((u) =>
-                              u.email === user.email ? { ...u, role } : u
-                            )
-                          );
-                          setIsOpen(null);
-                        }}
-                        className="pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue">
-                        {role}
-                      </div>
-                    ))}
-                  </div>
+                key={user.email}
+                className="shadow-md p-4 rounded-lg bg-white">
+                <div className="flex flex-col items-center text-mainBlue">
+                  <ICONS.PROFILE_LOGO />
+                  <p>{user.name}</p>
+                  <p>{user.email}</p>
+                  <p className="hidden">{user.role}</p>
                 </div>
-              )}
-            </div>
 
-            <button
-              onClick={() =>
-                setConfirmDelete({ show: true, email: user.email })
-              }
-              className="w-full mt-4 border bg-mainBlue text-white py-2 rounded-md hover:bg-blue-800 transition">
-              Видалити користувача
-            </button>
-          </div>
-        ))}
-      </div>
+                <label
+                  htmlFor="role-select"
+                  className="text-[18px] font-medium">
+                  Оберіть роль користувача
+                </label>
+                <div className="relative w-full">
+                  {/* Поле для вибору */}
+                  <div
+                    onClick={() =>
+                      setIsOpen(isOpen === user.email ? null : user.email)
+                    }
+                    className="w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] text-crm-secondary-blue">
+                    <span>{user.role}</span>
+                    {ICONS.ARROW_IN_CIRCLE && (
+                      <ICONS.ARROW_IN_CIRCLE className="absolute right-[8px] transform text-gray-500 cursor-pointer" />
+                    )}
+                  </div>
+                  {/* Попап зі списком ролей */}
+                  {isOpen === user.email && (
+                    <div className="fixed inset-0 flex flex-col content-center justify-center z-10 -top-10 py-[16px] gap-[8px] overflow-auto h-full">
+                      <div className="bg-white py-3 px-6 w-[358px] rounded-[10px] mx-auto">
+                        <div className="w-full flex justify-end">
+                          <button onClick={() => setIsOpen(null)}>
+                            <CloseBtb />
+                          </button>
+                        </div>
+                        {roles.map((role) => (
+                          <div
+                            key={`${user.email}-${role.id}`}
+                            onClick={() => {
+                              setUsers((prevUsers) =>
+                                prevUsers.map((u) =>
+                                  u.email === user.email
+                                    ? { ...u, role: role.title }
+                                    : u
+                                )
+                              );
+                              setIsOpen(null);
+                            }}
+                            className="pt-2 cursor-pointer hover:bg-gray-100 text-[18px] font- leading-[150%] border-b-[1px] border-lightBlue">
+                            {role.title}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  onClick={() =>
+                    setConfirmDelete({ show: true, email: user.email })
+                  }
+                  className="w-full mt-4 border bg-mainBlue text-white py-2 rounded-md hover:bg-blue-800 transition">
+                  Видалити користувача
+                </button>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <p>Користувачів не знайдено</p>
+            </div>
+          )}
+        </div>
+      )}
+
       {confirmDelete.show && (
         <div className="fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg relative text-center  shadow-lg w-[358px]">

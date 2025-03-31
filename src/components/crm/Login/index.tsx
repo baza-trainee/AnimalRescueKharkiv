@@ -20,12 +20,11 @@ type LoginProps = {
       formState: { errors },
     } = useForm<TypeLoginSchema>({
       defaultValues: { email: "", password: "" },
-      mode: "onSubmit",
+       mode: "onBlur",
       resolver: yupResolver(loginSchema),
     });
   
     const { login } = useAuth() || {};
-  
     const [credentials, setCredentials] = useState({ email: "", password: "" });
 
     console.log(errors);
@@ -53,6 +52,8 @@ type LoginProps = {
                 {...field}
                 label="Логін (Email) *"
                 placeholder="email@gmail.com"
+                errorMessage={errors.email?.message}
+              
               />
             )}
           />
@@ -64,6 +65,8 @@ type LoginProps = {
                 {...field}
                 label="Введіть пароль *"
                 placeholder="********"
+                errorMessage={errors.password?.message}
+     
               />
             )}
           />
@@ -75,7 +78,7 @@ type LoginProps = {
           Увійти
         </button>
         <p className="font-medium text-lg text-center text-crm-black">Забули пароль? </p>
-        <a href="" className="font-medium text-lg text-center text-mainBlue mb-1">Відновити</a>
+        <a href="/crm/forgot-password" className="font-medium text-lg text-center text-mainBlue mb-1">Відновити</a>
        
       </form>
     </>

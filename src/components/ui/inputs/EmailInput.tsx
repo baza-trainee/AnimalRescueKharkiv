@@ -1,5 +1,5 @@
 import { FC, ForwardedRef, forwardRef } from "react";
-// import { ErrorMessage } from "./ErrorMessage";
+import { ErrorMessage } from "./ErrorMessage";
 
 interface PropsEmailInput extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
@@ -8,9 +8,10 @@ interface PropsEmailInput extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const EmailInput: FC<PropsEmailInput> = forwardRef(
   ({ errorMessage, label, name, ...rest }, _ref: ForwardedRef<HTMLInputElement>) => {
+    const hasError = !!errorMessage;
     return (
       <div className="relative w-full">
-        <label htmlFor={name} className="block mb-2 text-[18px] font-medium">
+        <label htmlFor={name} className={`text-[18px] font-medium leading-[27px] ${hasError ? "text-[#B00000]" : "text-[#212833]"}`}>
           {label}
         </label>
         <input
@@ -18,13 +19,9 @@ export const EmailInput: FC<PropsEmailInput> = forwardRef(
           type="email"
           id={name}
           ref={_ref}
-          className={`w-full px-3 py-2 mb-4 rounded-xl bg-transparent  placeholder-crm-secondary-blue border ${
-            errorMessage
-              ? "border-red-600 placeholder:text-red-600 outline-red-600"
-              : "border-gray-300 outline-crm-secondary-blue"
-          } transition duration-300 text-[14px]`}
+          className={`w-full px-2 py-3 rounded-[10px] border-[1px] ${hasError ? "border-[#B00000] placeholder:text-[#B00000] text-[#B00000] outline-[#B00000]" : "placeholder:text-[#B6BBEB] border-[#B6BBEB] outline-[#4855CC]"}  transition duration-[350ms]  outline-1 text-[#070600] text-[14px] font-normal`}
         />
-        {/* {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} */}
+        {hasError && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </div>
     );
   }

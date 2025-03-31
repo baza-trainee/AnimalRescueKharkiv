@@ -1,28 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense  } from "react";
+
+import {post} from "../../utils/api"
 import { SecondStep } from "./formStep/SecondStep";
 import { FirstStep } from "./formStep/FirstStep";
 import { TypeStep1Schema, TypeStep2Schema } from "./validationSchema";
+import { useSearchParams, useRouter } from "next/navigation";
 
-export const RegisterForm = () => {
+
+const RegisterFormComponent = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const token = searchParams.get("token"); 
+
+
   const [step, setStep] = useState(0);
   const [step1Data, setStep1Data] = useState<TypeStep1Schema>({
-    login: "",
+    email: "",
     password: "",
     doublePassword: "",
   });
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+ 
   const handleNext = (data: TypeStep1Schema) => {
     setStep1Data(data);
     setStep(1);
   };
 
-  const handleFinalForm = (data: TypeStep2Schema) => {
-    console.log({ ...step1Data, ...data });
-    setIsSuccess(true);
-  };
+   
+
+  const handleFinalForm = async (data: TypeStep2Schema) => {
+  
+
+  const filteredData = Object.fromEntries(
+    Object.entries({ ...step1Data, ...data, token }).filter(
+      ([key]) =>
+        key !== "agreeTerms" &&
+        key !== "agreeDataProcessing" &&
+        key !== "doublePassword"
+    )
+    );
+  
+    setIsLoading(true);
+    try {
+   const response = await post<{ success: boolean }>("/auth/register",filteredData,{ token }
+);
+
+    if (response?.success) {
+      setIsSuccess(true);
+     
+    }
+  } catch (error) {
+    console.error("Помилка реєстрації:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <section className=" flex flex-col items-center pt-[80px] pb-[20px] md:px-[0] px-[10px]">
@@ -40,3 +77,9 @@ export const RegisterForm = () => {
     </section>
   );
 };
+
+export const RegisterForm = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <RegisterFormComponent />
+  </Suspense>
+);

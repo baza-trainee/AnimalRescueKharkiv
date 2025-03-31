@@ -9,11 +9,16 @@ import SetIcon from "../CatalogCrm/CatalogCrmIcons/Set";
 import CloseBtb from "../CatalogCrm/CatalogCrmIcons/Closebtn";
 import UserSearchAndFilter from "./UserSearchAndFilter";
 import SettingsRole from "./SettingsRole";
+import { post } from "../../../utils/api"; 
+import { useAuth } from "../../../context/AuthContext";
+
 
 const ProfileSettings: React.FC = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { logout } = useAuth();
+ 
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,6 +36,17 @@ const ProfileSettings: React.FC = () => {
       console.log("Email відправлено:", email);
     }
   };
+
+   const handleLogout = async () => {
+     try {
+      await post("/auth/logout"); 
+      logout(); 
+      
+    } catch (error) {
+      console.error("Помилка виходу:", error);
+    }
+  };
+
   const [filterPopupVisible, setFilterPopupVisible] = useState(false);
   const [sortingPopupVisible, setSortingPopupVisible] = useState(false);
   const toggleFilterPopup = (e: React.MouseEvent<HTMLElement>) => {
@@ -42,16 +58,6 @@ const ProfileSettings: React.FC = () => {
     setSortingPopupVisible(!sortingPopupVisible);
   };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("Ролі");
-
-  const roles = [
-    "Волонтер",
-    "Водій",
-    "Адміністратор клініки",
-    "Лікар",
-    "Фотограф",
-  ];
 
   return (
     <div className="w-[342px] mx-auto rounded-lg relative">
@@ -66,7 +72,7 @@ const ProfileSettings: React.FC = () => {
       </AccordionItem>
       <AccordionItem title="Зміна паролю">P0</AccordionItem>
       <Link href="../../crm">
-        <button className="w-full mt-4 border border-blue-600 text-blue-600 py-2 rounded-md hover:bg-blue-100 transition">
+        <button onClick={handleLogout} className="w-full mt-4 border border-blue-600 text-blue-600 py-2 rounded-md hover:bg-blue-100 transition">
           Вийти
         </button>
       </Link>
