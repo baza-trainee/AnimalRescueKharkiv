@@ -310,7 +310,7 @@ const ProfileSettings: React.FC<{ domain: string }> = ({ domain }) => {
                     onClick={() =>
                       setIsOpen(isOpen === user.email ? null : user.email)
                     }
-                    className="w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] text-crm-secondary-blue">
+                    className="w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] text-crm-black">
                     <span>{user.role}</span>
                     {ICONS.ARROW_IN_CIRCLE && (
                       <ICONS.ARROW_IN_CIRCLE className="absolute right-[8px] transform text-gray-500 cursor-pointer" />
