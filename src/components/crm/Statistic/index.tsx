@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { uk } from "date-fns/locale";
 import { isSameMonth, isSameYear } from "date-fns";
 import { fetch } from "../../../utils/api";
-
+import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 
 
@@ -25,16 +25,23 @@ const oneMonthAgo = new Date();
 oneMonthAgo.setMonth(today.getMonth() - 1);
 
 export default function DateRangePicker() {
-  const [startDate, setStartDate] = useState<Date | null>(oneMonthAgo); // Дата на месяц назад
+  const [startDate, setStartDate] = useState<Date | null>(oneMonthAgo); 
   const [endDate, setEndDate] = useState<Date | null>(today);
   const highlightDates = [startDate, endDate]
     .filter((date): date is Date => date !== null)
     .filter((date) => isSameMonth(date, today) && isSameYear(date, today));
 
-  const { data, isLoading, isError } = useQuery<ApiResponse>({
+   const { data, isLoading, isError } = useQuery<ApiResponse>({
     queryKey: ["arkStats", startDate, endDate],
-    queryFn: () => 
-      fetch(`${API_CRM_PATH}${API_STATS_PATH}/animals`)
+    queryFn: () => {
+      const formattedStartDate = startDate ? format(startDate, "dd/MM/yyyy") : undefined;
+      const formattedEndDate = endDate ? format(endDate, "dd/MM/yyyy") : undefined;
+
+      return fetch<ApiResponse>(`${API_CRM_PATH}${API_STATS_PATH}/animals`, {
+        from_date: formattedStartDate,
+        to_date: formattedEndDate,
+      });
+    },
   });
   return (
       <div className=" container">

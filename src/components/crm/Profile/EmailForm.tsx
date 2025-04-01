@@ -91,7 +91,9 @@ const EmailForm: React.FC<EmailFormProps> = ({onSubmit}) => {
           {/* Поле для вибору */}
           <div
             onClick={() => setIsOpen(!isOpen)}
-            className="w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] text-crm-secondary-blue">
+            className={`w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] ${
+              selectedRole !== "Ролі" ? "text-crm-black" : "text-crm-secondary-blue"
+            }`}>
             <span>{selectedRole}</span>
             {ICONS.ARROW_IN_CIRCLE && ( // Перевіряємо, чи існує іконка
               <ICONS.ARROW_IN_CIRCLE
