@@ -9,7 +9,7 @@ interface PropsNumberInput extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const NumberInput: React.FC<PropsNumberInput> = forwardRef(
   (
-    { label, errorMessage, styles, name, ...rest },
+    { label, errorMessage, styles, name, value, ...rest },
     _ref: React.ForwardedRef<HTMLInputElement>
   ) => {
     return (
@@ -29,7 +29,7 @@ export const NumberInput: React.FC<PropsNumberInput> = forwardRef(
             ref={_ref}
             type="number"
             id={name}
-            value={rest.value ?? ""}
+            value={value ?? ""}
             className={`w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent ${
               !!errorMessage
                 ? "border-[#B00000] placeholder:text-[#B00000] outline-[#B00000]"

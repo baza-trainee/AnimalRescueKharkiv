@@ -21,7 +21,7 @@ export const AddLocation = ({ onAdd }: PropsAddLocation) => {
       />
       <button
         type="button"
-        onClick={() => onAdd(customLocation)}
+        onClick={() => onAdd({ id: null, name: customLocation })}
         disabled={customLocation.trim() === ""}
         className={`bg-[#4855CC] transition duration-[350ms] rounded-[10px] w-full py-[13px] text-[20px] leading-[30px] font-normal ${
           customLocation.trim() === ""

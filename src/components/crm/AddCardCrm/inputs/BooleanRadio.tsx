@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
-import { RadioInput } from "../../ui/inputs/RadioInput";
-import { ErrorMessage } from "./inputs/ErrorMessage";
+import { RadioInput } from "./RadioInput";
+import { ErrorMessage } from "./ErrorMessage";
 
 interface PropsBooleanRadio {
   name: string;

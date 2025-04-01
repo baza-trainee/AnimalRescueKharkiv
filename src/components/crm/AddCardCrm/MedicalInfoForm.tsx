@@ -7,30 +7,27 @@ import {
   useWatch,
 } from "react-hook-form";
 import { TypeAddCardSchema } from "./schemas/addCardSchema";
-import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
+import { CustomDatePicker } from "./inputs/CustomDatePicker";
 import { CommentInput } from "./inputs/CommentInput";
-import { BooleanRadio } from "./BooleanRadio";
+import { BooleanRadio } from "../AddCardCrm/inputs/BooleanRadio";
 import { TextInput } from "./inputs/TextInput";
 import { AddCardFormValues } from "./AddCardForm";
 
 interface PropsMedicalInfoForm {
   control: Control<any>;
   errors: FieldErrors<TypeAddCardSchema>;
-  defaultValues: AddCardFormValues;
   trigger: UseFormTrigger<AddCardFormValues>;
 }
 
 export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   control,
   errors,
-  defaultValues,
   trigger,
 }) => {
-  const { fields: vaccinationsFields, append: appendVaccination } =
-    useFieldArray({
-      control,
-      name: "vaccinations",
-    });
+  const { fields: vaccinationsFields } = useFieldArray({
+    control,
+    name: "vaccinations",
+  });
 
   const { fields: diagnosesFields, append: appendDiagnosis } = useFieldArray({
     control,
@@ -42,7 +39,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
     name: "procedures",
   });
 
-  const vaccinations = useWatch({ control, name: "vaccinations" });
   const diagnoses = useWatch({ control, name: "diagnoses" });
   const procedures = useWatch({ control, name: "procedures" });
 

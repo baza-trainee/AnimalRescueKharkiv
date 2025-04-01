@@ -32,17 +32,21 @@ export const CurrentLocation: React.FC<PropsCurrentLocation> = ({
             <li
               key={location.id}
               onClick={() => {
-                if (location.name === "Інше") {
-                  setIsAddingLocation(true);
-                } else {
-                  handleSelectLocation(location);
-                }
+                handleSelectLocation(location);
               }}
               className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"
             >
               <span>{location.name}</span>
             </li>
           ))}
+          <li
+            onClick={() => {
+              setIsAddingLocation(true);
+            }}
+            className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"
+          >
+            Інше
+          </li>
         </ul>
       )}
     </>

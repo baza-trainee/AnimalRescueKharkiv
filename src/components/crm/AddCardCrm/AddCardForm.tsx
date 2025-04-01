@@ -2,24 +2,23 @@
 
 import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { addCardSchema, TypeAddCardSchema } from "./schemas/addCardSchema";
-import { FileInput } from "@/src/components/ui/inputs/FileInput";
+import { FileInput } from "@/src/components/crm/AddCardCrm/inputs/FileInput";
 import { BasicInfoForm } from "./BasicInfoForm";
 import { useToggle } from "../../register/popUp/useToggle";
 import { RequiredValues } from "./PopUp/RequiredValues";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MedicalInfoForm } from "./MedicalInfoForm";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { fetch } from "@/src/utils/api";
-import { format } from "date-fns";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
 const API_ANIMAL_TYPES_PATH = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
 
 export interface Location {
-  id: number;
+  id: number | null;
   name: string;
 }
 
@@ -33,7 +32,7 @@ export const defaultValues: TypeAddCardSchema = {
   origin__arrival_date: null as unknown as string,
   origin__city: "",
   origin__address: null,
-  general__animal_type: { id: null },
+  general__animal_type: { id: null as unknown as number },
   general__gender: "",
   general__weight: null,
   general__age: null,
@@ -42,7 +41,7 @@ export const defaultValues: TypeAddCardSchema = {
   comment__text: null,
   locations: [
     {
-      location: { id: null },
+      location: { id: null, name: null },
       date_from: "",
       date_to: null,
     },
@@ -55,7 +54,7 @@ export const defaultValues: TypeAddCardSchema = {
   microchipping__comment: null,
   vaccinations: [
     {
-      is_vaccinated: null as unknown as boolean,
+      is_vaccinated: false,
       vaccine_type: null,
       date: null,
       comment: null,
@@ -75,7 +74,7 @@ export const defaultValues: TypeAddCardSchema = {
       comment: null,
     },
   ],
-  files: null,
+  media: null,
 } as const;
 
 export type AddCardFormValues = typeof defaultValues;
@@ -118,20 +117,22 @@ export const AddCardForm = () => {
   if (isError) return <p>Помилка завантаження даних</p>;
 
   const onSubmit = (data: TypeAddCardSchema) => {
+    const processedLocations = data.locations?.map(({ location, ...rest }) => ({
+      ...rest,
+      location: location ? { id: location.id } : null,
+    }));
+
     const hasFilledDiagnosis = data.diagnoses?.some(
-      (diag) =>
-        diag.name?.trim() !== "" || diag.date || diag.comment?.trim() !== ""
+      (diag) => diag.name || diag.date || diag.comment
     );
 
     const hasFilledProcedures = data.procedures?.some(
-      (procedure) =>
-        procedure.name?.trim() !== "" ||
-        procedure.date ||
-        procedure.comment?.trim() !== ""
+      (procedure) => procedure.name || procedure.date || procedure.comment
     );
 
     const payload = {
       ...data,
+      locations: processedLocations,
       diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
       procedures: hasFilledProcedures ? data.procedures : null,
     };
@@ -166,11 +167,11 @@ export const AddCardForm = () => {
           </div>
           <div
             className={`min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[24px] ${
-              errors.files && "pb-[26px]"
+              errors.media && "pb-[26px]"
             }`}
           >
             <Controller
-              name="files"
+              name="media"
               control={control}
               render={({ field: { onChange, value, ...field } }) => (
                 <FileInput
@@ -179,7 +180,7 @@ export const AddCardForm = () => {
                   accept="image/*, video/*"
                   multiple
                   onChange={onChange}
-                  errorMessage={errors.files?.message}
+                  errorMessage={errors.media?.message}
                 />
               )}
             />
@@ -216,14 +217,13 @@ export const AddCardForm = () => {
               errors={errors}
               trigger={trigger}
               locationsData={(locationsData as Location[]) || []}
-              animalTypesData={(animalTypesData as Location[]) || []}
+              animalTypesData={(animalTypesData as AnimalTypes[]) || []}
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
             <MedicalInfoForm
               control={control}
               errors={errors}
-              defaultValues={defaultValues}
               trigger={trigger}
             />
           </fieldset>

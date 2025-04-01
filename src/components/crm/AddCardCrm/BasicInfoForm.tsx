@@ -10,10 +10,10 @@ import {
 } from "react-hook-form";
 import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { TypeAddCardSchema } from "./schemas/addCardSchema";
-import { useEffect, useState } from "react";
-import { PopupInput } from "../../ui/inputs/PopupInput";
-import { CustomDatePicker } from "../../ui/CustomDatePicker/CustomDatePicker";
-import { LocationPicker } from "../../ui/inputs/LocationPicker/LocationPicker";
+import { useState } from "react";
+import { PopupInput } from "./inputs/PopupInput";
+import { CustomDatePicker } from "../AddCardCrm/inputs/CustomDatePicker";
+import { LocationPicker } from "./inputs/LocationPicker";
 import { CommentInput } from "./inputs/CommentInput";
 import { AddCardFormValues, AnimalTypes, Location } from "./AddCardForm";
 import { NumberInput } from "./inputs/NumberInput";
@@ -83,7 +83,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
 
     appendLocation({ location: { id: null }, date_from: "", date_to: null });
   };
-
   return (
     <div className="flex flex-col gap-[16px]">
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
@@ -135,8 +134,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               label="Тип тварини*"
               data={animalTypesData as { id: number; name: string }[]}
               placeholder="Оберіть тип тварини"
-              // value={field.value}
-              // onChange={field.onChange}
               value={
                 animalTypesData.find((type) => type.id === field.value) || null
               }
@@ -175,10 +172,11 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           control={control}
           render={({ field }) => (
             <NumberInput
+              {...field}
               label="Вага тварини"
               placeholder="Введіть вагу"
+              value={field.value}
               errorMessage={errors?.general__weight?.message}
-              {...field}
             />
           )}
         />
@@ -187,10 +185,11 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           control={control}
           render={({ field }) => (
             <NumberInput
+              {...field}
               label="Вік тварини"
               placeholder="Введіть вік"
+              value={field.value}
               errorMessage={errors?.general__age?.message}
-              {...field}
             />
           )}
         />
@@ -199,28 +198,32 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           control={control}
           render={({ field }) => (
             <TextInput
+              {...field}
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
               errorMessage={errors?.general__specials?.message}
-              {...field}
             />
           )}
         />
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
-          name="locations.0.location.id"
+          name="locations.0.location"
           control={control}
           render={({ field, fieldState }) => (
             <LocationPicker
               label="Поточна локація*"
               locationsData={locationsData}
-              value={
-                locationsData.find((location) => location.id === field.value) ||
-                null
-              }
+              value={field.value || ""}
               onChange={(location) => {
-                field.onChange(location.id);
+                if (location.id) {
+                  field.onChange({
+                    id: location.id || null,
+                    name: location.name,
+                  });
+                } else {
+                  field.onChange(location);
+                }
                 trigger("locations.0.location");
                 trigger("locations.0.date_from");
               }}
@@ -256,7 +259,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
 
         {optionalUsers?.map((field, index) => {
           const locIndex = index + 1;
-          const location = `locations.${locIndex}.location.id`;
+          const location = `locations.${locIndex}.location`;
           const date_from = `locations.${locIndex}.date_from`;
           const date_to = `locations.${locIndex}.date_to`;
 
@@ -269,22 +272,18 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                   <LocationPicker
                     label={`Локація ${locIndex}`}
                     locationsData={locationsData}
-                    // value={field.value || null}
-                    value={
-                      locationsData.find(
-                        (location) => location.id === field.value
-                      ) || null
-                    }
-                    // value={
-                    //   locationsData.find((location) => {
-                    //     console.log(field.value);
-
-                    //     location.id === field.value;
-                    //   }) || null
-                    // }
+                    value={field.value || ""}
                     onChange={(location) => {
-                      field.onChange(location.id);
-                      trigger("locations");
+                      if (location.id) {
+                        field.onChange({
+                          id: location.id || null,
+                          name: location.name,
+                        });
+                        trigger("locations");
+                      } else {
+                        field.onChange(location);
+                        trigger("locations");
+                      }
                     }}
                     errorMessage={fieldState.error?.message}
                     isOpen={activeLocationPicker === location}
