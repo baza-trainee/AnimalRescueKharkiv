@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import React from "react";
-import ProfileIcon from "../../../../public/assets/icons/menuDesktop/profile-logo.svg";
+import { ICONS } from "../../../constants/icons/icons";
 import { inter } from "../../../fonts";
 
 const HeaderCrm: React.FC<{ title: string }> = ({ title }) => {
@@ -10,14 +10,14 @@ const HeaderCrm: React.FC<{ title: string }> = ({ title }) => {
 
   return (
     <header className="flex mx-auto justify-between w-[390px] pt-[18px] pb-2 border-b border-lightBlue ">
-      <div className="w-[347px] mx-auto flex mx-auto items-center justify-between">
+      <div className="w-[342px] mx-auto flex mx-auto items-center justify-between">
         <h1
           className={`${inter.className} font-bold text-[24px] leading-[150%] text-mainBlue`}>
           {title}
         </h1>
         {isProfilePage && (
           <div className="flex flex-col items-center text-mainBlue ml-4 block">
-            <ProfileIcon />
+            <ICONS.PROFILE_LOGO />
           </div>
         )}
       </div>
