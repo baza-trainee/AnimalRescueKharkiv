@@ -19,7 +19,9 @@ apiClient.interceptors.request.use(
     const token = Cookies.get("access_token");
     const token_type = Cookies.get("token_type") || "Bearer";
     if (token) {
-      config.headers.Authorization = `${capitalizeFirstLetter(token_type)} ${token}`;
+      config.headers.Authorization = `${capitalizeFirstLetter(
+        token_type
+      )} ${token}`;
     }
     return config;
   },
@@ -66,7 +68,9 @@ apiClient.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${newToken}`;
             return apiClient(originalRequest);
           } else {
-            console.log("Refresh token invalid or missing. Redirecting to login...");
+            console.log(
+              "Refresh token invalid or missing. Redirecting to login..."
+            );
             Cookies.remove("access_token");
             window.location.href = "/crm/login";
             return Promise.reject(error);
@@ -84,7 +88,10 @@ export const refreshToken = async (): Promise<string | null> => {
     const response = await apiClient.post(`/auth/refresh`);
     const { access_token } = response.data;
 
-    Cookies.set("access_token", access_token, { secure: true, sameSite: "Strict" });
+    Cookies.set("access_token", access_token, {
+      secure: true,
+      sameSite: "Strict",
+    });
 
     return access_token;
   } catch (error) {
@@ -94,7 +101,10 @@ export const refreshToken = async (): Promise<string | null> => {
   }
 };
 
-export const fetch = async <T>(path: string, params?: Record<string, any>): Promise<T> => {
+export const fetch = async <T>(
+  path: string,
+  params?: Record<string, any>
+): Promise<T> => {
   const config = params ? { params } : {};
   const response = await apiClient.get<T>(path, config);
   return response.data;
@@ -103,7 +113,8 @@ export const fetch = async <T>(path: string, params?: Record<string, any>): Prom
 export const post = async <T>(
   path: string,
   data?: unknown,
-  params?: Record<string, any> ): Promise<T | null> => {
+  params?: Record<string, any>
+): Promise<T | null> => {
   try {
     const queryString = params
       ? "?" + new URLSearchParams(params as Record<string, string>).toString()
@@ -118,7 +129,10 @@ export const post = async <T>(
   }
 };
 
-export const remove = async <T>(path: string, data?: unknown): Promise<T | null> => {
+export const remove = async <T>(
+  path: string,
+  data?: unknown
+): Promise<T | null> => {
   try {
     const response = await apiClient.delete<T>(path, { data });
 

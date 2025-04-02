@@ -12,6 +12,7 @@ import { useState } from "react";
 import { MedicalInfoForm } from "./MedicalInfoForm";
 import { useQueries } from "@tanstack/react-query";
 import { fetch } from "@/src/utils/api";
+import { uploadFiles } from "@/src/utils/media";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
@@ -39,6 +40,13 @@ export const defaultValues: TypeAddCardSchema = {
   general__specials: null,
   owner__info: null,
   comment__text: null,
+  sterilization__done: null,
+  sterilization__date: null,
+  sterilization__comment: null,
+  microchipping__done: null,
+  microchipping__date: null,
+  microchipping__comment: null,
+  media: null,
   locations: [
     {
       location: { id: null, name: null },
@@ -46,12 +54,6 @@ export const defaultValues: TypeAddCardSchema = {
       date_to: null,
     },
   ],
-  sterilization__done: null,
-  sterilization__date: null,
-  sterilization__comment: null,
-  microchipping__done: null,
-  microchipping__date: null,
-  microchipping__comment: null,
   vaccinations: [
     {
       is_vaccinated: false,
@@ -74,7 +76,6 @@ export const defaultValues: TypeAddCardSchema = {
       comment: null,
     },
   ],
-  media: null,
 } as const;
 
 export type AddCardFormValues = typeof defaultValues;
@@ -116,28 +117,41 @@ export const AddCardForm = () => {
   if (isLoading) return <p>Завантаження даних...</p>;
   if (isError) return <p>Помилка завантаження даних</p>;
 
-  const onSubmit = (data: TypeAddCardSchema) => {
-    const processedLocations = data.locations?.map(({ location, ...rest }) => ({
-      ...rest,
-      location: location ? { id: location.id } : null,
-    }));
+  const onSubmit = async (data: TypeAddCardSchema) => {
+    try {
+      let uploadedMedia = null;
 
-    const hasFilledDiagnosis = data.diagnoses?.some(
-      (diag) => diag.name || diag.date || diag.comment
-    );
+      if (data.media && data.media.length > 0) {
+        uploadedMedia = await uploadFiles(data.media);
+      }
 
-    const hasFilledProcedures = data.procedures?.some(
-      (procedure) => procedure.name || procedure.date || procedure.comment
-    );
+      const processedLocations = data.locations?.map(
+        ({ location, ...rest }) => ({
+          ...rest,
+          location: location ? { id: location.id } : null,
+        })
+      );
 
-    const payload = {
-      ...data,
-      locations: processedLocations,
-      diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
-      procedures: hasFilledProcedures ? data.procedures : null,
-    };
+      const hasFilledDiagnosis = data.diagnoses?.some(
+        (diag) => diag.name || diag.date || diag.comment
+      );
 
-    console.log(payload);
+      const hasFilledProcedures = data.procedures?.some(
+        (procedure) => procedure.name || procedure.date || procedure.comment
+      );
+
+      const payload = {
+        ...data,
+        media: uploadedMedia,
+        locations: processedLocations,
+        diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
+        procedures: hasFilledProcedures ? data.procedures : null,
+      };
+
+      console.log(payload);
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
