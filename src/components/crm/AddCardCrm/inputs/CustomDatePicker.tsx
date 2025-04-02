@@ -18,6 +18,7 @@ interface PropsCustomDataPicker {
   errorMessage?: string;
   labelStyles?: string;
   lableMargin?: boolean;
+  wrapperClassName?: string; 
 }
 
 interface PropsCustomInput {
@@ -26,6 +27,7 @@ interface PropsCustomInput {
   placeholder?: string;
   errorMessage?: string;
   isCalendarOpen: boolean;
+  
 }
 
 const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
