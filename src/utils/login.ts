@@ -27,8 +27,14 @@ export const handleLogin = async (
       login(response.data.access_token);
     }
 
-    window.location.href = "/crm/statistic";
-  } catch (error) {
-    console.error("Login failed:", error);
+    return true;
+  } catch (error: any) {
+    
+
+    if (error.response?.status === 401) {
+      throw new Error("Невірний пароль"); 
+    }
+
+    throw new Error("Помилка входу, спробуйте ще раз");
   }
 };

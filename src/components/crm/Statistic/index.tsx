@@ -46,8 +46,8 @@ export default function DateRangePicker() {
   return (
       <div className=" container">
           <div className="flex flex-row justify-between w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
-              <div className="--font-inter font-medium text-2xl leading-9 text-crm-black">Всього тварин в АRK </div>
-              <div className="--font-inter font-medium text-2xl leading-9 text-center text-mainBlue">{data?.total ?? "..."}</div>          
+              <div className="--font-inter font-semibold text-2xl leading-9 text-crm-black">Всього тварин в АRK </div>
+              <div className="--font-inter font-semibold text-2xl leading-9 text-center text-mainBlue">{data?.total ?? "..."}</div>          
           </div>
         
       <h2 className="--font-inter w-[342px] ml-6 mr-6 font-medium text-2xl leading-9 text-crm-black text-center mb-4">Статистика по ARK</h2>

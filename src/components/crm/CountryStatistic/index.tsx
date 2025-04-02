@@ -52,7 +52,7 @@
 
     return (
       <div className="w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]" >
-    <div><h3 className="font-normal text-[20px] text-black ">Кількість тварин прилаштованих по країнах:</h3></div> 
+    <div><h3 className="font-normal text-[20px] text-[#070600] ">Кількість тварин прилаштованих по країнах:</h3></div> 
         <div className="flex-1 min-h-[200px] my-2 ">
         
           <Pie 
