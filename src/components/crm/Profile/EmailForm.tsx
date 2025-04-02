@@ -97,7 +97,7 @@ const EmailForm: React.FC<EmailFormProps> = ({onSubmit}) => {
             <span>{selectedRole}</span>
             {ICONS.ARROW_IN_CIRCLE && ( // Перевіряємо, чи існує іконка
               <ICONS.ARROW_IN_CIRCLE
-                className="absolute right-[8px] transform  text-gray-500 cursor-pointer"
+                className="absolute right-[8px] transform  text-gray-500 cursor-pointer w-[18px] h-[18px]"
                 onClick={() => {
                   document.getElementById("role-select")?.focus();
                 }}
