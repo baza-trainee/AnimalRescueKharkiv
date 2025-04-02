@@ -61,7 +61,8 @@ const DepartmentStatistic = () => {
           data={chartData}
           options={{
             maintainAspectRatio: false,
-            radius: 90,
+            responsive: true,
+            
             plugins: {
               legend: {
                 position: "right",

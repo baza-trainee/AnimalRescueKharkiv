@@ -27,7 +27,7 @@ type LoginProps = {
     const { login } = useAuth() || {};
     const [credentials, setCredentials] = useState({ email: "", password: "" });
 
-    console.log(errors);
+
   
     const onSubmit = (data: TypeLoginSchema) => {
       setCredentials({ email: data.email, password: data.password });
@@ -63,7 +63,7 @@ type LoginProps = {
             render={({ field }) => (
               <PasswordInput
                 {...field}
-                label="Введіть пароль *"
+                label="Пароль *"
                 placeholder="********"
                 errorMessage={errors.password?.message}
      
