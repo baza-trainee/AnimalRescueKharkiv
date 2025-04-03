@@ -36,18 +36,32 @@ export const addCardSchema = Yup.object().shape({
   general__animal_type: Yup.object().shape({
     id: Yup.number().nullable().required("Оберіть тип тварини"),
   }),
-  general__gender: Yup.string().required("Оберіть стать тварини"),
+  general__gender: Yup.string()
+    .oneOf(["male", "female"], "Оберіть стать тварини")
+    .required("Оберіть стать тварини"),
   general__weight: Yup.number()
     .nullable()
+    .min(0, "Вага не може бути від'ємною")
     .transform((value, originalValue) => (originalValue === "" ? null : value))
     .notRequired(),
   general__age: Yup.number()
     .nullable()
+    .min(0, "Вік не може бути від'ємним")
+    .max(100, "Вік не може перевищувати 100 років")
     .transform((value, originalValue) => (originalValue === "" ? null : value))
     .notRequired(),
-  general__specials: Yup.string().nullable().notRequired(),
-  owner__info: Yup.string().nullable().notRequired(),
-  comment__text: Yup.string().nullable().notRequired(),
+  general__specials: Yup.string()
+    .nullable()
+    .max(200, "Не більше 200 символів")
+    .notRequired(),
+  owner__info: Yup.string()
+    .nullable()
+    .max(500, "Не більше 500 символів")
+    .notRequired(),
+  comment__text: Yup.string()
+    .nullable()
+    .max(1000, "Не більше 1000 символів")
+    .notRequired(),
   sterilization__done: Yup.boolean().nullable().notRequired(),
   sterilization__date: Yup.mixed()
     .nullable()
@@ -66,7 +80,7 @@ export const addCardSchema = Yup.object().shape({
     .notRequired(),
   sterilization__comment: Yup.string()
     .nullable()
-    .max(500, "Коментар не може бути більше 500 символів")
+    .max(500, "Не більше 500 символів")
     .notRequired(),
   microchipping__done: Yup.boolean().nullable().notRequired(),
   microchipping__date: Yup.mixed()
@@ -86,7 +100,7 @@ export const addCardSchema = Yup.object().shape({
     .notRequired(),
   microchipping__comment: Yup.string()
     .nullable()
-    .max(500, "Коментар не може бути більше 500 символів")
+    .max(500, "Не більше 500 символів")
     .notRequired(),
   media: Yup.mixed<FileList>()
     .test("fileFormat", "Тільки фото або відео", (value) => {
@@ -158,8 +172,19 @@ export const addCardSchema = Yup.object().shape({
   vaccinations: Yup.array()
     .of(
       Yup.object().shape({
-        is_vaccinated: Yup.boolean(),
-        vaccine_type: Yup.string().nullable().notRequired(),
+        is_vaccinated: Yup.boolean().notRequired(),
+        vaccine_type: Yup.string()
+          .nullable()
+          .when(["is_vaccinated", "date", "comment"], {
+            is: (is_vaccinated: boolean, date: string, comment: string) =>
+              is_vaccinated !== false || date !== null || comment !== null,
+            then: (schema) =>
+              schema
+                .min(2, "Не менше 2 символів")
+                .max(100, "Не більше 100 символів")
+                .required("Введіть тип вакцини або препарат"),
+            otherwise: (schema) => schema,
+          }),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>
@@ -190,7 +215,11 @@ export const addCardSchema = Yup.object().shape({
           .when(["date", "comment"], {
             is: (date: string, comment: string) =>
               date !== null || comment !== null,
-            then: (schema) => schema.required("Введіть назву діагнозу"),
+            then: (schema) =>
+              schema
+                .min(2, "Не менше 2 символів")
+                .max(100, "Не більше 100 символів")
+                .required("Введіть назву діагнозу"),
             otherwise: (schema) => schema,
           }),
         date: Yup.mixed()
@@ -223,7 +252,11 @@ export const addCardSchema = Yup.object().shape({
           .when(["date", "comment"], {
             is: (date: string, comment: string) =>
               date !== null || comment !== null,
-            then: (schema) => schema.required("Введіть назву діагнозу"),
+            then: (schema) =>
+              schema
+                .min(2, "Не менше 2 символів")
+                .max(100, "Не більше 100 символів")
+                .required("Введіть назву процедури"),
             otherwise: (schema) => schema,
           }),
         date: Yup.mixed()
