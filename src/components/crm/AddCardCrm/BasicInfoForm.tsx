@@ -62,17 +62,14 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
 
   const locations = useWatch({ control, name: "locations" });
 
-  const optionalUsers = locationsFields.slice(1);
-
   const handleAddLocation = async () => {
     const lastField = locations[locations.length - 1];
     const hasDate = lastField.date_from && lastField.date_to;
     const isValidDate = lastField.date_to > lastField.date_from;
 
-    const isValid = await trigger("locations");
+    await trigger("locations");
 
     if (
-      !isValid ||
       !lastField.location ||
       !lastField.date_from ||
       (lastField.date_to && !lastField.date_from) ||
@@ -94,7 +91,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               {...field}
               label="Дата прибуття*"
               selected={field.value}
-              onChange={(date) => field.onChange(date)}
               errorMessage={errors?.origin__arrival_date?.message}
             />
           )}
@@ -224,8 +220,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                 } else {
                   field.onChange(location);
                 }
-                trigger("locations.0.location");
-                trigger("locations.0.date_from");
               }}
               errorMessage={fieldState.error?.message}
               isOpen={activeLocationPicker === "currentLocation"}
@@ -244,8 +238,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               selected={field.value || null}
               onChange={(date) => {
                 field.onChange(date);
-                trigger(`locations.0.location`);
-                trigger(`locations.0.date_from`);
               }}
               errorMessage={fieldState.error?.message}
               labelStyles="font-normal text-[14px]"
@@ -257,7 +249,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
           Історія переміщень
         </h3>
 
-        {optionalUsers?.map((field, index) => {
+        {locationsFields.slice(1).map((field, index) => {
           const locIndex = index + 1;
           const location = `locations.${locIndex}.location`;
           const date_from = `locations.${locIndex}.date_from`;
@@ -279,10 +271,8 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                           id: location.id || null,
                           name: location.name,
                         });
-                        trigger("locations");
                       } else {
                         field.onChange(location);
-                        trigger("locations");
                       }
                     }}
                     errorMessage={fieldState.error?.message}
@@ -303,10 +293,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                         {...field}
                         label="З"
                         selected={field.value || null}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          trigger("locations");
-                        }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
                       />
@@ -322,10 +308,6 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                         {...field}
                         label="По"
                         selected={field.value || null}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          trigger("locations");
-                        }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
                       />

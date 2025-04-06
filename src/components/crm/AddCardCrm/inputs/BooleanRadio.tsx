@@ -10,7 +10,7 @@ interface PropsBooleanRadio {
 
 export const BooleanRadio: React.FC<PropsBooleanRadio> = forwardRef(
   (
-    { name, errorMessage, onChange },
+    { name, errorMessage, ...rest },
     _ref: React.ForwardedRef<HTMLInputElement>
   ) => {
     return (
@@ -25,17 +25,19 @@ export const BooleanRadio: React.FC<PropsBooleanRadio> = forwardRef(
           </h4>
           <div className="flex">
             <RadioInput
+              {...rest}
               label="Так"
               name={name}
               value={true}
-              onChange={onChange}
+              onChange={rest.onChange}
               errorMessage={errorMessage}
             />
             <RadioInput
+              {...rest}
               label="Ні"
               name={name}
               value={false}
-              onChange={onChange}
+              onChange={rest.onChange}
               errorMessage={errorMessage}
             />
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}

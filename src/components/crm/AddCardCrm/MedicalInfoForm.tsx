@@ -40,13 +40,9 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   const handleAddDiagnosis = async () => {
     const lastField = diagnoses[diagnoses.length - 1];
 
-    const isValid = await trigger("diagnoses");
+    await trigger("diagnoses");
 
-    if (
-      isValid &&
-      lastField &&
-      (lastField.name || lastField.date || lastField.comment)
-    ) {
+    if (lastField && (lastField.name || lastField.date || lastField.comment)) {
       appendDiagnosis({ name: null, date: null, comment: null });
     }
   };
@@ -54,13 +50,9 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   const handleAddProcedure = async () => {
     const lastField = procedures[procedures.length - 1];
 
-    const isValid = await trigger("procedures");
+    await trigger("procedures");
 
-    if (
-      isValid &&
-      lastField &&
-      (lastField.name || lastField.date || lastField.comment)
-    ) {
+    if (lastField && (lastField.name || lastField.date || lastField.comment)) {
       appendProcedure({ name: null, date: null, comment: null });
     }
   };
@@ -71,20 +63,17 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Стерилізація/кастрація
         </h3>
-        <div className={errors?.sterilization__done && "pb-[26px]"}>
-          <Controller
-            name="sterilization__done"
-            control={control}
-            render={({ field }) => (
-              <BooleanRadio
-                {...field}
-                name="sterilization__done"
-                errorMessage={errors?.sterilization__done?.message}
-                onChange={field.onChange}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="sterilization__done"
+          control={control}
+          render={({ field }) => (
+            <BooleanRadio
+              {...field}
+              name="sterilization__done"
+              errorMessage={errors?.sterilization__done?.message}
+            />
+          )}
+        />
         <Controller
           name="sterilization__date"
           control={control}
@@ -93,10 +82,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Дата проведення"
               selected={field.value}
-              onChange={(date) => {
-                field.onChange(date);
-                trigger("sterilization__date");
-              }}
               errorMessage={errors?.sterilization__date?.message}
               lableMargin={false}
             />
@@ -111,10 +96,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
-              onChange={(e) => {
-                field.onChange(e);
-                trigger("sterilization__comment");
-              }}
               errorMessage={errors?.sterilization__comment?.message}
               styles="h-[46px]"
               lableMargin={false}
@@ -126,20 +107,17 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Чіпування
         </h3>
-        <div className={errors?.microchipping__done && "pb-[26px]"}>
-          <Controller
-            name="microchipping__done"
-            control={control}
-            render={({ field }) => (
-              <BooleanRadio
-                {...field}
-                name="microchipping__done"
-                errorMessage={errors?.microchipping__done?.message}
-                onChange={field.onChange}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="microchipping__done"
+          control={control}
+          render={({ field }) => (
+            <BooleanRadio
+              {...field}
+              name="microchipping__done"
+              errorMessage={errors?.microchipping__done?.message}
+            />
+          )}
+        />
         <Controller
           name="microchipping__date"
           control={control}
@@ -148,10 +126,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Дата проведення"
               selected={field.value}
-              onChange={(date) => {
-                field.onChange(date);
-                trigger("microchipping__date");
-              }}
               errorMessage={errors?.microchipping__date?.message}
               lableMargin={false}
             />
@@ -166,10 +140,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
-              onChange={(e) => {
-                field.onChange(e);
-                trigger("microchipping__comment");
-              }}
               errorMessage={errors?.microchipping__comment?.message}
               styles="h-[46px]"
               lableMargin={false}
@@ -190,7 +160,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                 {...field}
                 name={`vaccinations.0.is_vaccinated`}
                 errorMessage={errors?.vaccinations?.[0]?.is_vaccinated?.message}
-                onChange={field.onChange}
               />
             )}
           />
@@ -203,10 +172,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                 label="Тип вакцини/препарат"
                 placeholder="Від чого провакциновано та яким препаратом"
                 value={field.value || ""}
-                onChange={(e) => {
-                  field.onChange(e);
-                  trigger("vaccinations");
-                }}
                 errorMessage={errors.vaccinations?.[0]?.vaccine_type?.message}
                 styles="h-[66px]"
               />
@@ -220,10 +185,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                 {...field}
                 label="Дата проведення"
                 selected={field.value}
-                onChange={(date) => {
-                  field.onChange(date);
-                  trigger("vaccinations");
-                }}
                 errorMessage={errors.vaccinations?.[0]?.date?.message}
               />
             )}
@@ -237,10 +198,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                 label="Рекомендації/коментар"
                 placeholder="Залиште рекомендації"
                 value={field.value || ""}
-                onChange={(e) => {
-                  field.onChange(e);
-                  trigger("vaccinations");
-                }}
                 errorMessage={errors.vaccinations?.[0]?.comment?.message}
                 styles="h-[46px]"
               />
@@ -267,10 +224,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label={`Діагноз ${index + 1}`}
                     placeholder="Впишіть діагноз"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      trigger("diagnoses");
-                    }}
                     errorMessage={fieldState.error?.message}
                   />
                 )}
@@ -283,10 +236,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label="Дата постановки"
                     selected={field.value}
-                    onChange={(date) => {
-                      field.onChange(date);
-                      trigger("diagnoses");
-                    }}
                     errorMessage={fieldState.error?.message}
                   />
                 )}
@@ -300,10 +249,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      trigger("diagnoses");
-                    }}
                     errorMessage={fieldState.error?.message}
                     styles="h-[46px]"
                   />
@@ -339,10 +284,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label={`Процедура ${index + 1}`}
                     placeholder="Впишіть назву проведеної процедури"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      trigger("procedures");
-                    }}
                     errorMessage={fieldState.error?.message}
                   />
                 )}
@@ -355,10 +296,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label="Дата проведення"
                     selected={field.value}
-                    onChange={(date) => {
-                      field.onChange(date);
-                      trigger("procedures");
-                    }}
                     errorMessage={fieldState.error?.message}
                   />
                 )}
@@ -372,10 +309,6 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      trigger("procedures");
-                    }}
                     errorMessage={fieldState.error?.message}
                     styles="h-[46px]"
                   />

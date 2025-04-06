@@ -37,7 +37,7 @@ export const addCardSchema = Yup.object().shape({
     id: Yup.number().nullable().required("Оберіть тип тварини"),
   }),
   general__gender: Yup.string()
-    .oneOf(["male", "female"], "Оберіть стать тварини")
+    .oneOf(["male", "female", ""], "Оберіть стать тварини")
     .required("Оберіть стать тварини"),
   general__weight: Yup.number()
     .nullable()
@@ -206,16 +206,10 @@ export const addCardSchema = Yup.object().shape({
       Yup.object().shape({
         name: Yup.string()
           .nullable()
-          .when(["date", "comment"], {
-            is: (date: string, comment: string) =>
-              date !== null || comment !== null,
-            then: (schema) =>
-              schema
-                .min(2, "Не менше 2 символів")
-                .max(100, "Не більше 100 символів")
-                .required("Введіть назву діагнозу"),
-            otherwise: (schema) => schema,
-          }),
+          .transform((value) => (value === "" ? null : value))
+          .min(2, "Не менше 2 символів")
+          .max(100, "Не більше 100 символів")
+          .notRequired(),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>
@@ -243,16 +237,10 @@ export const addCardSchema = Yup.object().shape({
       Yup.object().shape({
         name: Yup.string()
           .nullable()
-          .when(["date", "comment"], {
-            is: (date: string, comment: string) =>
-              date !== null || comment !== null,
-            then: (schema) =>
-              schema
-                .min(2, "Не менше 2 символів")
-                .max(100, "Не більше 100 символів")
-                .required("Введіть назву процедури"),
-            otherwise: (schema) => schema,
-          }),
+          .transform((value) => (value === "" ? null : value))
+          .min(2, "Не менше 2 символів")
+          .max(100, "Не більше 100 символів")
+          .notRequired(),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>

@@ -78,13 +78,13 @@ export const CustomDatePicker = forwardRef<
   (
     {
       selected,
-      onChange,
       minDate,
       maxDate,
       label,
       errorMessage,
       labelStyles,
       lableMargin = true,
+      ...rest
     },
     _ref
   ) => {
@@ -115,6 +115,7 @@ export const CustomDatePicker = forwardRef<
           </span>
         )}
         <DatePicker
+          {...rest}
           customInput={
             <CustomInput
               errorMessage={errorMessage}
@@ -122,7 +123,7 @@ export const CustomDatePicker = forwardRef<
             />
           }
           selected={selected}
-          onChange={onChange}
+          onChange={rest.onChange}
           locale={uk}
           dateFormat="dd.MM.yyyy"
           minDate={minDate}
