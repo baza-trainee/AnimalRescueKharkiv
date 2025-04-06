@@ -175,16 +175,10 @@ export const addCardSchema = Yup.object().shape({
         is_vaccinated: Yup.boolean().notRequired(),
         vaccine_type: Yup.string()
           .nullable()
-          .when(["is_vaccinated", "date", "comment"], {
-            is: (is_vaccinated: boolean, date: string, comment: string) =>
-              is_vaccinated !== false || date !== null || comment !== null,
-            then: (schema) =>
-              schema
-                .min(2, "Не менше 2 символів")
-                .max(100, "Не більше 100 символів")
-                .required("Введіть тип вакцини або препарат"),
-            otherwise: (schema) => schema,
-          }),
+          .transform((value) => (value === "" ? null : value))
+          .min(2, "Не менше 2 символів")
+          .max(100, "Не більше 100 символів")
+          .notRequired(),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>
