@@ -62,6 +62,7 @@
                   {...field}
                   label="Логін (Email) *"
                   placeholder="email@gmail.com"
+                  className="w-[342px]"
                   errorMessage={errors.email?.message}
                 
                 />
