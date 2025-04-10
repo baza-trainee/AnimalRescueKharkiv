@@ -1,4 +1,5 @@
 "use client";
+
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "../../../utils/api";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js/auto";
@@ -96,7 +97,7 @@ const DepartmentStatistic = () => {
           }}
         />
       </div>
-      <div className="max-h-[234px] overflow-y-auto w-[120px] pr-1">
+        <div className="max-h-[234px] overflow-y-auto w-[120px] pr-1 custom-scroll">
           <ul className="my-auto">
       {chartData.labels.map((label, index) => (
         <li key={index} className="flex items-center gap-2 text-[10px] text-crm-black font-normal leading-[15px]">
