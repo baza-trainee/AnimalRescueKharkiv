@@ -9,11 +9,12 @@ interface PropsPasswordInput
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   errorMessage?: string;
+  className?: string;
 }
 
 export const PasswordInput: FC<PropsPasswordInput> = forwardRef(
   (
-    { label, errorMessage, name, ...rest },
+    { label, errorMessage,className, name, ...rest },
     _ref: ForwardedRef<HTMLInputElement>
   ) => {
     const [type, setType] = useState<boolean>(true);
@@ -25,7 +26,7 @@ export const PasswordInput: FC<PropsPasswordInput> = forwardRef(
     }`;
 
     return (
-      <div className=" relative flex flex-col gap-[4px] w-full">
+      <div className={`relative flex flex-col gap-[4px] w-full ${className}`}>
         <label
           htmlFor={name}
           className={`${

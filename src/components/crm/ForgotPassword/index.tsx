@@ -48,17 +48,18 @@ export default function ForgotPassword() {
       
         <form onSubmit={handleSubmit(onSubmit)} className="w-96 flex flex-col gap-4">
           <Controller
-            name="email"
+          name="email"
+        
             control={control}
             render={({ field }) => (
-              <EmailInput {...field} label="Логін (Email) *" placeholder="email@gmail.com" />
+              <EmailInput {...field} label="Логін (Email) *" className="w-[342px] m-auto" placeholder="email@gmail.com" />
             )}
           />
           {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
           <button
             type="submit"
-            className="block bg-[#4855CC] transition duration-[350ms] hover:bg-[#3442c7] focus:bg-[#3442c7] outline-none rounded-[10px] py-[13px] w-full disabled:bg-[#0E265D] disabled:opacity-[40%] text-[#EDF7FF] font-normal text-[20px] mb-8 mt-[63px] mx-auto"
+            className="block w-[342px] bg-[#4855CC] transition duration-[350ms] hover:bg-[#3442c7] focus:bg-[#3442c7] outline-none rounded-[10px] py-[13px]  disabled:bg-[#0E265D] disabled:opacity-[40%] text-[#EDF7FF] font-normal text-[20px] mb-8 mt-[63px] mx-auto"
             disabled={isLoading}
           >
             {isLoading ? "Зачекайте..." : "Отримати посилання"}
