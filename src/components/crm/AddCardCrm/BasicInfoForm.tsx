@@ -67,18 +67,15 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
     const hasDate = lastField.date_from && lastField.date_to;
     const isValidDate = lastField.date_to > lastField.date_from;
 
-    await trigger("locations");
+    const isValid = await trigger("locations");
 
     if (
-      !lastField.location ||
-      !lastField.date_from ||
+      (isValid && lastField.location) ||
+      lastField.date_from ||
       (lastField.date_to && !lastField.date_from) ||
-      (hasDate && !isValidDate)
-    ) {
-      return;
-    }
-
-    appendLocation({ location: { id: null }, date_from: "", date_to: null });
+      (hasDate && isValidDate)
+    )
+      appendLocation({ location: { id: null }, date_from: "", date_to: null });
   };
   return (
     <div className="flex flex-col gap-[16px]">

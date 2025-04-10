@@ -40,9 +40,13 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   const handleAddDiagnosis = async () => {
     const lastField = diagnoses[diagnoses.length - 1];
 
-    await trigger("diagnoses");
+    const isValid = await trigger("diagnoses");
 
-    if (lastField && (lastField.name || lastField.date || lastField.comment)) {
+    if (
+      isValid &&
+      lastField &&
+      (lastField.name || lastField.date || lastField.comment)
+    ) {
       appendDiagnosis({ name: null, date: null, comment: null });
     }
   };
@@ -50,9 +54,13 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
   const handleAddProcedure = async () => {
     const lastField = procedures[procedures.length - 1];
 
-    await trigger("procedures");
+    const isValid = await trigger("procedures");
 
-    if (lastField && (lastField.name || lastField.date || lastField.comment)) {
+    if (
+      isValid &&
+      lastField &&
+      (lastField.name || lastField.date || lastField.comment)
+    ) {
       appendProcedure({ name: null, date: null, comment: null });
     }
   };
