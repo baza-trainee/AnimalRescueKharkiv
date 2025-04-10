@@ -146,6 +146,13 @@ export const AddCardForm = () => {
         locations: processedLocations,
         diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
         procedures: hasFilledProcedures ? data.procedures : null,
+        adoption__country: null,
+        adoption__city: null,
+        adoption__date: null,
+        adoption__comment: null,
+        death__dead: null,
+        death__date: null,
+        death__comment: null,
       };
 
       console.log(payload);
