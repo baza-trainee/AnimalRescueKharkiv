@@ -6,7 +6,7 @@ import { isSameMonth, isSameYear } from "date-fns";
 import { fetch } from "../../../utils/api";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { CustomDatePicker } from "../AddCardCrm/inputs/CustomDatePicker";
+import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
@@ -27,10 +27,6 @@ oneMonthAgo.setMonth(today.getMonth() - 1);
 export default function DateRangePicker() {
   const [startDate, setStartDate] = useState<Date | null>(oneMonthAgo); 
   const [endDate, setEndDate] = useState<Date | null>(today);
-  const highlightDates = [startDate, endDate]
-    .filter((date): date is Date => date !== null)
-    .filter((date) => isSameMonth(date, today) && isSameYear(date, today));
-
    const { data, isLoading, isError } = useQuery<ApiResponse>({
     queryKey: ["arkStats", startDate, endDate],
     queryFn: () => {
@@ -54,17 +50,26 @@ export default function DateRangePicker() {
           < div className="flex flex-row gap-4 w-auto mb-6 ml-6 mr-6 mt-4">
         <div className=" w-[163px]">
           <CustomDatePicker
-            label="З"
-            selected={startDate}
-            onChange={(date: Date | null) => setStartDate(date)}
-          />
+  label="З"
+  selected={startDate}
+  onChange={(date: Date | null) => {
+    if (date && endDate && date > endDate) return; 
+    setStartDate(date);
+  }}
+  maxDate={endDate ?? today} 
+/>
         </div>
          
         <div className="w-[163px]">
           <CustomDatePicker
             label="По"
             selected={endDate}
-            onChange={(date: Date | null) => setEndDate(date)}           
+             onChange={(date) => {
+    if (date && startDate && date < startDate) return; 
+    setEndDate(date);
+  }}
+            minDate={startDate ?? undefined}   
+            maxDate={today}          
           />
         </div>
         
