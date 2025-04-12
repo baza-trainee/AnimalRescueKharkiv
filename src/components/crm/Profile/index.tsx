@@ -71,11 +71,10 @@ const ProfileSettings: React.FC = () => {
         <SettingsRole />
       </AccordionItem>
       <AccordionItem title="Зміна паролю">P0</AccordionItem>
-      <Link href="../../crm">
+ 
         <button onClick={handleLogout} className="w-full mt-4 border border-blue-600 text-blue-600 py-2 rounded-md hover:bg-blue-100 transition">
           Вийти
         </button>
-      </Link>
     </div>
   );
 };

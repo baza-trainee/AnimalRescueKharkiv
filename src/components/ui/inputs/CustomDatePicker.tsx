@@ -2,10 +2,10 @@ import { forwardRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import { uk } from "date-fns/locale";
 import "react-datepicker/dist/react-datepicker.css";
-import { ArrowLeftIcon } from "../../../ui/icon/ArrowLeftIcon";
-import { ArrowRightIcon } from "../../../ui/icon/ArrowRightIcon";
-import { ArrowUpIcon } from "../../../ui/icon/ArrowUpIcon";
-import { ArrowDownIcon } from "../../../ui/icon/ArrowDownIcon";
+import { ArrowLeftIcon } from "../../ui/icon/ArrowLeftIcon";
+import { ArrowRightIcon } from "../../ui/icon/ArrowRightIcon";
+import { ArrowUpIcon } from "../../ui/icon/ArrowUpIcon";
+import { ArrowDownIcon } from "../../ui/icon/ArrowDownIcon";
 import { ErrorMessage } from "../inputs/ErrorMessage";
 
 interface PropsCustomDataPicker {
@@ -18,6 +18,7 @@ interface PropsCustomDataPicker {
   errorMessage?: string;
   labelStyles?: string;
   lableMargin?: boolean;
+  wrapperClassName?: string; 
 }
 
 interface PropsCustomInput {
@@ -26,6 +27,7 @@ interface PropsCustomInput {
   placeholder?: string;
   errorMessage?: string;
   isCalendarOpen: boolean;
+  
 }
 
 const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(

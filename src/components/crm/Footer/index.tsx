@@ -23,7 +23,7 @@ const FooterCrm = () => {
                 className={`flex flex-col items-center ${
                   isActive("/crm/statistic")
                     ? "text-mainBlue fill-mainBlue  text-opacity-100"
-                    : " text-mainBlue text-opacity-40 "
+                    : " text-[#b6bbeb] "
                 } `}>
                 <div className=" flex justify-center ">
                   <StatisticIcon />
@@ -39,7 +39,7 @@ const FooterCrm = () => {
                 className={`flex flex-col items-center ${
                   isActive("/crm/add-card")
                     ? "text-mainBlue fill-mainBlue  text-opacity-100"
-                    : " text-mainBlue text-opacity-40 "
+                    : " text-[#b6bbeb]"
                 } `}>
                 <div className="flex justify-center">
                   <AddIcon />
@@ -55,7 +55,7 @@ const FooterCrm = () => {
                 className={`flex flex-col items-center ${
                   isActive("/crm/catalog")
                     ? "text-mainBlue fill-mainBlue  text-opacity-100"
-                    : " text-mainBlue text-opacity-40 "
+                    : " text-[#b6bbeb]"
                 } `}>
                 <div className="flex justify-center">
                   <CardIcon />
@@ -71,7 +71,7 @@ const FooterCrm = () => {
                 className={`flex flex-col items-center ${
                   isActive("/crm/profile")
                     ? "text-mainBlue fill-mainBlue  text-opacity-100"
-                    : " text-mainBlue text-opacity-40 "
+                    : " text-[#b6bbeb] "
                 } `}>
                 <div className="flex justify-center">
                   <ProfileIcon />

@@ -34,7 +34,7 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className=" md:w-[343px] w-[320px] max-w-full"
+        className="max-w-full"
       >
         <div className=" flex flex-col gap-[35px] items-center">
           <Controller
@@ -44,6 +44,7 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
               <EmailInput
                 {...field}
                 label="Логін (Email) *"
+                className="w-[342px]"
                 placeholder="arh@gmail.com"
                 errorMessage={!isOpen ? errors.email?.message : ""}
               />
@@ -57,6 +58,7 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
                 {...field}
                 label="Введіть пароль * "
                 placeholder="********"
+                className="w-[342px]"
                 errorMessage={errors.password?.message}
               />
             )}
@@ -69,6 +71,7 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
                 {...field}
                 label="Підтвердьте  пароль *"
                 placeholder="********"
+                className="w-[342px]"
                 errorMessage={errors.doublePassword?.message }
               />
             )}

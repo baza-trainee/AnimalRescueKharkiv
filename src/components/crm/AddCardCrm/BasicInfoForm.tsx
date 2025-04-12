@@ -12,7 +12,7 @@ import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { TypeAddCardSchema } from "./schemas/addCardSchema";
 import { useState } from "react";
 import { PopupInput } from "./inputs/PopupInput";
-import { CustomDatePicker } from "../AddCardCrm/inputs/CustomDatePicker";
+import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { LocationPicker } from "./inputs/LocationPicker";
 import { CommentInput } from "./inputs/CommentInput";
 import { AddCardFormValues, AnimalTypes, Location } from "./AddCardForm";

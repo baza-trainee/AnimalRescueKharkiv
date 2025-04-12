@@ -39,6 +39,10 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       console.log("Handling 401: Refreshing token...");
 
+        if (originalRequest.url === "/auth/login") {
+        return Promise.reject(error);
+      }
+
       if (originalRequest.url === "/auth/refresh") {
         console.log("No refresh token available. Redirecting to login...");
         Cookies.remove("access_token");

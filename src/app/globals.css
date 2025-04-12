@@ -127,3 +127,11 @@ body {
   font-weight: 700;
   font-size: 16px;
 }
+
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #acacac #f6f6f6;
+}
+.custom-scroll::-webkit-scrollbar-button {
+  display: none;
+}

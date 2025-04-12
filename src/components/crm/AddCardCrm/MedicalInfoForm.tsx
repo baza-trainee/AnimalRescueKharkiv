@@ -7,7 +7,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import { TypeAddCardSchema } from "./schemas/addCardSchema";
-import { CustomDatePicker } from "./inputs/CustomDatePicker";
+import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { CommentInput } from "./inputs/CommentInput";
 import { BooleanRadio } from "../AddCardCrm/inputs/BooleanRadio";
 import { TextInput } from "./inputs/TextInput";

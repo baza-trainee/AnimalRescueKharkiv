@@ -44,7 +44,7 @@ const ResetPasswordComponent=()=> {
           <h2 className="text-2xl font-bold mb-[68px] text-black">Відновлення паролю</h2>
                   
       
-        <form onSubmit={handleSubmit(onSubmit)} className="w-96 flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className=" flex flex-col gap-4 w-[342px]">
           <Controller
                       control={control}
                       name="password"
@@ -52,6 +52,7 @@ const ResetPasswordComponent=()=> {
                         <PasswordInput
                           {...field}
                           label="Новий пароль * "
+                         
                           placeholder="********"
                           errorMessage={errors.password?.message}
                         />
@@ -64,6 +65,7 @@ const ResetPasswordComponent=()=> {
                         <PasswordInput
                           {...field}
                           label="Підтвердити пароль *"
+                         
                           placeholder="********"
                           errorMessage={errors.doublePassword?.message }
                         />
@@ -73,7 +75,7 @@ const ResetPasswordComponent=()=> {
 
           <button
             type="submit"
-            className="block bg-[#4855CC] transition duration-[350ms] hover:bg-[#3442c7] focus:bg-[#3442c7] outline-none rounded-[10px] py-[13px] w-full disabled:bg-[#0E265D] disabled:opacity-[40%] text-[#EDF7FF] font-normal text-[20px] mb-8 mt-[63px] mx-auto"
+            className="block bg-[#4855CC] transition duration-[350ms] hover:bg-[#3442c7] focus:bg-[#3442c7] outline-none rounded-[10px] py-[13px] w-[342px] disabled:bg-[#0E265D] disabled:opacity-[40%] text-[#EDF7FF] font-normal text-[20px] mb-8 mt-[63px] mx-auto"
             disabled={isLoading}
           >
             {isLoading ? "Зачекайте..." : "Зберегти"}
