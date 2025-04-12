@@ -34,11 +34,15 @@ useEffect(() => {
 
     fetchAnimals();
 }, []);
+  
    const formatDate = (dateStr: string) => {
     const [day, month] = dateStr.split("/");
     return `${day}.${month}`;
   };
 
+const maxSlides = 4;
+const visibleAnimals = animals.slice(0, maxSlides);
+  
   return (
     <div className="w-[342px] overflow-hidden mx-6 shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)] border-[1px] border-solid border-mainBlue rounded-[10px] px-[10px] relative mb-20">
       <span className="absolute  bg-crm-backgraund w-full z-10 h-2 right-0 bottom-0"></span>
@@ -52,7 +56,7 @@ useEffect(() => {
         spaceBetween={16}
         slidesPerView={1.2}
       >
-        {animals.map((animal) => (
+        {visibleAnimals.map((animal) => (
           <SwiperSlide
             key={animal.id}
             className="!w-[163px] shadow-[3px_4px_10px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] mb-2 relative">
