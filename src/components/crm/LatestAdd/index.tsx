@@ -1,34 +1,44 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
 import "swiper/css";
+import { useEffect, useState } from "react";
+import { fetch } from "../../../utils/api";
 
-const slides = [
-  {
-    text: "Кузя",
-    texId: "ID414141",
-    texCity: "Вовчанск",
-    dateText: "13.06",
-    img: "/assets/imagescrm/сat.png",
-  },
-  {
-    text: "Кузя",
-    texId: "ID414141",
-    texCity: "Вовчанск",
-    dateText: "13.06",
-    img: "/assets/imagescrm/сat.png",
-  },
-  {
-    text: "Кузя",
-    texId: "ID414141",
-    texCity: "Вовчанск",
-    dateText: "13.06",
-    img: "/assets/imagescrm/сat.png",
-  },
-];
 
-export default () => {
+const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
+const API_LATEST_PATH = "/animals"; 
+
+interface Animal {
+  id: string;
+  name: string;
+  origin: {
+    origin__city: string;
+    origin__arrival_date: string;
+  };
+  media?: {
+    url: string;
+  }[];
+}
+export default function LastAnimals() {
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  const fallbackImage = "/assets/imagescrm/сat.png";
+useEffect(() => {
+    const fetchAnimals = async () => {
+      try {
+         const data = await fetch<Animal[]>(`${API_CRM_PATH}${API_LATEST_PATH}`);
++     setAnimals(data);
+      } catch (err) {
+        console.error("Помилка при завантаженні тваринок:", err);
+      }
+    };
+
+    fetchAnimals();
+}, []);
+   const formatDate = (dateStr: string) => {
+    const [day, month] = dateStr.split("/");
+    return `${day}.${month}`;
+  };
+
   return (
     <div className="w-[342px] overflow-hidden mx-6 shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)] border-[1px] border-solid border-mainBlue rounded-[10px] px-[10px] relative mb-20">
       <span className="absolute  bg-crm-backgraund w-full z-10 h-2 right-0 bottom-0"></span>
@@ -41,21 +51,20 @@ export default () => {
         className="w-[310px] m-auto"
         spaceBetween={16}
         slidesPerView={1.2}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}>
-        {slides.map((slide, index) => (
+      >
+        {animals.map((animal) => (
           <SwiperSlide
-            key={index}
+            key={animal.id}
             className="!w-[163px] shadow-[3px_4px_10px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] mb-2 relative">
             <div className="p-[4px]">
-              <img src={slide.img} alt={slide.text} className="w-[155px]" />
+              <img src={animal.media?.[0]?.url || fallbackImage} alt={animal.name} className="w-[155px]" />
               <div className="">
-                <p className="mt-2 text-xl font-normal --font-inter">
-                  {slide.text}
+                <p className="mt-2 text-xl font-normal --font-inter text-text">
+                  {animal.name}
                 </p>
-                <p className="text-crm-secondary-blue text-sm">{slide.texId}</p>
-                <p className="text-xl">{slide.texCity}</p>
-                <p className="text-xl">{slide.dateText}</p>
+                <p className="text-crm-secondary-blue font-normal text-sm">ID{animal.id}</p>
+                <p className="text-xl font-normal text-text">{animal.origin.origin__city|| "Невідомо"}</p>
+                <p className="text-xl font-normal text-text">{formatDate(animal.origin.origin__arrival_date) || ""}</p>
               </div>
             </div>
           </SwiperSlide>
