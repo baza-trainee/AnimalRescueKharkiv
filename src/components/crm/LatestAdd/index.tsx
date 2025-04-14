@@ -6,7 +6,7 @@ import { fetch } from "../../../utils/api";
 
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
-const API_LATEST_PATH = "/animals"; 
+const API_LATEST_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH; 
 
 interface Animal {
   id: string;
@@ -22,26 +22,33 @@ interface Animal {
 export default function LastAnimals() {
   const [animals, setAnimals] = useState<Animal[]>([]);
   const fallbackImage = "/assets/imagescrm/сat.png";
-useEffect(() => {
-    const fetchAnimals = async () => {
-      try {
-         const data = await fetch<Animal[]>(`${API_CRM_PATH}${API_LATEST_PATH}`);
-+     setAnimals(data);
-      } catch (err) {
-        console.error("Помилка при завантаженні тваринок:", err);
-      }
-    };
 
-    fetchAnimals();
+useEffect(() => {
+  const fetchAnimals = async () => {
+    try {
+      const params = new URLSearchParams();
+      params.append("limit", "4");
+
+      const data = await fetch<Animal[]>(
+        `${API_CRM_PATH}${API_LATEST_PATH}`,
+        params
+      );
+
+      setAnimals(data);
+    } catch (err) {
+      console.error("Помилка при завантаженні тварин:", err);
+    }
+  };
+
+  fetchAnimals();
 }, []);
-  
+
    const formatDate = (dateStr: string) => {
     const [day, month] = dateStr.split("/");
     return `${day}.${month}`;
   };
 
-const maxSlides = 4;
-const visibleAnimals = animals.slice(0, maxSlides);
+
   
   return (
     <div className="w-[342px] overflow-hidden mx-6 shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)] border-[1px] border-solid border-mainBlue rounded-[10px] px-[10px] relative mb-20">
@@ -56,13 +63,13 @@ const visibleAnimals = animals.slice(0, maxSlides);
         spaceBetween={16}
         slidesPerView={1.2}
       >
-        {visibleAnimals.map((animal) => (
+        {animals.map((animal) => (
           <SwiperSlide
             key={animal.id}
             className="!w-[163px] shadow-[3px_4px_10px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] mb-2 relative">
             <div className="p-[4px]">
               <img src={animal.media?.[0]?.url || fallbackImage} alt={animal.name} className="w-[155px]" />
-              <div className="">
+              <div className="pl-1">
                 <p className="mt-2 text-xl font-normal --font-inter text-text">
                   {animal.name}
                 </p>
