@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
 import { Location } from "../AddCardForm";
+import { TextInput } from "@/src/components/ui/inputs/TextInput";
 
 interface PropsAddLocation {
   onAdd: (location: Location) => void;
@@ -18,6 +18,7 @@ export const AddLocation = ({ onAdd }: PropsAddLocation) => {
         placeholder="Назва"
         value={customLocation}
         onChange={(e) => setCustomLocation(e.target.value)}
+        className="bg-transparent"
       />
       <button
         type="button"

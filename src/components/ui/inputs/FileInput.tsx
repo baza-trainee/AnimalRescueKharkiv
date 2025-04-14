@@ -1,8 +1,8 @@
 "use client";
 
 import React, { forwardRef, useRef, useState } from "react";
+import { PlusIcon } from "../icon/PlusIcon";
 import { ErrorMessage } from "./ErrorMessage";
-import { PlusIcon } from "../../../ui/icon/PlusIcon";
 
 interface PropsFileInput extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;

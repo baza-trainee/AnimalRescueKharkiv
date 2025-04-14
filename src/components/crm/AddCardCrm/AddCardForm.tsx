@@ -1,18 +1,18 @@
 "use client";
 
-import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
-import { addCardSchema, TypeAddCardSchema } from "./schemas/addCardSchema";
-import { FileInput } from "@/src/components/crm/AddCardCrm/inputs/FileInput";
 import { BasicInfoForm } from "./BasicInfoForm";
+import { MedicalInfoForm } from "./MedicalInfoForm";
+import { FileInput } from "../../ui/inputs/FileInput";
+import { TextInput } from "../../ui/inputs/TextInput";
 import { useToggle } from "../../register/popUp/useToggle";
+import { addCardSchema, TypeAddCardSchema } from "./schemas/addCardSchema";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { RequiredValues } from "./PopUp/RequiredValues";
 import { useState } from "react";
-import { MedicalInfoForm } from "./MedicalInfoForm";
 import { useQueries } from "@tanstack/react-query";
-import { fetch } from "@/src/utils/api";
-import { uploadFiles } from "@/src/utils/media";
+import { fetch } from "../../../utils/api";
+import { uploadFiles } from "../../../utils/media";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
@@ -168,11 +168,7 @@ export const AddCardForm = () => {
         className="p-[24px] pb-[112px] bg-[#F8F9FD]"
       >
         <fieldset className="flex flex-col gap-[24px]">
-          <div
-            className={`p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] ${
-              errors.name && "pb-[26px]"
-            }`}
-          >
+          <div className="p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
             <Controller
               name="name"
               control={control}
@@ -182,15 +178,12 @@ export const AddCardForm = () => {
                   label="Ім'я*"
                   placeholder="Придумайте ім’я тварини"
                   errorMessage={errors.name?.message}
+                  className="bg-transparent"
                 />
               )}
             />
           </div>
-          <div
-            className={`min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[24px] ${
-              errors.media && "pb-[26px]"
-            }`}
-          >
+          <div className="min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[24px]">
             <Controller
               name="media"
               control={control}

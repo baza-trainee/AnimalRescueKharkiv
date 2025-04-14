@@ -1,9 +1,9 @@
-import { PopUp } from "../PopUp/index";
-import { ArrowDownIcon } from "../../../ui/icon/ArrowDownIcon";
-import { ArrowUpIcon } from "../../../ui/icon/ArrowUpIcon";
-import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
-import { CurrentLocation } from "../PopUp/CurrentLocation";
-import { Location } from "@/src/components/crm/AddCardCrm/AddCardForm";
+import { PopUp } from "../../crm/AddCardCrm/PopUp/index";
+import { ArrowDownIcon } from "../icon/ArrowDownIcon";
+import { ArrowUpIcon } from "../icon/ArrowUpIcon";
+import { CurrentLocation } from "../../crm/AddCardCrm/PopUp/CurrentLocation";
+import { Location } from "../../crm/AddCardCrm/AddCardForm";
+import { TextInput } from "./TextInput";
 
 interface PropsLocationPicker {
   label: string;
@@ -47,6 +47,7 @@ export const LocationPicker: React.FC<PropsLocationPicker> = ({
           value={value?.name || ""}
           onChange={() => {}}
           onClick={isOpen ? onClose : onOpen}
+          className="bg-transparent"
         />
       </div>
       {isOpen && (

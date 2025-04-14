@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "../../ui/icon/ArrowLeftIcon";
 import { ArrowRightIcon } from "../../ui/icon/ArrowRightIcon";
 import { ArrowUpIcon } from "../../ui/icon/ArrowUpIcon";
 import { ArrowDownIcon } from "../../ui/icon/ArrowDownIcon";
-import { ErrorMessage } from "../inputs/ErrorMessage";
+import { ErrorMessage } from "./ErrorMessage";
 
 interface PropsCustomDataPicker {
   selected: Date | null;
@@ -18,7 +18,7 @@ interface PropsCustomDataPicker {
   errorMessage?: string;
   labelStyles?: string;
   lableMargin?: boolean;
-  wrapperClassName?: string; 
+  wrapperClassName?: string;
 }
 
 interface PropsCustomInput {
@@ -27,7 +27,6 @@ interface PropsCustomInput {
   placeholder?: string;
   errorMessage?: string;
   isCalendarOpen: boolean;
-  
 }
 
 const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
@@ -101,10 +100,7 @@ export const CustomDatePicker = forwardRef<
     };
 
     return (
-      <div
-        ref={_ref}
-        className={`relative w-full ${errorMessage && "pb-[26px]"}`}
-      >
+      <div ref={_ref} className="relative w-full">
         {label && (
           <span
             className={`${
@@ -125,7 +121,6 @@ export const CustomDatePicker = forwardRef<
             />
           }
           selected={selected}
-          onChange={rest.onChange}
           locale={uk}
           dateFormat="dd.MM.yyyy"
           minDate={minDate}

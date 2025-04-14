@@ -8,15 +8,15 @@ import {
   UseFormTrigger,
   useWatch,
 } from "react-hook-form";
-import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
-import { TypeAddCardSchema } from "./schemas/addCardSchema";
 import { useState } from "react";
-import { PopupInput } from "./inputs/PopupInput";
+import { TextInput } from "../../ui/inputs/TextInput";
+import { NumberInput } from "../../ui/inputs/NumberInput";
+import { CommentInput } from "../../ui/inputs/CommentInput";
+import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
-import { LocationPicker } from "./inputs/LocationPicker";
-import { CommentInput } from "./inputs/CommentInput";
+import { LocationPicker } from "../../ui/inputs/LocationPicker";
+import { TypeAddCardSchema } from "./schemas/addCardSchema";
 import { AddCardFormValues, AnimalTypes, Location } from "./AddCardForm";
-import { NumberInput } from "./inputs/NumberInput";
 
 const genderOptions = [
   { name: "Самець", value: "male" },
@@ -100,6 +100,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               label="Звідки (місто)*"
               placeholder="Введіть назву міста"
               errorMessage={errors?.origin__city?.message}
+              className="bg-transparent"
               {...field}
             />
           )}
@@ -112,8 +113,9 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               {...field}
               label="Адреса"
               placeholder="Введіть назву вулиці та номер будинку"
-              errorMessage={errors?.origin__address?.message}
               value={field.value ?? ""}
+              errorMessage={errors?.origin__address?.message}
+              className="bg-transparent"
             />
           )}
         />
@@ -194,7 +196,9 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               {...field}
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
+              value={field.value ?? ""}
               errorMessage={errors?.general__specials?.message}
+              className="bg-transparent"
             />
           )}
         />
@@ -281,7 +285,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
               />
 
               <div className="flex gap-[16px]">
-                <div className="flex-grow">
+                <div className="flex-grow w-[151px]">
                   <Controller
                     name={date_from}
                     control={control}
@@ -296,7 +300,7 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
                     )}
                   />
                 </div>
-                <div className="flex-grow">
+                <div className="flex-grow w-[151px]">
                   <Controller
                     name={date_to}
                     control={control}
@@ -324,21 +328,20 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
         </button>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <div className={errors?.owner__info && "pb-[26px]"}>
-          <Controller
-            name="owner__info"
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                {...field}
-                label="Інформація про власника"
-                placeholder="Введіть інформацію"
-                value={field.value ?? "Відсутня"}
-                errorMessage={errors?.owner__info?.message}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="owner__info"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              {...field}
+              label="Інформація про власника"
+              placeholder="Введіть інформацію"
+              value={field.value ?? "Відсутня"}
+              errorMessage={errors?.owner__info?.message}
+              className="bg-transparent"
+            />
+          )}
+        />
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[16px]">
         <Controller

@@ -6,12 +6,12 @@ import {
   UseFormTrigger,
   useWatch,
 } from "react-hook-form";
-import { TypeAddCardSchema } from "./schemas/addCardSchema";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
-import { CommentInput } from "./inputs/CommentInput";
-import { BooleanRadio } from "../AddCardCrm/inputs/BooleanRadio";
-import { TextInput } from "./inputs/TextInput";
+import { CommentInput } from "../../ui/inputs/CommentInput";
+import { BooleanRadio } from "../../ui/inputs/BooleanRadio";
+import { TextInput } from "../../ui/inputs/TextInput";
 import { AddCardFormValues } from "./AddCardForm";
+import { TypeAddCardSchema } from "./schemas/addCardSchema";
 
 interface PropsMedicalInfoForm {
   control: Control<any>;
@@ -233,6 +233,8 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     label={`Діагноз ${index + 1}`}
                     placeholder="Впишіть діагноз"
                     errorMessage={fieldState.error?.message}
+                    value={field.value || ""}
+                    className="bg-transparent"
                   />
                 )}
               />
@@ -293,6 +295,8 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     label={`Процедура ${index + 1}`}
                     placeholder="Впишіть назву проведеної процедури"
                     errorMessage={fieldState.error?.message}
+                    value={field.value || ""}
+                    className="bg-transparent"
                   />
                 )}
               />
