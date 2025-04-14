@@ -11,14 +11,16 @@
   import { useRouter } from "next/navigation";
   import { useEffect } from "react";
 
+  const invalidTokenPage = "/crm/invalid-reset-token";
   const ResetPasswordComponent=()=> {
       const searchParams = useSearchParams();
     const token = searchParams.get("token"); 
     const router = useRouter();
     useEffect(() => {
+   
     const validateToken = async () => { 
       if (!token) {
-        router.replace("/crm/invalid-reset-token"); 
+        router.replace(invalidTokenPage); 
         return;
       }
 
@@ -26,7 +28,7 @@
         await post("/auth/token/validate", { token }); 
       } catch (error) {
         console.error("Token validation error:", error);
-        router.replace("/crm/invalid-reset-token");
+        router.replace(invalidTokenPage);
       }
     };
 
