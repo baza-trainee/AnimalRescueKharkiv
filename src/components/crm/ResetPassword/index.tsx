@@ -8,10 +8,30 @@ import { post } from "../../../utils/api";
 import { useSearchParams } from "next/navigation";
 import { PasswordInput } from "../../ui/inputs/PasswordInput";
 import { ResetSuccess } from "./SuccessResetPopUp";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const ResetPasswordComponent=()=> {
     const searchParams = useSearchParams();
-    const token = searchParams.get("token"); 
+  const token = searchParams.get("token"); 
+  const router = useRouter();
+  useEffect(() => {
+  const validateToken = async () => {
+    if (!token) {
+      router.replace("/crm/invalid-token"); 
+      return;
+    }
+
+    try {
+      await post("/auth/token/validate", { token }); 
+    } catch (error) {
+      console.error("Token validation error:", error);
+      router.replace("/crm/invalid-token");
+    }
+  };
+
+  validateToken();
+}, [token, router]);
   const {
     handleSubmit,
     control,

@@ -7,6 +7,7 @@ import { forgotSchema, TypeForgotSchema } from "./validationForgotSchema";
 import { EmailInput } from "../../ui/inputs/EmailInput";
 import { post } from "../../../utils/api"; 
 import { EmailSent } from "./SuccessPopUp";
+import Link from "next/link";
 
 export default function ForgotPassword() {
   const {
@@ -46,7 +47,7 @@ export default function ForgotPassword() {
           </div>
           
       
-        <form onSubmit={handleSubmit(onSubmit)} className="w-96 flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-96 flex flex-col">
           <Controller
           name="email"
         
@@ -63,7 +64,8 @@ export default function ForgotPassword() {
             disabled={isLoading}
           >
             {isLoading ? "Зачекайте..." : "Отримати посилання"}
-          </button>
+        </button>
+        <Link href="../crm/login" className=" mx-auto w-[342px]  py-3 rounded-[10px] bg-[#0e265d] opacity-40 text-[#edf7ff] text-center font-normal text-[20px] leading-[30px]"> Вхід до CRM</Link>
         </form>
           
            {isPopupOpen && <EmailSent onClose={() => setIsPopupOpen(false)} />}
