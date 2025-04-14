@@ -16,9 +16,9 @@
     const token = searchParams.get("token"); 
     const router = useRouter();
     useEffect(() => {
-    const validateToken = async () => {
+    const validateToken = async () => { 
       if (!token) {
-        router.replace("/crm/invalid-token"); 
+        router.replace("/crm/invalid-reset-token"); 
         return;
       }
 
@@ -26,7 +26,7 @@
         await post("/auth/token/validate", { token }); 
       } catch (error) {
         console.error("Token validation error:", error);
-        router.replace("/crm/invalid-token");
+        router.replace("/crm/invalid-reset-token");
       }
     };
 
@@ -102,7 +102,7 @@
             </button>
           </form>
             
-            {isPopupOpen && <ResetSuccess onClose={() => setIsPopupOpen(false)} />}
+            {isPopupOpen && <ResetSuccess onClose={() => router.push("/crm/login")} />}
         </section>
         
     );
