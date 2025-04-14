@@ -15,8 +15,8 @@ import { CommentInput } from "../../ui/inputs/CommentInput";
 import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker";
-import { TypeAddCardSchema } from "./schemas/addCardSchema";
-import { AddCardFormValues, AnimalTypes, Location } from "./AddCardForm";
+import { TypeAddCardSchema } from "../AddCardCrm/schemas/addCardSchema";
+import { AddCardFormValues, AnimalTypes, Location } from "../AddCardForm";
 
 const genderOptions = [
   { name: "Самець", value: "male" },
@@ -30,8 +30,7 @@ interface PropsBasicInfoForm {
   errors: FieldErrors<TypeAddCardSchema>;
   trigger: UseFormTrigger<AddCardFormValues>;
 }
-
-export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
+const BasicInfo: React.FC<PropsBasicInfoForm> = ({
   control,
   errors,
   trigger,
@@ -362,3 +361,5 @@ export const BasicInfoForm: React.FC<PropsBasicInfoForm> = ({
     </div>
   );
 };
+
+export default BasicInfo;

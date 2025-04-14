@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Control,
   Controller,
@@ -10,8 +12,8 @@ import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { CommentInput } from "../../ui/inputs/CommentInput";
 import { BooleanRadio } from "../../ui/inputs/BooleanRadio";
 import { TextInput } from "../../ui/inputs/TextInput";
-import { AddCardFormValues } from "./AddCardForm";
-import { TypeAddCardSchema } from "./schemas/addCardSchema";
+import { AddCardFormValues } from "../AddCardForm";
+import { TypeAddCardSchema } from "../AddCardCrm/schemas/addCardSchema";
 
 interface PropsMedicalInfoForm {
   control: Control<any>;
@@ -19,7 +21,7 @@ interface PropsMedicalInfoForm {
   trigger: UseFormTrigger<AddCardFormValues>;
 }
 
-export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
+const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
   control,
   errors,
   trigger,
@@ -340,3 +342,5 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
     </div>
   );
 };
+
+export default MedicalInfo;

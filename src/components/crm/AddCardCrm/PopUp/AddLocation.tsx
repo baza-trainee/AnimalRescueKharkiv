@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Location } from "../AddCardForm";
+import { Location } from "../../AddCardForm";
 import { TextInput } from "@/src/components/ui/inputs/TextInput";
 
 interface PropsAddLocation {

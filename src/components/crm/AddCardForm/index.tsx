@@ -1,18 +1,21 @@
 "use client";
 
-import { BasicInfoForm } from "./BasicInfoForm";
-import { MedicalInfoForm } from "./MedicalInfoForm";
 import { FileInput } from "../../ui/inputs/FileInput";
 import { TextInput } from "../../ui/inputs/TextInput";
 import { useToggle } from "../../register/popUp/useToggle";
-import { addCardSchema, TypeAddCardSchema } from "./schemas/addCardSchema";
+import {
+  addCardSchema,
+  TypeAddCardSchema,
+} from "../AddCardCrm/schemas/addCardSchema";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { RequiredValues } from "./PopUp/RequiredValues";
+import { RequiredValues } from "../AddCardCrm/PopUp/RequiredValues";
 import { useState } from "react";
 import { useQueries } from "@tanstack/react-query";
 import { fetch } from "../../../utils/api";
 import { uploadFiles } from "../../../utils/media";
+import BasicInfo from "../BasicInfo";
+import MedicalInfo from "../MedicalInfo";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
@@ -80,7 +83,7 @@ export const defaultValues: TypeAddCardSchema = {
 
 export type AddCardFormValues = typeof defaultValues;
 
-export const AddCardForm = () => {
+const AddCardForm = () => {
   const { isOpen, toggleModal } = useToggle();
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
@@ -226,7 +229,7 @@ export const AddCardForm = () => {
         </div>
         <div>
           <fieldset className={activeTab === "basic" ? "block" : "hidden"}>
-            <BasicInfoForm
+            <BasicInfo
               control={control}
               errors={errors}
               trigger={trigger}
@@ -235,11 +238,7 @@ export const AddCardForm = () => {
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
-            <MedicalInfoForm
-              control={control}
-              errors={errors}
-              trigger={trigger}
-            />
+            <MedicalInfo control={control} errors={errors} trigger={trigger} />
           </fieldset>
         </div>
         <button
@@ -256,3 +255,5 @@ export const AddCardForm = () => {
     </>
   );
 };
+
+export default AddCardForm;
