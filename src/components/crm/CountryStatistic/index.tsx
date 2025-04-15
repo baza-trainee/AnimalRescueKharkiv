@@ -92,7 +92,7 @@
           }}
         />
       </div>
-      <div className="max-h-[234px] overflow-y-auto w-[120px] pr-1 custom-scroll">
+      <div className="max-h-[167px] overflow-y-auto w-[120px] pr-1 custom-scroll">
           <ul className="my-auto">
       {chartData.labels.map((label, index) => (
         <li key={index} className="flex items-center gap-2 text-[10px] text-crm-black font-normal leading-[15px]">
