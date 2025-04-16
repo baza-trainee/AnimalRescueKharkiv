@@ -7,6 +7,7 @@ import { fetch } from "../../../utils/api";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LATEST_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH; 
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface Animal {
   id: string;
@@ -16,7 +17,7 @@ interface Animal {
     origin__arrival_date: string;
   };
   media?: {
-    url: string;
+    uri: string;
   }[];
 }
 export default function LastAnimals() {
@@ -68,7 +69,14 @@ useEffect(() => {
             key={animal.id}
             className="!w-[163px] shadow-[3px_4px_10px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] mb-2 relative">
             <div className="p-[4px]">
-              <img src={animal.media?.[0]?.url || fallbackImage} alt={animal.name} className="w-[155px]" />
+              <img src={
+                    animal.media?.[0]?.uri
+                    ? `${BASE_URL}${animal.media[0].uri}`
+                    : fallbackImage
+                  }
+                  alt={animal.name} 
+                  className="w-[155px] h-[161px] object-cover" 
+              />
               <div className="pl-1">
                 <p className="mt-2 text-xl font-normal --font-inter text-text">
                   {animal.name}
