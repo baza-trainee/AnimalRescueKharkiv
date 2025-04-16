@@ -1,6 +1,6 @@
 export const getTimezoneOffsetForLocation = async (location: string): Promise<number | null> => {
     try {
-      const response = await fetch(`https://timeapi.io/api/timezone/zone?timeZone=Europe%2F${location}`);
+      const response = await fetch(`https://timeapi.io/api/timezone/zone?timeZone=${location}`);
       
       if (!response.ok) {
         console.error('Failed to fetch timezone data');

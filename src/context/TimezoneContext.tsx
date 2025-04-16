@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { getTimezoneOffsetForLocation } from "../utils/timezone";
 
 const TimezoneContext = createContext<number | null>(null);
+const TZ_NAME = process.env.NEXT_PUBLIC_TIME_ZONE_NAME || "";
 
 export const TimezoneProvider = ({ children }: { children: React.ReactNode }) => {
   const [offset, setOffset] = useState<number | null>(null);
@@ -13,14 +14,14 @@ export const TimezoneProvider = ({ children }: { children: React.ReactNode }) =>
       const cached = localStorage.getItem("timezoneOffset");
 
       if (cached !== null) {
-        const parsed = parseInt(cached, 10);
+        const parsed = parseInt(cached, 10); 
         if (!isNaN(parsed)) {
           setOffset(parsed);
           return;
         }
       }
 
-      const fetchedOffset = await getTimezoneOffsetForLocation("Berlin");
+      const fetchedOffset = await getTimezoneOffsetForLocation(TZ_NAME);
 
       if (fetchedOffset !== null) {
         localStorage.setItem("timezoneOffset", fetchedOffset.toString());
