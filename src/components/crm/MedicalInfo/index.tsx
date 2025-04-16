@@ -236,6 +236,10 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
                     placeholder="Впишіть діагноз"
                     errorMessage={fieldState.error?.message}
                     value={field.value || ""}
+                    onChange={(e) => {
+                      field.onChange(e.target.value);
+                      trigger("diagnoses");
+                    }}
                     className="bg-transparent"
                   />
                 )}
@@ -248,6 +252,10 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label="Дата постановки"
                     selected={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      trigger("diagnoses");
+                    }}
                     errorMessage={fieldState.error?.message}
                   />
                 )}
@@ -298,6 +306,10 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
                     placeholder="Впишіть назву проведеної процедури"
                     errorMessage={fieldState.error?.message}
                     value={field.value || ""}
+                    onChange={(e) => {
+                      field.onChange(e.target.value);
+                      trigger("procedures");
+                    }}
                     className="bg-transparent"
                   />
                 )}
@@ -310,6 +322,10 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label="Дата проведення"
                     selected={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      trigger("procedures");
+                    }}
                     errorMessage={fieldState.error?.message}
                   />
                 )}

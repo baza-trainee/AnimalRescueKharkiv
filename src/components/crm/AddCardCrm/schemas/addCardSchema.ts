@@ -114,60 +114,113 @@ export const addCardSchema = Yup.object().shape({
     })
     .notRequired(),
   locations: Yup.array().of(
-    Yup.object().shape({
-      location: Yup.object()
-        .shape({
+    Yup.object()
+      .shape({
+        location: Yup.object().shape({
           id: Yup.number().nullable(),
           name: Yup.string().nullable(),
-        })
-        .test(
-          "location-required",
-          "Оберіть локацію",
-          (value) => !!value?.id || !!value?.name
-        ),
-      date_from: Yup.mixed()
-        .transform((value) =>
-          value instanceof Date ? format(value, "dd/MM/yyyy") : value
-        )
-        .nullable()
-        .test(
-          "no-later-than-today",
-          `Не пізніше за ${formattedTodayDate}`,
-          function (value) {
-            if (!value || typeof value !== "string") return true;
-            const parsedDate = parse(value, "dd/MM/yyyy", new Date());
-            return isValid(parsedDate) && parsedDate <= today;
-          }
-        )
-        .test("required-date-from", "Оберіть дату 'З'", function (value) {
-          const { location } = this.parent;
-          if (location && !value) {
-            return this.createError({ message: "Оберіть дату 'З'" });
-          }
-          return true;
         }),
-      date_to: Yup.mixed()
-        .transform((value) =>
-          value instanceof Date ? format(value, "dd/MM/yyyy") : value
-        )
-        .nullable()
-        .test(
-          "no-later-than-today",
-          `Не пізніше за ${formattedTodayDate}`,
-          function (value) {
-            if (!value || typeof value !== "string") return true;
-            const parsedDate = parse(value, "dd/MM/yyyy", new Date());
-            return isValid(parsedDate) && parsedDate <= today;
+        date_from: Yup.mixed()
+          .transform((value) =>
+            value instanceof Date ? format(value, "dd/MM/yyyy") : value
+          )
+          .nullable()
+          .test(
+            "no-later-than-today",
+            `Не пізніше за ${formattedTodayDate}`,
+            function (value) {
+              if (!value || typeof value !== "string") return true;
+              const parsedDate = parse(value, "dd/MM/yyyy", new Date());
+              return isValid(parsedDate) && parsedDate <= today;
+            }
+          )
+          .test(
+            "required-date-from-for-index-0",
+            "Оберіть дату 'З'",
+            function (value) {
+              const { index } = this.options as unknown as { index: number };
+              if (index === 0 && !value) {
+                return this.createError({
+                  path: `locations[${index}].date_from`,
+                  message: "Оберіть дату",
+                });
+              }
+              return true;
+            }
+          ),
+        date_to: Yup.mixed()
+          .transform((value) =>
+            value instanceof Date ? format(value, "dd/MM/yyyy") : value
+          )
+          .nullable()
+          .test(
+            "no-later-than-today",
+            `Не пізніше за ${formattedTodayDate}`,
+            function (value) {
+              if (!value || typeof value !== "string") return true;
+              const parsedDate = parse(value, "dd/MM/yyyy", new Date());
+              return isValid(parsedDate) && parsedDate <= today;
+            }
+          )
+          .test(
+            "date-to-after-from",
+            'Не раніше за дату "З"',
+            function (value) {
+              const { date_from } = this.parent;
+
+              const parsedFrom = parse(
+                String(date_from),
+                "dd/MM/yyyy",
+                new Date()
+              );
+              const parsedTo = parse(String(value), "dd/MM/yyyy", new Date());
+
+              return parsedTo >= parsedFrom;
+            }
+          ),
+      })
+      .test("required-fields-by-index", "", function (value) {
+        const { index } = this.options as unknown as { index: number };
+
+        const hasLocation = !!value?.location?.id || !!value?.location?.name;
+        const hasDateFrom = !!value?.date_from;
+
+        if (index === 0) {
+          if (!hasLocation) {
+            return this.createError({
+              path: `locations[0].location`,
+              message: "Оберіть поточну локацію",
+            });
           }
-        )
-        .test("date-to-after-from", 'Не раніше дати "З"', function (value) {
-          const { date_from } = this.parent;
-          if (!date_from || !value) {
-            return true;
+        }
+
+        if (index > 0) {
+          if (hasDateFrom && !hasLocation) {
+            return this.createError({
+              path: `locations[${index}].location`,
+              message: "Оберіть локацію",
+            });
           }
-          return value >= date_from;
-        }),
-    })
+
+          if (hasLocation && !hasDateFrom) {
+            return this.createError({
+              path: `locations[${index}].date_from`,
+              message: "Оберіть дату",
+            });
+          }
+        }
+
+        if (index > 1) {
+          if (!hasLocation) {
+            return this.createError({
+              path: `locations[${index}].location`,
+              message: "Оберіть локацію",
+            });
+          }
+        }
+
+        return true;
+      })
   ),
   vaccinations: Yup.array()
     .of(

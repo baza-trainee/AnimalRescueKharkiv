@@ -62,20 +62,30 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
   const locations = useWatch({ control, name: "locations" });
 
   const handleAddLocation = async () => {
-    const lastField = locations[locations.length - 1];
-    const hasDate = lastField.date_from && lastField.date_to;
-    const isValidDate = lastField.date_to > lastField.date_from;
+    const lastIndex = locations.length - 1;
+    const lastField = locations[lastIndex];
+
+    const hasLocation =
+      !!lastField?.location?.id || !!lastField?.location?.name;
+    const hasDateFrom = !!lastField?.date_from;
+    const hasDateTo = !!lastField?.date_to;
+    const hasBothDates = hasDateFrom && hasDateTo;
+    const validDateOrder =
+      hasBothDates && lastField.date_to >= lastField.date_from;
 
     const isValid = await trigger("locations");
 
-    if (
-      (isValid && lastField.location) ||
-      lastField.date_from ||
-      (lastField.date_to && !lastField.date_from) ||
-      (hasDate && isValidDate)
-    )
-      appendLocation({ location: { id: null }, date_from: "", date_to: null });
+    if (isValid && (hasLocation || hasDateFrom || hasDateTo)) {
+      appendLocation({
+        location: { id: null, name: null },
+        date_from: "",
+        date_to: null,
+      });
+    }
   };
+
+  console.log(errors);
+
   return (
     <div className="flex flex-col gap-[16px]">
       <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
@@ -274,6 +284,7 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
                       } else {
                         field.onChange(location);
                       }
+                      trigger("locations");
                     }}
                     errorMessage={fieldState.error?.message}
                     isOpen={activeLocationPicker === location}
@@ -293,6 +304,10 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
                         {...field}
                         label="З"
                         selected={field.value || null}
+                        onChange={(date) => {
+                          field.onChange(date);
+                          trigger("locations");
+                        }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
                       />
@@ -308,6 +323,10 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
                         {...field}
                         label="По"
                         selected={field.value || null}
+                        onChange={(date) => {
+                          field.onChange(date);
+                          trigger("locations");
+                        }}
                         errorMessage={fieldState.error?.message}
                         labelStyles="font-normal text-[14px]"
                       />

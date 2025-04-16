@@ -16,6 +16,7 @@ import { fetch } from "../../../utils/api";
 import { uploadFiles } from "../../../utils/media";
 import BasicInfo from "../BasicInfo";
 import MedicalInfo from "../MedicalInfo";
+import { getCleanLocations } from "../AddCardCrm/helpers/locations";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
@@ -51,6 +52,11 @@ export const defaultValues: TypeAddCardSchema = {
   microchipping__comment: null,
   media: null,
   locations: [
+    {
+      location: { id: null, name: null },
+      date_from: "",
+      date_to: null,
+    },
     {
       location: { id: null, name: null },
       date_from: "",
@@ -128,12 +134,12 @@ const AddCardForm = () => {
         uploadedMedia = await uploadFiles(data.media);
       }
 
-      const processedLocations = data.locations?.map(
-        ({ location, ...rest }) => ({
-          ...rest,
-          location: location ? { id: location.id } : null,
-        })
-      );
+      // const processedLocations = data.locations?.map(
+      //   ({ location, ...rest }) => ({
+      //     ...rest,
+      //     location: location ? { id: location.id } : null,
+      //   })
+      // );
 
       const hasFilledDiagnosis = data.diagnoses?.some(
         (diag) => diag.name || diag.date || diag.comment
@@ -146,7 +152,7 @@ const AddCardForm = () => {
       const payload = {
         ...data,
         media: uploadedMedia,
-        locations: processedLocations,
+        locations: getCleanLocations(data.locations),
         diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
         procedures: hasFilledProcedures ? data.procedures : null,
         adoption__country: null,
