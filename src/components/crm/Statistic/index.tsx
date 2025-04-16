@@ -24,9 +24,18 @@ const today = new Date();
 const oneMonthAgo = new Date();
 oneMonthAgo.setMonth(today.getMonth() - 1);
 
-export default function DateRangePicker() {
-  const [startDate, setStartDate] = useState<Date | null>(oneMonthAgo); 
-  const [endDate, setEndDate] = useState<Date | null>(today);
+export default function DateRangePicker({
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
+}: {
+  startDate: Date | null;
+  endDate: Date | null;
+  setStartDate: React.Dispatch<React.SetStateAction<Date | null>>;
+  setEndDate: React.Dispatch<React.SetStateAction<Date | null>>;
+}) {
+  
    const { data, isLoading, isError } = useQuery<ApiResponse>({
     queryKey: ["arkStats", startDate, endDate],
     queryFn: () => {
@@ -46,7 +55,7 @@ export default function DateRangePicker() {
               <div className="--font-inter font-semibold text-2xl leading-9 text-center text-mainBlue">{data?.total ?? "..."}</div>          
           </div>
         
-      <h2 className="--font-inter w-[342px] ml-6 mr-6 font-medium text-2xl leading-9 text-crm-black text-center mb-4">Статистика по ARK</h2>
+      <h2 className="--font-inter w-[342px] ml-6 mr-6 font-bold text-2xl leading-9 text-crm-black text-center mb-4">Статистика по ARK</h2>
           < div className="flex flex-row gap-4 w-auto mb-6 ml-6 mr-6 mt-4">
         <div className=" w-[163px]">
           <CustomDatePicker
@@ -56,7 +65,8 @@ export default function DateRangePicker() {
     if (date && endDate && date > endDate) return; 
     setStartDate(date);
   }}
-  maxDate={endDate ?? today} 
+            maxDate={endDate ?? today} 
+            labelStyles="text-crm-black text-sm font-normal"
 />
         </div>
          
@@ -69,7 +79,8 @@ export default function DateRangePicker() {
     setEndDate(date);
   }}
             minDate={startDate ?? undefined}   
-            maxDate={today}          
+            maxDate={today}  
+            labelStyles="text-crm-black text-sm font-normal"
           />
         </div>
         
@@ -78,8 +89,10 @@ export default function DateRangePicker() {
         <p>Завантаження даних...</p>
       ) : isError ? (
         <p>Помилка завантаження даних</p>
-      ) : (
-        <div className="flex flex-col gap-1 w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
+      ) :  !data || data.total === 0 ? (
+  <p>Немає даних за вибраний період.</p>
+) : (
+        <div className="flex flex-col gap-2 w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
           <div className="flex flex-row justify-between py-0 px-1 shadow-statistic w-[310px] h-[30px] bg-crm-backgraund">
             <h3 className="--font-inter font-normal text-xl text-crm-black">
               Стерилізовано
