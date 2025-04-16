@@ -3,7 +3,8 @@
   import { fetch } from "../../../utils/api";
   import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js/auto";
   import { Pie } from "react-chartjs-2";
-  import ChartDataLabels from "chartjs-plugin-datalabels";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+  import { format } from "date-fns";
 
   const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
   const API_STATS_PATH = process.env.NEXT_PUBLIC_API_STATS_PATH;
@@ -15,6 +16,10 @@
     data: number[];
   }
 
+  interface Props {
+  startDate: Date | null;
+  endDate: Date | null;
+}
   const backgroundColors = [
     "rgba(232, 193, 160, 1)",
     "rgba(232, 168, 56, 1)",
@@ -35,15 +40,30 @@
 ];
   
 
-  const CountryStatistic = () => {
+const CountryStatistic = ({ startDate, endDate }: Props) => {
+  const formattedStartDate = startDate ? format(startDate, "dd/MM/yyyy") : undefined;
+  const formattedEndDate = endDate ? format(endDate, "dd/MM/yyyy") : undefined;
+
     const { data: apiData, isLoading, isError } = useQuery<ApiResponse>({
-      queryKey: ["countryChartData"],
-      queryFn: () => fetch(`${API_CRM_PATH}${API_STATS_PATH}/countries`),
+      queryKey: ["countryChartData",formattedStartDate, formattedEndDate],
+      queryFn: () => fetch(`${API_CRM_PATH}${API_STATS_PATH}/countries`, {
+        from_date: formattedStartDate,
+        to_date: formattedEndDate,
+      }),
     });
 
     if (isLoading) return <p>Завантаження даних...</p>;
     if (isError) return <p>Помилка завантаження даних</p>;
-
+      if (!apiData || apiData.data.length === 0) {
+    return (
+      <div className="w-[342px] h-[272px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
+        <h3 className="font-normal text-[20px] text-[#070600] mb-4">
+          Кількість тварин прилаштованих по країнах:
+        </h3>
+        <p>Немає даних для вибраного періоду.</p>
+      </div>
+    );
+  }
     const chartData = {
       labels: apiData?.labels || [],
       datasets: [
