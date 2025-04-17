@@ -1,13 +1,13 @@
 import * as Yup from "yup";
 
 const emailRegexp =
-  /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?!ru$|by$|рф$)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 
 const phonePattern = /^\+380 \d{2} \d{3} \d{2} \d{2}$/;
 
 export const step1Schema = Yup.object().shape({
   email: Yup.string()
-    .matches(emailRegexp, "Введіть дійсний email")
+    .matches(emailRegexp, "Введіть дійсний email(не допускаються домени .ru, .by, .рф)")
     .required("Введіть email"),
   password: Yup.string()
     .min(8, "Пароль має містити мінімум 8 символів")

@@ -19,14 +19,14 @@ export const PasswordInput: FC<PropsPasswordInput> = forwardRef(
   ) => {
     const [type, setType] = useState<boolean>(true);
 
-    const style = `  transition duration-[350ms] ${
+    const style = `transition duration-[350ms] ${
       !!errorMessage
         ? "fill-[#B00000]"
         : "fill-[#B6BBEB] hover:fill-[#4855CC] group-focus:fill-[#4855CC] "
     }`;
 
     return (
-      <div className={`relative flex flex-col gap-[4px] w-full ${className}`}>
+      <div className={`relative flex flex-col gap-[4px] w-full  min-w-0  ${className}`}>
         <label
           htmlFor={name}
           className={`${
@@ -40,7 +40,7 @@ export const PasswordInput: FC<PropsPasswordInput> = forwardRef(
             {...rest}
             type={type ? "password" : "text"}
             id={name}
-            className={` w-full px-[8px] py-[12px] rounded-[10px] border-[1px]  ${
+            className={`box-border w-full px-[8px] py-[12px] rounded-[10px] border-[1px]  ${
               !!errorMessage
                 ? "border-[#B00000] placeholder:text-[#B00000] text-[#B00000] outline-[#B00000]"
                 : "placeholder:text-[#B6BBEB] border-[#B6BBEB] outline-[#4855CC]"
