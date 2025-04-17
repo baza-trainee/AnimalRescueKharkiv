@@ -80,8 +80,12 @@ export const FirstStep: FC<PropsFirstStep> = ({ onNext, step1Data }) => {
         <button
           type="submit"
           onClick={toggleModal}
-          disabled={isSubmitted && !isValid}
-          className=" block bg-[#4855CC] transition duration-[350ms] hover:bg-[#3442c7] focus:bg-[#3442c7] outline-none rounded-[10px] py-[13px] w-full disabled:bg-[#0E265D] disabled:opacity-[40%] text-[#EDF7FF] mt-[63px] mx-auto"
+          disabled={ !isValid}
+           className={`block transition duration-[350ms] rounded-[10px] py-[13px] w-full mt-[63px] mx-auto text-[#EDF7FF] ${
+    isValid
+      ? "bg-[#4855CC] hover:bg-[#3442c7] focus:bg-[#3442c7]"
+      : "bg-[#0E265D] opacity-40 cursor-not-allowed"
+  }`}
         >
           Продовжити
         </button>
