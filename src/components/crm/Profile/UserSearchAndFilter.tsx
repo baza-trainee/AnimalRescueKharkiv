@@ -29,7 +29,8 @@ const searchUsers = async (
   sortParam?: string
 ) => {
   try {
-    const usersPath = `/users/${domain}/search`;
+    const apiUsersPathTemplate = process.env.NEXT_PUBLIC_API_USERS_PATH || '';
+    const usersPath = apiUsersPathTemplate.replace('{domain}', domain);
 
     const params = new URLSearchParams();
     if (query) params.append("query", query);

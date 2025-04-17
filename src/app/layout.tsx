@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ReactQueryProvider from "../QueryClientProvider";
 import { AuthProvider } from '../context/AuthContext';
+import { TimezoneProvider } from '../context/TimezoneContext';
 import './globals.css';
 
 
@@ -23,10 +24,11 @@ export default function RootLayout({
       <body>
         
         <ReactQueryProvider>
-<AuthProvider>
-          
-            {children} {/* Here the pages will be injected */}
- </AuthProvider>          
+          <AuthProvider>
+            <TimezoneProvider>          
+              {children} {/* Here the pages will be injected */}
+            </TimezoneProvider>
+          </AuthProvider>          
         </ReactQueryProvider>
       </body>
     </html>

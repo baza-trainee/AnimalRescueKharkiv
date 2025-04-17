@@ -18,11 +18,13 @@ interface RolesContextType {
 
 const RolesContext = createContext<RolesContextType | undefined>(undefined);
 
-export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const RolesProvider: React.FC<{ children: React.ReactNode; domain: string }> = ({ children, domain }) => {
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { userRole } = useAuth() || {};
+  const apiRolesPathTemplate = process.env.NEXT_PUBLIC_API_ROLES_PATH || '';
+  const rolesPath = apiRolesPathTemplate.replace('{domain}', domain);
 
   useEffect(() => {
 
