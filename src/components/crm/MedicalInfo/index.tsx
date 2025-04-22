@@ -1,31 +1,23 @@
 "use client";
 
 import {
-  Control,
   Controller,
-  FieldErrors,
   useFieldArray,
-  UseFormTrigger,
+  useFormContext,
   useWatch,
 } from "react-hook-form";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { CommentInput } from "../../ui/inputs/CommentInput";
 import { BooleanRadio } from "../../ui/inputs/BooleanRadio";
 import { TextInput } from "../../ui/inputs/TextInput";
-import { AddCardFormValues } from "../AddCardForm";
-import { TypeAddCardSchema } from "../AddCardCrm/schemas/addCardSchema";
 
-interface PropsMedicalInfoForm {
-  control: Control<any>;
-  errors: FieldErrors<TypeAddCardSchema>;
-  trigger: UseFormTrigger<AddCardFormValues>;
-}
+const MedicalInfo: React.FC = () => {
+  const {
+    control,
+    formState: { errors },
+    trigger,
+  } = useFormContext();
 
-const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
-  control,
-  errors,
-  trigger,
-}) => {
   const { fields: diagnosesFields, append: appendDiagnosis } = useFieldArray({
     control,
     name: "diagnoses",
@@ -80,7 +72,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
             <BooleanRadio
               {...field}
               name="sterilization__done"
-              errorMessage={errors?.sterilization__done?.message}
+              errorMessage={
+                errors?.sterilization__done?.message as string | undefined
+              }
             />
           )}
         />
@@ -92,7 +86,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Дата проведення"
               selected={field.value}
-              errorMessage={errors?.sterilization__date?.message}
+              errorMessage={
+                errors?.sterilization__date?.message as string | undefined
+              }
               lableMargin={false}
             />
           )}
@@ -106,7 +102,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
-              errorMessage={errors?.sterilization__comment?.message}
+              errorMessage={
+                errors?.sterilization__comment?.message as string | undefined
+              }
               styles="h-[46px]"
               lableMargin={false}
             />
@@ -124,7 +122,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
             <BooleanRadio
               {...field}
               name="microchipping__done"
-              errorMessage={errors?.microchipping__done?.message}
+              errorMessage={
+                errors?.microchipping__done?.message as string | undefined
+              }
             />
           )}
         />
@@ -136,7 +136,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Дата проведення"
               selected={field.value}
-              errorMessage={errors?.microchipping__date?.message}
+              errorMessage={
+                errors?.microchipping__date?.message as string | undefined
+              }
               lableMargin={false}
             />
           )}
@@ -150,7 +152,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
-              errorMessage={errors?.microchipping__comment?.message}
+              errorMessage={
+                errors?.microchipping__comment?.message as string | undefined
+              }
               styles="h-[46px]"
               lableMargin={false}
             />
@@ -169,7 +173,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
               <BooleanRadio
                 {...field}
                 name={`vaccinations.0.is_vaccinated`}
-                errorMessage={errors?.vaccinations?.[0]?.is_vaccinated?.message}
+                errorMessage={
+                  (errors.vaccinations as any)?.[0]?.is_vaccinated?.message
+                }
               />
             )}
           />
@@ -182,7 +188,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
                 label="Тип вакцини/препарат"
                 placeholder="Від чого провакциновано та яким препаратом"
                 value={field.value || ""}
-                errorMessage={errors.vaccinations?.[0]?.vaccine_type?.message}
+                errorMessage={
+                  (errors.vaccinations as any)?.[0]?.vaccine_type?.message
+                }
                 styles="h-[66px]"
               />
             )}
@@ -195,7 +203,7 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
                 {...field}
                 label="Дата проведення"
                 selected={field.value}
-                errorMessage={errors.vaccinations?.[0]?.date?.message}
+                errorMessage={(errors.vaccinations as any)?.[0]?.date?.message}
               />
             )}
           />
@@ -208,7 +216,9 @@ const MedicalInfo: React.FC<PropsMedicalInfoForm> = ({
                 label="Рекомендації/коментар"
                 placeholder="Залиште рекомендації"
                 value={field.value || ""}
-                errorMessage={errors.vaccinations?.[0]?.comment?.message}
+                errorMessage={
+                  (errors.vaccinations as any)?.[0]?.comment?.message
+                }
                 styles="h-[46px]"
               />
             )}

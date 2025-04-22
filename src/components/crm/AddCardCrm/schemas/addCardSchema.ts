@@ -119,6 +119,7 @@ export const addCardSchema = Yup.object().shape({
         location: Yup.object().shape({
           id: Yup.number().nullable(),
           name: Yup.string().nullable(),
+          isCustom: Yup.boolean(),
         }),
         date_from: Yup.mixed()
           .transform((value) =>
@@ -174,6 +175,8 @@ export const addCardSchema = Yup.object().shape({
                 new Date()
               );
               const parsedTo = parse(String(value), "dd/MM/yyyy", new Date());
+
+              if (!isValid(parsedFrom) || !isValid(parsedTo)) return true;
 
               return parsedTo >= parsedFrom;
             }

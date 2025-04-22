@@ -7,7 +7,7 @@ import {
   addCardSchema,
   TypeAddCardSchema,
 } from "../AddCardCrm/schemas/addCardSchema";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RequiredValues } from "../AddCardCrm/PopUp/RequiredValues";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import { uploadFiles } from "../../../utils/media";
 import BasicInfo from "../BasicInfo";
 import MedicalInfo from "../MedicalInfo";
 import { getCleanLocations } from "../AddCardCrm/helpers/locations";
+import { createLocation } from "@/src/utils/locations";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
@@ -24,7 +25,8 @@ const API_ANIMAL_TYPES_PATH = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
 
 export interface Location {
   id: number | null;
-  name: string;
+  name: string | null;
+  isCustom: boolean;
 }
 
 export interface AnimalTypes {
@@ -53,12 +55,12 @@ export const defaultValues: TypeAddCardSchema = {
   media: null,
   locations: [
     {
-      location: { id: null, name: null },
+      location: { id: null, name: null, isCustom: false },
       date_from: "",
       date_to: null,
     },
     {
-      location: { id: null, name: null },
+      location: { id: null, name: null, isCustom: false },
       date_from: "",
       date_to: null,
     },
@@ -93,16 +95,19 @@ const AddCardForm = () => {
   const { isOpen, toggleModal } = useToggle();
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
-  const {
-    control,
-    handleSubmit,
-    trigger,
-    formState: { errors, isValid, isSubmitted },
-  } = useForm<TypeAddCardSchema>({
+  const methods = useForm<TypeAddCardSchema>({
     defaultValues,
     mode: "onSubmit",
     resolver: yupResolver(addCardSchema),
   });
+
+  const {
+    control,
+    handleSubmit,
+    trigger,
+    getValues,
+    formState: { errors, isValid, isSubmitted },
+  } = methods;
 
   const results = useQueries({
     queries: [
@@ -134,12 +139,29 @@ const AddCardForm = () => {
         uploadedMedia = await uploadFiles(data.media);
       }
 
-      // const processedLocations = data.locations?.map(
-      //   ({ location, ...rest }) => ({
-      //     ...rest,
-      //     location: location ? { id: location.id } : null,
-      //   })
-      // );
+      let updatedLocations = null;
+
+      if (Array.isArray(data.locations)) {
+        const cleanedLocations = getCleanLocations(data.locations) ?? [];
+
+        updatedLocations = await Promise.all(
+          cleanedLocations.map(async (item) => {
+            const location = item.location;
+
+            if (!location.id && location.name) {
+              const createdId = await createLocation(location.name);
+              console.log(createdId);
+
+              return {
+                ...item,
+                location: createdId,
+              };
+            }
+
+            return item;
+          })
+        );
+      }
 
       const hasFilledDiagnosis = data.diagnoses?.some(
         (diag) => diag.name || diag.date || diag.comment
@@ -151,8 +173,8 @@ const AddCardForm = () => {
 
       const payload = {
         ...data,
-        media: uploadedMedia,
-        locations: getCleanLocations(data.locations),
+        media: uploadedMedia || null,
+        locations: updatedLocations,
         diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
         procedures: hasFilledProcedures ? data.procedures : null,
         adoption__country: null,
@@ -171,7 +193,7 @@ const AddCardForm = () => {
   };
 
   return (
-    <>
+    <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-[24px] pb-[112px] bg-[#F8F9FD]"
@@ -236,15 +258,12 @@ const AddCardForm = () => {
         <div>
           <fieldset className={activeTab === "basic" ? "block" : "hidden"}>
             <BasicInfo
-              control={control}
-              errors={errors}
-              trigger={trigger}
               locationsData={(locationsData as Location[]) || []}
               animalTypesData={(animalTypesData as AnimalTypes[]) || []}
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
-            <MedicalInfo control={control} errors={errors} trigger={trigger} />
+            <MedicalInfo />
           </fieldset>
         </div>
         <button
@@ -258,7 +277,7 @@ const AddCardForm = () => {
       {isOpen && isSubmitted && (
         <>{!isValid ? <RequiredValues onClose={toggleModal} /> : null}</>
       )}
-    </>
+    </FormProvider>
   );
 };
 

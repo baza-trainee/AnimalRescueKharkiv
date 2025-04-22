@@ -25,14 +25,21 @@ export const CurrentLocation: React.FC<PropsCurrentLocation> = ({
   return (
     <>
       {isAddingLocation ? (
-        <AddLocation onAdd={handleSelectLocation} />
+        <AddLocation
+          onAdd={handleSelectLocation}
+          locationsData={locationsData}
+        />
       ) : (
         <ul className="flex flex-col gap-[8px] w-full font-medium text-[18px] max-h-[508px] overflow-y-auto">
           {locationsData?.map((location: Location) => (
             <li
               key={location.id}
               onClick={() => {
-                handleSelectLocation(location);
+                handleSelectLocation({
+                  id: location.id,
+                  name: location.name,
+                  isCustom: false,
+                });
               }}
               className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"
             >

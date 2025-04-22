@@ -12,10 +12,26 @@ export const getCleanLocations = (
     return index === 0 || hasLocation || hasDateFrom || hasDateTo;
   });
 
-  return cleaned?.sort((a, b) => {
-    const dateA = parse(String(a.date_from || ""), "dd/MM/yyyy", new Date());
-    const dateB = parse(String(b.date_from || ""), "dd/MM/yyyy", new Date());
+  return cleaned
+    ?.sort((a, b) => {
+      const dateA = parse(String(a.date_from || ""), "dd/MM/yyyy", new Date());
+      const dateB = parse(String(b.date_from || ""), "dd/MM/yyyy", new Date());
 
-    return dateB.getTime() - dateA.getTime();
-  });
+      return dateB.getTime() - dateA.getTime();
+    })
+    .map((location) => {
+      if (location.location.isCustom && location.location.name) {
+        return {
+          location: { name: location.location.name },
+          date_from: location.date_from,
+          date_to: location.date_to,
+        };
+      } else {
+        return {
+          location: { id: location.location.id },
+          date_from: location.date_from,
+          date_to: location.date_to,
+        };
+      }
+    });
 };

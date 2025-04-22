@@ -1,11 +1,9 @@
 "use client";
 
 import {
-  Control,
   Controller,
-  FieldErrors,
   useFieldArray,
-  UseFormTrigger,
+  useFormContext,
   useWatch,
 } from "react-hook-form";
 import { useState } from "react";
@@ -15,8 +13,7 @@ import { CommentInput } from "../../ui/inputs/CommentInput";
 import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker";
-import { TypeAddCardSchema } from "../AddCardCrm/schemas/addCardSchema";
-import { AddCardFormValues, AnimalTypes, Location } from "../AddCardForm";
+import { AnimalTypes, Location } from "../AddCardForm";
 
 const genderOptions = [
   { name: "Самець", value: "male" },
@@ -26,17 +23,18 @@ const genderOptions = [
 interface PropsBasicInfoForm {
   locationsData: Location[];
   animalTypesData: AnimalTypes[];
-  control: Control<any>;
-  errors: FieldErrors<TypeAddCardSchema>;
-  trigger: UseFormTrigger<AddCardFormValues>;
 }
+
 const BasicInfo: React.FC<PropsBasicInfoForm> = ({
-  control,
-  errors,
-  trigger,
   locationsData,
   animalTypesData,
 }) => {
+  const {
+    control,
+    formState: { errors },
+    trigger,
+  } = useFormContext();
+
   const [openPopup, setOpenPopup] = useState<string | null>(null);
   const [activeLocationPicker, setActiveLocationPicker] = useState<
     string | null
@@ -75,7 +73,10 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
 
     const isValid = await trigger("locations");
 
-    if (isValid && (hasLocation || hasDateFrom || hasDateTo)) {
+    if (
+      isValid &&
+      (hasLocation || hasDateFrom || hasDateTo || validDateOrder)
+    ) {
       appendLocation({
         location: { id: null, name: null },
         date_from: "",
@@ -83,8 +84,6 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
       });
     }
   };
-
-  console.log(errors);
 
   return (
     <div className="flex flex-col gap-[16px]">
@@ -97,7 +96,9 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               {...field}
               label="Дата прибуття*"
               selected={field.value}
-              errorMessage={errors?.origin__arrival_date?.message}
+              errorMessage={
+                errors?.origin__arrival_date?.message as string | undefined
+              }
             />
           )}
         />
@@ -108,7 +109,7 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
             <TextInput
               label="Звідки (місто)*"
               placeholder="Введіть назву міста"
-              errorMessage={errors?.origin__city?.message}
+              errorMessage={errors?.origin__city?.message as string | undefined}
               className="bg-transparent"
               {...field}
             />
@@ -123,7 +124,9 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               label="Адреса"
               placeholder="Введіть назву вулиці та номер будинку"
               value={field.value ?? ""}
-              errorMessage={errors?.origin__address?.message}
+              errorMessage={
+                errors?.origin__address?.message as string | undefined
+              }
               className="bg-transparent"
             />
           )}
@@ -144,7 +147,9 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               onChange={(type: { id: number; name: string }) => {
                 field.onChange(type.id);
               }}
-              errorMessage={errors.general__animal_type?.id?.message}
+              errorMessage={
+                errors.general__animal_type?.message as string | undefined
+              }
               isOpen={openPopup === "animalType"}
               onClose={() => handleTogglePopup("animalType")}
             />
@@ -165,7 +170,9 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               onChange={(gender: { name: string; value: string }) => {
                 field.onChange(gender.value);
               }}
-              errorMessage={errors.general__gender?.message}
+              errorMessage={
+                errors.general__gender?.message as string | undefined
+              }
               isOpen={openPopup === "gender"}
               onClose={() => handleTogglePopup("gender")}
             />
@@ -180,7 +187,9 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               label="Вага тварини"
               placeholder="Введіть вагу"
               value={field.value}
-              errorMessage={errors?.general__weight?.message}
+              errorMessage={
+                errors?.general__weight?.message as string | undefined
+              }
             />
           )}
         />
@@ -193,7 +202,7 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               label="Вік тварини"
               placeholder="Введіть вік"
               value={field.value}
-              errorMessage={errors?.general__age?.message}
+              errorMessage={errors?.general__age?.message as string | undefined}
             />
           )}
         />
@@ -206,7 +215,9 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
               value={field.value ?? ""}
-              errorMessage={errors?.general__specials?.message}
+              errorMessage={
+                errors?.general__specials?.message as string | undefined
+              }
               className="bg-transparent"
             />
           )}
@@ -224,12 +235,18 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               onChange={(location) => {
                 if (location.id) {
                   field.onChange({
-                    id: location.id || null,
+                    id: location.id,
                     name: location.name,
+                    isCustom: false,
                   });
                 } else {
-                  field.onChange(location);
+                  field.onChange({
+                    id: null,
+                    name: location.name,
+                    isCustom: true,
+                  });
                 }
+                trigger("locations");
               }}
               errorMessage={fieldState.error?.message}
               isOpen={activeLocationPicker === "currentLocation"}
@@ -248,6 +265,7 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               selected={field.value || null}
               onChange={(date) => {
                 field.onChange(date);
+                trigger("locations");
               }}
               errorMessage={fieldState.error?.message}
               labelStyles="font-normal text-[14px]"
@@ -278,11 +296,16 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
                     onChange={(location) => {
                       if (location.id) {
                         field.onChange({
-                          id: location.id || null,
+                          id: location.id,
                           name: location.name,
+                          isCustom: false,
                         });
                       } else {
-                        field.onChange(location);
+                        field.onChange({
+                          id: null,
+                          name: location.name,
+                          isCustom: true,
+                        });
                       }
                       trigger("locations");
                     }}
@@ -355,7 +378,7 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               label="Інформація про власника"
               placeholder="Введіть інформацію"
               value={field.value ?? "Відсутня"}
-              errorMessage={errors?.owner__info?.message}
+              errorMessage={errors?.owner__info?.message as string | undefined}
               className="bg-transparent"
             />
           )}
@@ -371,7 +394,9 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               label="Загальний коментар"
               placeholder="Додайте інформацію, яку вважаєте важливою"
               value={field.value ?? ""}
-              errorMessage={errors?.comment__text?.message}
+              errorMessage={
+                errors?.comment__text?.message as string | undefined
+              }
               styles="h-[66px]"
             />
           )}
