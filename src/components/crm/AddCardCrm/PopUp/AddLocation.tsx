@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Location } from "../../AddCardForm";
 import { TextInput } from "../../../ui/inputs/TextInput";
-import { useFormContext, UseFormGetValues } from "react-hook-form";
 
 interface PropsAddLocation {
   onAdd: (location: Location) => void;
@@ -11,31 +10,18 @@ interface PropsAddLocation {
 }
 
 export const AddLocation = ({ onAdd, locationsData }: PropsAddLocation) => {
-  const { getValues } = useFormContext();
   const [customLocation, setCustomLocation] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const formLocations = getValues("locations") || [];
   const isDuplicatedInDataList = locationsData.some(
     (location: Location) =>
-      location.name?.trim().toLocaleLowerCase() ===
-      customLocation.trim().toLocaleLowerCase()
-  );
-
-  const isDuplicatedInForm = formLocations.some(
-    (location: { location?: { name?: string } }) =>
-      location.location?.name?.trim().toLocaleLowerCase() ===
-      customLocation.trim().toLocaleLowerCase()
+      location.name?.trim().toLowerCase() ===
+      customLocation.trim().toLowerCase()
   );
 
   const handleAdd = () => {
     if (isDuplicatedInDataList) {
       setErrorMessage("Локація вже існує у списку");
-      return;
-    }
-
-    if (isDuplicatedInForm) {
-      setErrorMessage("Ця локація вже додана у форму");
       return;
     }
 

@@ -16,7 +16,11 @@ import { fetch } from "../../../utils/api";
 import { uploadFiles } from "../../../utils/media";
 import BasicInfo from "../BasicInfo";
 import MedicalInfo from "../MedicalInfo";
-import { getCleanLocations } from "../AddCardCrm/helpers/locations";
+import {
+  CreateLocationFn,
+  FormLocationItem,
+  prepareLocations,
+} from "../AddCardCrm/helpers/locations";
 import { createLocation } from "@/src/utils/locations";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
@@ -139,29 +143,11 @@ const AddCardForm = () => {
         uploadedMedia = await uploadFiles(data.media);
       }
 
-      let updatedLocations = null;
-
-      if (Array.isArray(data.locations)) {
-        const cleanedLocations = getCleanLocations(data.locations) ?? [];
-
-        updatedLocations = await Promise.all(
-          cleanedLocations.map(async (item) => {
-            const location = item.location;
-
-            if (!location.id && location.name) {
-              const createdId = await createLocation(location.name);
-              console.log(createdId);
-
-              return {
-                ...item,
-                location: createdId,
-              };
-            }
-
-            return item;
-          })
-        );
-      }
+      const updatedLocations = await prepareLocations(
+        data.locations as FormLocationItem[],
+        locationsData as Location[],
+        createLocation as CreateLocationFn
+      );
 
       const hasFilledDiagnosis = data.diagnoses?.some(
         (diag) => diag.name || diag.date || diag.comment

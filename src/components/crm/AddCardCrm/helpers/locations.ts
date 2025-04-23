@@ -1,5 +1,12 @@
 import { parse } from "date-fns";
-import { AddCardFormValues } from "../../AddCardForm";
+import { AddCardFormValues, Location } from "../../AddCardForm";
+
+
+export type FormLocationItem = {
+  location: Location;
+};
+
+export type CreateLocationFn = (name: string) => Promise<Location>;
 
 export const getCleanLocations = (
   locations: AddCardFormValues["locations"]
@@ -34,4 +41,51 @@ export const getCleanLocations = (
         };
       }
     });
+};
+
+export const prepareLocations = async (
+  formLocations: FormLocationItem[],
+  locationsData: Location[],
+  createLocation: CreateLocationFn
+): Promise<FormLocationItem[]> => {
+  try {
+    const cleanedLocations = getCleanLocations(formLocations) ?? [];
+    const createdLocationsMap = new Map();
+
+    for (const item of cleanedLocations) {
+      const location = item.location;
+      const nameKey = location?.name?.trim().toLowerCase();
+
+      if (location?.id || !nameKey || createdLocationsMap.has(nameKey))
+        continue;
+
+      const existing = locationsData.find(
+        (loc) => loc?.name?.trim().toLowerCase() === nameKey
+      );
+
+      if (existing) {
+        createdLocationsMap.set(nameKey, existing);
+      } else {
+        if (!location.name) continue;
+
+        const created = await createLocation(location.name);
+        createdLocationsMap.set(nameKey, created);
+      }
+    }
+
+    return cleanedLocations.map((item) => {
+      const location = item.location;
+      const nameKey = location?.name?.trim().toLowerCase();
+
+      if (location.id || !nameKey) return item;
+
+      const resolvedLocations = createdLocationsMap.get(nameKey);
+      return {
+        ...item,
+        location: resolvedLocations ?? location,
+      };
+    });
+  } catch (error) {
+    throw error;
+  }
 };
