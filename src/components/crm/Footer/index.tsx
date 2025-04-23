@@ -14,7 +14,7 @@ const FooterCrm = () => {
   const isActive = (path: Path): boolean => pathname === path;
   return (
     <footer className="fixed bottom-0 w-full mx-auto z-20">
-      <div className="flex justify-center mx-auto bg-white w-[390px] h-[67px] mt-6 border-t border-lightBlue">
+      <div className="flex justify-center mx-auto bg-white w-[390px] h-[67px]  border-t border-lightBlue">
         <nav className="px-0 py-2">
           <ul className="flex flex-row gap-3 px-4">
             <li className="w-20 flex justify-center">
@@ -26,7 +26,7 @@ const FooterCrm = () => {
                     : " text-[#b6bbeb] "
                 } `}>
                 <div className=" flex justify-center ">
-                  <StatisticIcon />
+                  <StatisticIcon  />
                 </div>
                 <p className="font-normal text-[10px] leading-normal text-center pt-1">
                   Статистика

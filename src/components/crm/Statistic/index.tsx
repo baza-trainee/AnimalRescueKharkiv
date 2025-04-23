@@ -67,6 +67,7 @@ export default function DateRangePicker({
   }}
             maxDate={endDate ?? today} 
             labelStyles="text-crm-black text-sm font-normal"
+          
 />
         </div>
          

@@ -111,7 +111,7 @@ export const CustomDatePicker = forwardRef<
               !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
             } font-medium leading-[27px] block ${
               labelStyles ? labelStyles : "text-[18px]"
-            } ${lableMargin ? "block mb-[4px]" : ""}`}
+            } ${lableMargin ? "block" : ""}`}
           >
             {label}
           </span>
