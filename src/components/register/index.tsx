@@ -64,7 +64,7 @@ const RegisterFormComponent = () => {
   return (
     <section className=" flex flex-col items-center pt-[80px] pb-[20px] md:px-[0] px-[10px]">
       <h2 className=" text-[#070600] text-[24px] xl:text-[32px] font-bold mb-[20px]">
-        Вхід до CRM
+        Реєстрація до CRM  
       </h2>
       <h3 className=" text-[#070600] text-[24px] xl:text-[32px] font-bold mb-[40px]">
         Animal Rescue Kharkiv
