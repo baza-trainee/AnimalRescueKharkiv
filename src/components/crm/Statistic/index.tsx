@@ -61,9 +61,10 @@ export default function DateRangePicker({
           <CustomDatePicker
   label="З"
   selected={startDate}
-  onChange={(date: Date | null) => {
-    if (date && endDate && date > endDate) return; 
-    setStartDate(date);
+            onChange={(date: Date | null) => {
+    if (!date) return;
+              
+setStartDate(new Date(date));
   }}
             maxDate={endDate ?? today} 
             labelStyles="text-crm-black text-sm font-normal"
@@ -76,8 +77,11 @@ export default function DateRangePicker({
             label="По"
             selected={endDate}
              onChange={(date) => {
-    if (date && startDate && date < startDate) return; 
-    setEndDate(date);
+if (!date) return;
+
+    
+
+    setEndDate(new Date(date));
   }}
             minDate={startDate ?? undefined}   
             maxDate={today}  
