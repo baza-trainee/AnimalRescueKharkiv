@@ -7,7 +7,7 @@ import { RolesProvider } from "@/src/context/RolesContext";
 export default function ProfilePage() {
   return (
     <>
-      <RolesProvider>
+      <RolesProvider domain="crm">
       <Header title="Профіль" />
       <section className="w-[390px] mx-auto">
         

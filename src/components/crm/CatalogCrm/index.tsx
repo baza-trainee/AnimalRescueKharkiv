@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import Header from "../Header";
 import SearchInputIcon from "./CatalogCrmIcons/SearchInputIcon";
 import FilterIcon from "./CatalogCrmIcons/FilterIcon";
@@ -9,16 +9,72 @@ import SetIcon from "./CatalogCrmIcons/Set";
 import CloseBtb from "./CatalogCrmIcons/Closebtn";
 import DownArrow from "./CatalogCrmIcons/DownArrow";
 import DateInput from "./Dateinput";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import { fetch } from "../../../utils/api";
+
+const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
+const API_LATEST_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+interface Animal {
+    id: string;
+    name: string;
+    origin: {
+        origin__city: string;
+        origin__arrival_date: string;
+    };
+    media?: {
+        uri: string;
+    }[];
+}
+
+function useAnimalsCatalog() {
+    const [animals, setAnimals] = useState<Animal[]>([]);
+    const fallbackImage = "/assets/imagescrm/сat.png";
+
+    useEffect(() => {
+        const fetchAnimals = async () => {
+            try {
+                const params = new URLSearchParams();
+
+                const data = await fetch<Animal[]>(
+                    `${API_CRM_PATH}${API_LATEST_PATH}`,
+                    params
+                );
+
+                setAnimals(data);
+            } catch (err) {
+                console.error("Помилка при завантаженні тварин:", err);
+            }
+        };
+
+        fetchAnimals();
+    }, []);
+
+    const formatDate = (dateStr: string) => {
+        const [day, month] = dateStr.split("/");
+        return `${day}.${month}`;
+    };
+
+    return { animals, fallbackImage, formatDate };
+}
+// обробник кліку по карточці:
+const handleCardClick = (animal: Animal) => {
+    console.log("Клік по:", animal);
+};
 
 const CatalogCrm: React.FC = () => {
     const [filterPopupVisible, setFilterPopupVisible] = useState(false);
     const [sortingPopupVisible, setSortingPopupVisible] = useState(false);
-
     const [arrivalDate, setArrivalDate] = useState<Date | null>(null);
-    const [deathDate, setDeathDate] = useState<Date | null>(null);
+    {/*const [deathDate, setDeathDate] = useState<Date | null>(null);*/ }
     const [chipDate, setChipDate] = useState<Date | null>(null);
     const [sterilizationDate, setSterilizationDate] = useState<Date | null>(null);
     const [vaccineDate, setVaccineDate] = useState<Date | null>(null);
+    const { animals, fallbackImage, formatDate } = useAnimalsCatalog();
+
+
 
     const filters = [
         {
@@ -556,7 +612,32 @@ const CatalogCrm: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    <div>Картотека</div>
+                    <div>
+                        <div className="w-full flex flex-wrap gap-4 m-auto">
+                            {animals.map((animal) => (
+                                <div key={animal.id} className="!w-[163px]  shadow-[1px_1px_5px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] mb-2 relative" onClick={() => handleCardClick(animal)}>
+                                    <div className="p-1">
+                                        <img src={
+                                            animal.media?.[0]?.uri
+                                                ? `${BASE_URL}${animal.media[0].uri}`
+                                                : fallbackImage
+                                        }
+                                            alt={animal.name}
+                                            className="w-[155px] h-[161px] object-cover"
+                                        />
+                                        <div className="pl-1">
+                                            <p className="mt-2 text-xl font-normal --font-inter text-text">
+                                                {animal.name}
+                                            </p>
+                                            <p className="text-crm-secondary-blue font-normal text-sm">ID{animal.id}</p>
+                                            <p className="text-xl font-normal text-text">{animal.origin.origin__city || "Невідомо"}</p>
+                                            <p className="text-xl font-normal text-text">{formatDate(animal.origin.origin__arrival_date) || ""}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </section>
         </>
