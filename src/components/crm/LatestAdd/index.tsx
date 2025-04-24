@@ -60,9 +60,12 @@ useEffect(() => {
         Останні поповнення:
       </h3>
       <Swiper
-        className="w-[310px] mb-2"
-        spaceBetween={16}
-        slidesPerView={1.2}
+     className="w-[310px] mb-2"
+  spaceBetween={16}
+  slidesPerView="auto"
+  loop={false}
+  watchOverflow={true}
+       
       >
         {animals.map((animal) => (
           <SwiperSlide
