@@ -12,7 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RequiredValues } from "../AddCardCrm/PopUp/RequiredValues";
 import { useState } from "react";
 import { useQueries } from "@tanstack/react-query";
-import { fetch } from "../../../utils/api";
+import { fetch, post } from "../../../utils/api";
 import { uploadFiles } from "../../../utils/media";
 import BasicInfo from "../BasicInfo";
 import MedicalInfo from "../MedicalInfo";
@@ -27,7 +27,7 @@ import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
 const API_ANIMAL_TYPES_PATH = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
-
+const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
 export interface Location {
   id: number | null;
   name: string | null;
@@ -97,6 +97,7 @@ export const defaultValues: TypeAddCardSchema = {
 export type AddCardFormValues = typeof defaultValues;
 
 const AddCardForm = () => {
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState<boolean>(false);
   const { isOpen, toggleModal } = useToggle();
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
 
@@ -138,6 +139,7 @@ const AddCardForm = () => {
 
   const onSubmit = async (data: TypeAddCardSchema) => {
     try {
+      setIsLoadingSubmit(true);
       let uploadedMedia = null;
 
       if (data.media && data.media.length > 0) {
@@ -158,7 +160,7 @@ const AddCardForm = () => {
         (procedure) => procedure.name || procedure.date || procedure.comment
       );
 
-      const payload = {
+      const updatedData = {
         ...data,
         media: uploadedMedia || null,
         locations: updatedLocations,
@@ -177,9 +179,13 @@ const AddCardForm = () => {
         death__comment: null,
       };
 
-      console.log(payload);
+      console.log(updatedData);
+
+      await post(`${API_CRM_PATH}${API_ANIMALS_PATH}`, updatedData);
     } catch (error) {
       throw error;
+    } finally {
+      setIsLoadingSubmit(false);
     }
   };
 
@@ -262,7 +268,7 @@ const AddCardForm = () => {
           onClick={toggleModal}
           className="flex justify-center items-center w-full py-[13px] rounded-[10px] text-[20px] text-[#EDEEFA] leading-[30px] bg-[#4855CC] transition duration-[350ms] hover:bg-[#B6BBEB] focus::bg-[#B6BBEB]"
         >
-          Зберегти картку
+          {isLoadingSubmit ? "Надсилаємо..." : "Зберегти картку"}
         </button>
       </form>
       {isOpen && isSubmitted && (

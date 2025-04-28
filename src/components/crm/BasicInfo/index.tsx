@@ -210,7 +210,7 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
           name="general__specials"
           control={control}
           render={({ field }) => (
-            <TextInput
+            <CommentInput
               {...field}
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
@@ -218,7 +218,7 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               errorMessage={
                 errors?.general__specials?.message as string | undefined
               }
-              className="bg-transparent"
+              initialHeight="45px"
             />
           )}
         />
@@ -397,7 +397,6 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               errorMessage={
                 errors?.comment__text?.message as string | undefined
               }
-              styles="h-[66px]"
             />
           )}
         />

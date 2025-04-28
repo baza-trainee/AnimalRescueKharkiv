@@ -8,16 +8,25 @@ interface PropsCommentInput
   errorMessage?: string;
   label: string;
   styles?: string;
-  lableMargin?: boolean;
+  initialHeight?: string;
+  labelMargin?: boolean;
 }
 import { useState } from "react";
 
 export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
   (
-    { label, errorMessage, styles, name, lableMargin = true, ...rest },
+    {
+      label,
+      errorMessage,
+      styles,
+      name,
+      initialHeight = "66px",
+      labelMargin = true,
+      ...rest
+    },
     _ref: React.ForwardedRef<HTMLTextAreaElement>
   ) => {
-    const [height, setHeight] = useState("auto");
+    const [height, setHeight] = useState(initialHeight);
 
     const handleInput = (event: React.FormEvent<HTMLTextAreaElement>) => {
       const textarea = event.target as HTMLTextAreaElement;
@@ -29,7 +38,7 @@ export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
       <div className="relative w-full">
         <label
           htmlFor={name}
-          className={`${lableMargin ? "block mb-[4px]" : ""}`}
+          className={`${labelMargin ? "block mb-[4px]" : ""}`}
         >
           <span
             className={`${
@@ -43,8 +52,8 @@ export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
           {...rest}
           ref={_ref}
           id={name}
-          style={{ height }}
           onInput={handleInput}
+          style={{ height }}
           className={`overflow-hidden block w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent resize-none ${
             !!errorMessage
               ? "border-[#B00000] placeholder:text-[#B00000] outline-[#B00000]"

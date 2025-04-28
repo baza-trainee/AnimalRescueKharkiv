@@ -89,7 +89,7 @@ const MedicalInfo: React.FC = () => {
               errorMessage={
                 errors?.sterilization__date?.message as string | undefined
               }
-              lableMargin={false}
+              labelMargin={false}
             />
           )}
         />
@@ -105,8 +105,8 @@ const MedicalInfo: React.FC = () => {
               errorMessage={
                 errors?.sterilization__comment?.message as string | undefined
               }
-              styles="h-[46px]"
-              lableMargin={false}
+              initialHeight="45px"
+              labelMargin={false}
             />
           )}
         />
@@ -139,7 +139,7 @@ const MedicalInfo: React.FC = () => {
               errorMessage={
                 errors?.microchipping__date?.message as string | undefined
               }
-              lableMargin={false}
+              labelMargin={false}
             />
           )}
         />
@@ -155,8 +155,8 @@ const MedicalInfo: React.FC = () => {
               errorMessage={
                 errors?.microchipping__comment?.message as string | undefined
               }
-              styles="h-[46px]"
-              lableMargin={false}
+              initialHeight="45px"
+              labelMargin={false}
             />
           )}
         />
@@ -219,7 +219,7 @@ const MedicalInfo: React.FC = () => {
                 errorMessage={
                   (errors.vaccinations as any)?.[0]?.comment?.message
                 }
-                styles="h-[46px]"
+                initialHeight="45px"
               />
             )}
           />
@@ -280,7 +280,7 @@ const MedicalInfo: React.FC = () => {
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
                     errorMessage={fieldState.error?.message}
-                    styles="h-[46px]"
+                    initialHeight="45px"
                   />
                 )}
               />
@@ -350,7 +350,7 @@ const MedicalInfo: React.FC = () => {
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
                     errorMessage={fieldState.error?.message}
-                    styles="h-[46px]"
+                    initialHeight="45px"
                   />
                 )}
               />
