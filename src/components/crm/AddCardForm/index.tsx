@@ -22,6 +22,7 @@ import {
   prepareLocations,
 } from "../AddCardCrm/helpers/locations";
 import { createLocation } from "@/src/utils/locations";
+import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
@@ -161,8 +162,12 @@ const AddCardForm = () => {
         ...data,
         media: uploadedMedia || null,
         locations: updatedLocations,
-        diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
-        procedures: hasFilledProcedures ? data.procedures : null,
+        diagnoses: hasFilledDiagnosis
+          ? sortDiagnosesOrProcedures(data.diagnoses || [])
+          : null,
+        procedures: hasFilledProcedures
+          ? sortDiagnosesOrProcedures(data.procedures || [])
+          : null,
         adoption__country: null,
         adoption__city: null,
         adoption__date: null,
