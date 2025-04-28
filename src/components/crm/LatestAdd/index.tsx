@@ -56,7 +56,7 @@ useEffect(() => {
       {/* <span className="absolute  bg-crm-backgraund w-full z-10 h-2 right-0 bottom-0"></span>
       <span className="absolute  bg-crm-backgraund w-[6.3%] z-10 h-full left-0 bottom-0"></span> */}
 
-      <h3 className="font-semibold text-crm-black text-2xl mb-4  mt-2">
+      <h3 className="font-semibold text-crm-black text-2xl leading-[35px] mb-4  mt-2">
         Останні поповнення:
       </h3>
       <Swiper
@@ -81,12 +81,12 @@ useEffect(() => {
                   className="w-[155px] h-[161px] object-cover" 
               />
               <div className="">
-                <p className="mt-2 mb-[2px] text-xl font-normal --font-inter text-text">
+                <p className="mt-2 mb-[2px] text-xl leading-[30px] font-normal --font-inter text-text">
                   {animal.name}
                 </p>
                 <p className="text-crm-secondary-blue font-normal text-sm mb-[2px]">ID{animal.id}</p>
-                <p className="text-xl font-normal text-text mb-[2px]">{animal.origin.origin__city|| "Невідомо"}</p>
-                <p className="text-xl font-normal text-text">{formatDate(animal.origin.origin__arrival_date) || ""}</p>
+                <p className="text-xl leading-[30px] font-normal text-text mb-[2px]">{animal.origin.origin__city|| "Невідомо"}</p>
+                <p className="text-xl leading-[30px]  font-normal text-text">{formatDate(animal.origin.origin__arrival_date) || ""}</p>
               </div>
             </div>
           </SwiperSlide>
