@@ -107,7 +107,7 @@ export const CustomDatePicker = forwardRef<
               !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
             } font-medium leading-[27px] block ${
               labelStyles ? labelStyles : "text-[18px]"
-            } ${lableMargin ? "block mb-[4px]" : ""}`}
+            } ${lableMargin ? "block" : ""}`}
           >
             {label}
           </span>
@@ -120,6 +120,7 @@ export const CustomDatePicker = forwardRef<
               isCalendarOpen={isCalendarOpen}
             />
           }
+          
           selected={selected}
           locale={uk}
           dateFormat="dd.MM.yyyy"
@@ -134,9 +135,9 @@ export const CustomDatePicker = forwardRef<
           calendarClassName="custom-calendar"
           popperClassName="react-datepicker-popper"
           renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
-            <div className="flex justify-between text-[18px] font-sans font-medium leading-[27px] bg-[#FFFFFF]">
+            <div className="flex justify-between text-[18px] font-sans font-medium leading-[27px] bg-[#FFFFFF] mx-[14px]">
               <button type="button" onClick={decreaseMonth}>
-                {<ArrowLeftIcon style="stroke-[#070600] w-[20px] h-[20px]" />}
+                {<ArrowLeftIcon style="stroke-[#4855cc] w-[24px] h-[25px]" />}
               </button>
               <span>
                 {monthDate
@@ -149,7 +150,7 @@ export const CustomDatePicker = forwardRef<
                 {monthDate.getFullYear()}
               </span>
               <button type="button" onClick={increaseMonth}>
-                {<ArrowRightIcon style="stroke-[#070600] w-[20px] h-[20px]" />}
+                {<ArrowRightIcon style="stroke-[#4855cc] w-[24px] h-[25px]" />}
               </button>
             </div>
           )}

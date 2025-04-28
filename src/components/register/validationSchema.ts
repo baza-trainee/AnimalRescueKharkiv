@@ -7,6 +7,7 @@ const phonePattern = /^\+380 \d{2} \d{3} \d{2} \d{2}$/;
 
 export const step1Schema = Yup.object().shape({
   email: Yup.string()
+    .email( "Введіть дійсний email")
     .matches(emailRegexp, "Введіть дійсний email(не допускаються домени .ru, .by, .рф)")
     .required("Введіть email"),
   password: Yup.string()

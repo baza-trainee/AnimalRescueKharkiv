@@ -56,7 +56,7 @@ export default function ForgotPassword() {
               <EmailInput {...field} label="Логін (Email) *" className="w-[342px] m-auto" placeholder="email@gmail.com" />
             )}
           />
-          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+          {errors.email && <p className="text-red-500 max-w-[342px] mx-auto">{errors.email.message}</p>}
 
           <button
             type="submit"

@@ -73,12 +73,14 @@ body {
   color: black;
 }
 .custom-calendar .react-datepicker__day--today {
+  border: 1px solid rgba(0, 0, 0, 0.4) !important;
   border-radius: 50%;
-  background: #b6bbeb;
-  color: black;
+  background-color: transparent !important;
+  color: inherit !important;
 }
+
 .react-datepicker__portal {
-  background: rgba(0, 0, 0, 0.4) !important; /* Черный полупрозрачный фон */
+  background: rgba(0, 0, 0, 0.4) !important;
 }
 .custom-calendar .react-datepicker__navigation-icon {
   stroke: #b6bbeb;
