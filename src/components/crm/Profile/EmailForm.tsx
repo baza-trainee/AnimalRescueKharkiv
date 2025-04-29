@@ -33,7 +33,7 @@ const EmailForm: React.FC<EmailFormProps> = ({onSubmit}) => {
         console.log("Отправка данных:", { email, role, language, domain: "crm" });
     try {
         await sendInvitation(email, role, language, "crm"); 
-        setSuccessMessage(`Запрошення надіслано на ${email}!`);
+        setSuccessMessage(`Запрошення\n${email}\nвідправлено!`);
       } catch (error) {
         setFormError("Не вдалося надіслати запрошення. Спробуйте ще раз.");
       }
@@ -53,25 +53,18 @@ const EmailForm: React.FC<EmailFormProps> = ({onSubmit}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedRole, setSelectedRole] = useState("Ролі");
 
-    // const roles = [
-    //   "Волонтер",
-    //   "Водій",
-    //   "Адміністратор клініки",
-    //   "Лікар",
-    //   "Фотограф",
-    // ];
-
+ 
     return (
       <div>
         {formError && (
-          <div className="text-red-600 text-center mb-4">
-            <p>{formError}</p>
+          <div className="text-crm-warning-red text-[20px] font-normal leading-[30px] text-center mb-4 pt-1 pb-1">
+            <p className="mb-[30px]">{formError}</p>
             <p>Бажаєте спробувати ще раз?</p>
           </div>
         )}
         {successMessage && (
-          <div className="text-mainBlue text-center mb-4">
-            <p>{successMessage}</p>
+          <div className="text-mainBlue text-[20px] font-normal leading-[30px] text-center mb-4 pt-1 pb-1 border-b border-crm-light-blue">
+            <p className="mb-[35px] whitespace-pre-line">{successMessage}</p>
             <p>Бажаєте відправити ще одне запрошення?</p>
           </div>
         )}
@@ -82,16 +75,17 @@ const EmailForm: React.FC<EmailFormProps> = ({onSubmit}) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           errorMessage={formError}
-          className="border rounded-2xl text-[14px]"
+          className="mb-4"
+          
         />
-        <label htmlFor="role-select" className="text-[18px] font-medium">
+        <label htmlFor="role-select" className="text-[18px] font-medium text-crm-black leading-[27px] mb-1 ">
           Оберіть роль користувача
         </label>
         <div className="relative w-full">
           {/* Поле для вибору */}
           <div
             onClick={() => setIsOpen(!isOpen)}
-            className={`w-full p-[8px] border rounded-xl mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] ${
+            className={`w-full h-[45px] p-[8px] border rounded-[10px] border-crm-secondary-blue mt-[4px] mb-4 flex justify-between items-center cursor-pointer text-[14px] ${
               selectedRole !== "Ролі" ? "text-crm-black" : "text-crm-secondary-blue"
             }`}>
             <span>{selectedRole}</span>
@@ -109,7 +103,7 @@ const EmailForm: React.FC<EmailFormProps> = ({onSubmit}) => {
             <div className="fixed inset-0 flex flex-col content-center justify-center z-10 -top-10  py-[16px]  gap-[8px] overflow-auto h-full ">
               <div className="bg-white py-3 px-6 w-[358px] rounded-[10px] mx-auto">
                 <div className="w-full flex justify-end">
-                  <button onClick={() => setIsOpen(false)}>
+                  <button onClick={() => setIsOpen(false) } >
                     <CloseBtb />
                   </button>
                 </div>
@@ -131,7 +125,7 @@ const EmailForm: React.FC<EmailFormProps> = ({onSubmit}) => {
         </div>
         <button
           onClick={handleSubmit}
-          className="w-full bg-mainBlue text-white py-2 rounded-md mb-1 hover:bg-blue-700 transition">
+          className="w-full h-[56px] font-normal text-[20px] leading-[30px] bg-mainBlue text-white py-2 rounded-md mb-1 hover:bg-blue-700 transition">
           Відправити запрошення
         </button>
       </div>

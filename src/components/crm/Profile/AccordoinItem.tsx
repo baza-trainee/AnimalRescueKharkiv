@@ -10,11 +10,11 @@ const AccordionItem: React.FC<{
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative mt-2 mb-4 ">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex justify-between items-center w-full pt-3 pb-4 mb-3 font-semibold border-b ${ isOpen ? "border-gray-300" : "border-blue-500"}`}>
-        <span className="w-[300px] text-left text-[24px] leading-[150%]">
+        className={`flex justify-between items-center w-full pt-1 pb-1 mb-3 font-semibold border-b ${ isOpen ? "border-gray-300" : "border-blue-500"}`}>
+        <span className="w-[300px] text-left text-[24px] leading-[36px]">
           {title}
         </span>
         <div

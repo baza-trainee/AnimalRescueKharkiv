@@ -12,7 +12,7 @@ export const EmailInput: FC<PropsEmailInput> = forwardRef(
     const hasError = !!errorMessage;
     return (
       <div className={`relative ${className}`}>
-        <label htmlFor={name} className={`text-[18px] font-medium leading-[27px] ${hasError ? "text-[#B00000]" : "text-[#212833]"}`}>
+        <label htmlFor={name} className={`text-[18px] font-medium mb-1 leading-[27px] ${hasError ? "text-[#B00000]" : "text-crm-black"}`}>
           {label}
         </label>
         <input

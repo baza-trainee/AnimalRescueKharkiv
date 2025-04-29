@@ -40,7 +40,7 @@
       formState: { errors },
     } = useForm<TypeResetSchema>({
       defaultValues: { password: "" ,doublePassword:""},
-      mode: "onSubmit",
+      mode: "onBlur",
       resolver: yupResolver(resetPasswordSchema),
     });
 
