@@ -9,6 +9,7 @@ import SetIcon from "./CatalogCrmIcons/Set";
 import CloseBtb from "./CatalogCrmIcons/Closebtn";
 import DownArrow from "./CatalogCrmIcons/DownArrow";
 import DateInput from "./Dateinput";
+import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { fetch } from "../../../utils/api";
 import { Animal } from "@/src/app/types/animal";
 
@@ -341,18 +342,19 @@ const CatalogCrm: React.FC = () => {
 
     const filters = [
         {
-            title: "Дата Прибуття", // Є
+            title: "Дата Прибуття",
             content: (
                 <div>
-                    <DateInput
-                        selectedDate={selectedFilters.date ? parseDateSlash(selectedFilters.date) : null}
+                    <CustomDatePicker
+                        selected={selectedFilters.date ? parseDateSlash(selectedFilters.date) : null}
                         onChange={handleDateChange}
+                        label="Оберіть дату"
                     />
                 </div>
             ),
         },
         {
-            title: "Звідки (місто)", // Є
+            title: "Звідки (місто)",
             content: (
                 <div className="w-full h-[48px] flex item-center justify-center border rounded-[10px]">
                     <input
@@ -365,7 +367,7 @@ const CatalogCrm: React.FC = () => {
             ),
         },
         {
-            title: "Тип тварин", // Є
+            title: "Тип тварин",
             content: (
                 <div className="w-full flex flex-wrap gap-4 font-medium">
                     <label className="w-100 flex items-center gap-[8px] text-lg">
@@ -660,7 +662,7 @@ const CatalogCrm: React.FC = () => {
             ),
         },
         {
-            title: "Статус", // Є треба взнати про Placed
+            title: "Статус", // треба взнати про Placed
             content: (
                 <div className="w-full flex flex-col items-center justify-start gap-4  font-medium">
                     <div className="w-full flex flex-col gap-4 text-lg my-3">
@@ -734,7 +736,12 @@ const CatalogCrm: React.FC = () => {
                     </div>
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Дата проведення</span>
-                        <DateInput selectedDate={selectedFilters.microchipping_date ? parseDateSlash(selectedFilters.microchipping_date) : null} onChange={handleChippingDateChange} />
+                        <CustomDatePicker
+                            selected={selectedFilters.microchipping_date ?
+                                parseDateSlash(selectedFilters.microchipping_date) : null}
+                            onChange={handleChippingDateChange}
+                            label=""
+                        />
                     </div>
                 </div>
             ),
@@ -772,9 +779,11 @@ const CatalogCrm: React.FC = () => {
                     </div>
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Дата проведення</span>
-                        <DateInput
-                            selectedDate={selectedFilters.sterilization_date ? parseDateSlash(selectedFilters.sterilization_date) : null}
+                        <CustomDatePicker
+                            selected={selectedFilters.sterilization_date ?
+                                parseDateSlash(selectedFilters.sterilization_date) : null}
                             onChange={handleSterelizationDateChange}
+                            label=""
                         />
                     </div>
                 </div>
@@ -813,7 +822,12 @@ const CatalogCrm: React.FC = () => {
                     </div>
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Дата проведення</span>
-                        <DateInput selectedDate={selectedFilters.vaccination_date ? parseDateDash(selectedFilters.vaccination_date) : null} onChange={handleVaccinationDateChange} />
+                        <CustomDatePicker
+                            selected={selectedFilters.vaccination_date ?
+                                parseDateDash(selectedFilters.vaccination_date) : null}
+                            onChange={handleVaccinationDateChange}
+                            label=""
+                        />
                     </div>
                 </div>
             ),
