@@ -1,6 +1,5 @@
 import { parse } from "date-fns";
-import { AddCardFormValues, Location } from "../../AddCardForm";
-
+import { AddCardFormValues, Location } from "../types/types";
 
 export type FormLocationItem = {
   location: Location;
