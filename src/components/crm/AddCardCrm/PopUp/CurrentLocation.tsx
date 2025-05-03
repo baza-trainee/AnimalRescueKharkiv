@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AddLocation } from "./AddLocation";
-import { Location } from "../../AddCardForm";
+import { Location } from "../types/types";
 
 interface PropsCurrentLocation {
   locationsData: Location[];

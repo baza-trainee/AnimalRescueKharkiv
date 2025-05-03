@@ -23,78 +23,17 @@ import {
 } from "../AddCardCrm/helpers/locations";
 import { createLocation } from "@/src/utils/locations";
 import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
+import {
+  AnimalCard,
+  AnimalTypes,
+  Location,
+  defaultValues,
+} from "../AddCardCrm/types/types";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
 const API_ANIMAL_TYPES_PATH = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
 const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
-export interface Location {
-  id: number | null;
-  name: string | null;
-  isCustom: boolean;
-}
-
-export interface AnimalTypes {
-  id: number;
-  name: string;
-}
-
-export const defaultValues: TypeAddCardSchema = {
-  name: "",
-  origin__arrival_date: null as unknown as string,
-  origin__city: "",
-  origin__address: null,
-  general__animal_type: { id: null as unknown as number },
-  general__gender: "",
-  general__weight: null,
-  general__age: null,
-  general__specials: null,
-  owner__info: null,
-  comment__text: null,
-  sterilization__done: null,
-  sterilization__date: null,
-  sterilization__comment: null,
-  microchipping__done: null,
-  microchipping__date: null,
-  microchipping__comment: null,
-  media: null,
-  locations: [
-    {
-      location: { id: null, name: null, isCustom: false },
-      date_from: "",
-      date_to: null,
-    },
-    {
-      location: { id: null, name: null, isCustom: false },
-      date_from: "",
-      date_to: null,
-    },
-  ],
-  vaccinations: [
-    {
-      is_vaccinated: false,
-      vaccine_type: null,
-      date: null,
-      comment: null,
-    },
-  ],
-  diagnoses: [
-    {
-      name: null,
-      date: null,
-      comment: null,
-    },
-  ],
-  procedures: [
-    {
-      name: null,
-      date: null,
-      comment: null,
-    },
-  ],
-} as const;
-
-export type AddCardFormValues = typeof defaultValues;
 
 const AddCardForm = () => {
   const [isLoadingSubmit, setIsLoadingSubmit] = useState<boolean>(false);
@@ -179,9 +118,14 @@ const AddCardForm = () => {
         death__comment: null,
       };
 
-      console.log(updatedData);
+      const result = await post<AnimalCard>(
+        `${API_CRM_PATH}${API_ANIMALS_PATH}`,
+        updatedData
+      );
 
-      await post(`${API_CRM_PATH}${API_ANIMALS_PATH}`, updatedData);
+      if (result?.id) {
+        window.location.href = "/crm/catalog";
+      }
     } catch (error) {
       throw error;
     } finally {

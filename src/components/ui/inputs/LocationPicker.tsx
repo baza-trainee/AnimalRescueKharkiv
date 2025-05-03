@@ -2,8 +2,8 @@ import { PopUp } from "../../crm/AddCardCrm/PopUp/index";
 import { ArrowDownIcon } from "../icon/ArrowDownIcon";
 import { ArrowUpIcon } from "../icon/ArrowUpIcon";
 import { CurrentLocation } from "../../crm/AddCardCrm/PopUp/CurrentLocation";
-import { Location } from "../../crm/AddCardForm";
 import { TextInput } from "./TextInput";
+import { Location } from "../../crm/AddCardCrm/types/types";
 
 interface PropsLocationPicker {
   label: string;

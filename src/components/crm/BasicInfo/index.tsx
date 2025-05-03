@@ -13,7 +13,7 @@ import { CommentInput } from "../../ui/inputs/CommentInput";
 import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker";
-import { AnimalTypes, Location } from "../AddCardForm";
+import { AnimalTypes, Location } from "../AddCardCrm/types/types";
 
 const genderOptions = [
   { name: "Самець", value: "male" },

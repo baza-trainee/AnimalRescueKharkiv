@@ -28,7 +28,7 @@ export const uploadFiles = async (files: FileList) => {
         },
       });
 
-      return { id: response.data.id };
+      return [{ id: response.data.id }];
     }
   } catch (error) {
     throw error;
