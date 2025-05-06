@@ -164,3 +164,13 @@ body {
   border-radius: 0.3rem;
   background-color: inherit;
 }
+
+.withoutArrows::-webkit-inner-spin-button,
+.withoutArrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.withoutArrows {
+  -moz-appearance: textfield; /* Firefox */
+}

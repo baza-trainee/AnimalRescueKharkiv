@@ -10,7 +10,7 @@ interface PropsRadioInput {
 
 export const RadioInput: React.FC<PropsRadioInput> = forwardRef(
   (
-    { name, label, value, onChange, errorMessage },
+    { name, label, value, errorMessage, ...rest },
     _ref: React.ForwardedRef<HTMLInputElement>
   ) => {
     return (
@@ -23,10 +23,11 @@ export const RadioInput: React.FC<PropsRadioInput> = forwardRef(
           </span>
 
           <input
+            {...rest}
             type="radio"
             name={name}
             value={String(value)}
-            onChange={() => onChange(value)}
+            onChange={() => rest.onChange(value)}
             ref={_ref}
             className="w-[20px] h-[20px]"
           />

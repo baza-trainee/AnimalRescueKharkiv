@@ -1,5 +1,5 @@
+import AddCardForm from "../AddCardForm";
 import Header from "../Header";
-import { AddCardForm } from "./AddCardForm";
 const AddCardCrm = () => {
   return (
     <>

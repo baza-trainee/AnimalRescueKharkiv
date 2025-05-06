@@ -1,33 +1,22 @@
+"use client";
+
 import {
-  Control,
   Controller,
-  FieldErrors,
   useFieldArray,
-  UseFormTrigger,
+  useFormContext,
   useWatch,
 } from "react-hook-form";
-import { TypeAddCardSchema } from "./schemas/addCardSchema";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
-import { CommentInput } from "./inputs/CommentInput";
-import { BooleanRadio } from "../AddCardCrm/inputs/BooleanRadio";
-import { TextInput } from "./inputs/TextInput";
-import { AddCardFormValues } from "./AddCardForm";
+import { CommentInput } from "../../ui/inputs/CommentInput";
+import { BooleanRadio } from "../../ui/inputs/BooleanRadio";
+import { TextInput } from "../../ui/inputs/TextInput";
 
-interface PropsMedicalInfoForm {
-  control: Control<any>;
-  errors: FieldErrors<TypeAddCardSchema>;
-  trigger: UseFormTrigger<AddCardFormValues>;
-}
-
-export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
-  control,
-  errors,
-  trigger,
-}) => {
-  const { fields: vaccinationsFields } = useFieldArray({
+const MedicalInfo: React.FC = () => {
+  const {
     control,
-    name: "vaccinations",
-  });
+    formState: { errors },
+    trigger,
+  } = useFormContext();
 
   const { fields: diagnosesFields, append: appendDiagnosis } = useFieldArray({
     control,
@@ -76,20 +65,19 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Стерилізація/кастрація
         </h3>
-        <div className={errors?.sterilization__done && "pb-[26px]"}>
-          <Controller
-            name="sterilization__done"
-            control={control}
-            render={({ field }) => (
-              <BooleanRadio
-                {...field}
-                name="sterilization__done"
-                errorMessage={errors?.sterilization__done?.message}
-                onChange={field.onChange}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="sterilization__done"
+          control={control}
+          render={({ field }) => (
+            <BooleanRadio
+              {...field}
+              name="sterilization__done"
+              errorMessage={
+                errors?.sterilization__done?.message as string | undefined
+              }
+            />
+          )}
+        />
         <Controller
           name="sterilization__date"
           control={control}
@@ -98,12 +86,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Дата проведення"
               selected={field.value}
-              onChange={(date) => {
-                field.onChange(date);
-                trigger("sterilization__date");
-              }}
-              errorMessage={errors?.sterilization__date?.message}
-              lableMargin={false}
+              errorMessage={
+                errors?.sterilization__date?.message as string | undefined
+              }
+              labelMargin={false}
             />
           )}
         />
@@ -116,13 +102,11 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
-              onChange={(e) => {
-                field.onChange(e);
-                trigger("sterilization__comment");
-              }}
-              errorMessage={errors?.sterilization__comment?.message}
-              styles="h-[46px]"
-              lableMargin={false}
+              errorMessage={
+                errors?.sterilization__comment?.message as string | undefined
+              }
+              initialHeight="45px"
+              labelMargin={false}
             />
           )}
         />
@@ -131,20 +115,19 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Чіпування
         </h3>
-        <div className={errors?.microchipping__done && "pb-[26px]"}>
-          <Controller
-            name="microchipping__done"
-            control={control}
-            render={({ field }) => (
-              <BooleanRadio
-                {...field}
-                name="microchipping__done"
-                errorMessage={errors?.microchipping__done?.message}
-                onChange={field.onChange}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          name="microchipping__done"
+          control={control}
+          render={({ field }) => (
+            <BooleanRadio
+              {...field}
+              name="microchipping__done"
+              errorMessage={
+                errors?.microchipping__done?.message as string | undefined
+              }
+            />
+          )}
+        />
         <Controller
           name="microchipping__date"
           control={control}
@@ -153,12 +136,10 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               {...field}
               label="Дата проведення"
               selected={field.value}
-              onChange={(date) => {
-                field.onChange(date);
-                trigger("microchipping__date");
-              }}
-              errorMessage={errors?.microchipping__date?.message}
-              lableMargin={false}
+              errorMessage={
+                errors?.microchipping__date?.message as string | undefined
+              }
+              labelMargin={false}
             />
           )}
         />
@@ -171,13 +152,11 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
-              onChange={(e) => {
-                field.onChange(e);
-                trigger("microchipping__comment");
-              }}
-              errorMessage={errors?.microchipping__comment?.message}
-              styles="h-[46px]"
-              lableMargin={false}
+              errorMessage={
+                errors?.microchipping__comment?.message as string | undefined
+              }
+              initialHeight="45px"
+              labelMargin={false}
             />
           )}
         />
@@ -186,75 +165,65 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
         <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Вакцинація
         </h3>
-        {vaccinationsFields.map((field, index) => {
-          return (
-            <div key={field.id} className="flex flex-col gap-[8px]">
-              <Controller
-                name={`vaccinations.${index}.is_vaccinated`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <BooleanRadio
-                    {...field}
-                    name={`vaccinations.${index}.is_vaccinated`}
-                    errorMessage={fieldState.error?.message}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      trigger("vaccinations");
-                    }}
-                  />
-                )}
+        <div className="flex flex-col gap-[8px]">
+          <Controller
+            name={`vaccinations.0.is_vaccinated`}
+            control={control}
+            render={({ field }) => (
+              <BooleanRadio
+                {...field}
+                name={`vaccinations.0.is_vaccinated`}
+                errorMessage={
+                  (errors.vaccinations as any)?.[0]?.is_vaccinated?.message
+                }
               />
-              <Controller
-                name={`vaccinations.${index}.vaccine_type`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <CommentInput
-                    {...field}
-                    label="Тип вакцини/препарат"
-                    placeholder="Від чого провакциновано та яким препаратом"
-                    value={field.value || ""}
-                    errorMessage={fieldState.error?.message}
-                    styles="h-[66px]"
-                  />
-                )}
+            )}
+          />
+          <Controller
+            name={`vaccinations.0.vaccine_type`}
+            control={control}
+            render={({ field }) => (
+              <CommentInput
+                {...field}
+                label="Тип вакцини/препарат"
+                placeholder="Від чого провакциновано та яким препаратом"
+                value={field.value || ""}
+                errorMessage={
+                  (errors.vaccinations as any)?.[0]?.vaccine_type?.message
+                }
+                styles="h-[66px]"
               />
-              <Controller
-                name={`vaccinations.${index}.date`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <CustomDatePicker
-                    {...field}
-                    label="Дата проведення"
-                    selected={field.value}
-                    onChange={(date) => {
-                      field.onChange(date);
-                      trigger("vaccinations");
-                    }}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
+            )}
+          />
+          <Controller
+            name={`vaccinations.0.date`}
+            control={control}
+            render={({ field }) => (
+              <CustomDatePicker
+                {...field}
+                label="Дата проведення"
+                selected={field.value}
+                errorMessage={(errors.vaccinations as any)?.[0]?.date?.message}
               />
-              <Controller
-                name={`vaccinations.${index}.comment`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <CommentInput
-                    {...field}
-                    label="Рекомендації/коментар"
-                    placeholder="Залиште рекомендації"
-                    value={field.value || ""}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      trigger("vaccinations");
-                    }}
-                    errorMessage={fieldState.error?.message}
-                    styles="h-[46px]"
-                  />
-                )}
+            )}
+          />
+          <Controller
+            name={`vaccinations.0.comment`}
+            control={control}
+            render={({ field }) => (
+              <CommentInput
+                {...field}
+                label="Рекомендації/коментар"
+                placeholder="Залиште рекомендації"
+                value={field.value || ""}
+                errorMessage={
+                  (errors.vaccinations as any)?.[0]?.comment?.message
+                }
+                initialHeight="45px"
               />
-            </div>
-          );
-        })}
+            )}
+          />
+        </div>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
@@ -275,11 +244,13 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label={`Діагноз ${index + 1}`}
                     placeholder="Впишіть діагноз"
+                    errorMessage={fieldState.error?.message}
+                    value={field.value || ""}
                     onChange={(e) => {
-                      field.onChange(e);
+                      field.onChange(e.target.value);
                       trigger("diagnoses");
                     }}
-                    errorMessage={fieldState.error?.message}
+                    className="bg-transparent"
                   />
                 )}
               />
@@ -308,12 +279,8 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      trigger("diagnoses");
-                    }}
                     errorMessage={fieldState.error?.message}
-                    styles="h-[46px]"
+                    initialHeight="45px"
                   />
                 )}
               />
@@ -347,11 +314,13 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     {...field}
                     label={`Процедура ${index + 1}`}
                     placeholder="Впишіть назву проведеної процедури"
+                    errorMessage={fieldState.error?.message}
+                    value={field.value || ""}
                     onChange={(e) => {
-                      field.onChange(e);
+                      field.onChange(e.target.value);
                       trigger("procedures");
                     }}
-                    errorMessage={fieldState.error?.message}
+                    className="bg-transparent"
                   />
                 )}
               />
@@ -380,12 +349,8 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      trigger("procedures");
-                    }}
                     errorMessage={fieldState.error?.message}
-                    styles="h-[46px]"
+                    initialHeight="45px"
                   />
                 )}
               />
@@ -403,3 +368,5 @@ export const MedicalInfoForm: React.FC<PropsMedicalInfoForm> = ({
     </div>
   );
 };
+
+export default MedicalInfo;

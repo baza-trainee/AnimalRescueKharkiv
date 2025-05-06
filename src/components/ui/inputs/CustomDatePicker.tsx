@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "../../ui/icon/ArrowLeftIcon";
 import { ArrowRightIcon } from "../../ui/icon/ArrowRightIcon";
 import { ArrowUpIcon } from "../../ui/icon/ArrowUpIcon";
 import { ArrowDownIcon } from "../../ui/icon/ArrowDownIcon";
-import { ErrorMessage } from "../inputs/ErrorMessage";
+import { ErrorMessage } from "./ErrorMessage";
 
 interface PropsCustomDataPicker {
   selected: Date | null;
@@ -17,8 +17,8 @@ interface PropsCustomDataPicker {
   label: string;
   errorMessage?: string;
   labelStyles?: string;
-  lableMargin?: boolean;
-  wrapperClassName?: string; 
+  labelMargin?: boolean;
+  wrapperClassName?: string;
 }
 
 interface PropsCustomInput {
@@ -27,14 +27,14 @@ interface PropsCustomInput {
   placeholder?: string;
   errorMessage?: string;
   isCalendarOpen: boolean;
-  
 }
 
 const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
   ({ value, onClick, placeholder, errorMessage, isCalendarOpen }, _ref) => {
     return (
-      <div className="relative"   >
-        <span onClick={onClick}
+      <div className="relative">
+        <span
+          onClick={onClick}
           className={`absolute top-[14px] right-[8px] z-[5] cursor-pointer ${
             !!errorMessage ? "stroke-[#B00000]" : "stroke-[#B6BBEB]"
           }  transition duration-[350ms]`}
@@ -47,7 +47,7 @@ const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
         </span>
         <button
           type="button"
-        onClick={onClick}
+          onClick={onClick}
           ref={_ref}
           className={`flex justify-start items-center w-full h-[45px] px-[8px] py-[12px] rounded-[10px] border-[1px] text-left transition duration-[350ms] outline-1 cursor-pointer ${
             !!errorMessage
@@ -80,13 +80,13 @@ export const CustomDatePicker = forwardRef<
   (
     {
       selected,
-      onChange,
       minDate,
       maxDate,
       label,
       errorMessage,
       labelStyles,
-      lableMargin = true,
+      labelMargin = true,
+      ...rest
     },
     _ref
   ) => {
@@ -101,31 +101,27 @@ export const CustomDatePicker = forwardRef<
     };
 
     return (
-      <div
-        ref={_ref}
-        className={`relative w-full ${errorMessage && "pb-[26px]"}`}
-      >
+      <div ref={_ref} className="relative w-full">
         {label && (
           <span
             className={`${
               !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
             } font-medium leading-[27px] block ${
               labelStyles ? labelStyles : "text-[18px]"
-            } ${lableMargin ? "block" : ""}`}
+            } ${labelMargin ? "block" : ""}`}
           >
             {label}
           </span>
         )}
         <DatePicker
+          {...rest}
           customInput={
             <CustomInput
               errorMessage={errorMessage}
               isCalendarOpen={isCalendarOpen}
             />
           }
-          
           selected={selected}
-          onChange={onChange}
           locale={uk}
           dateFormat="dd.MM.yyyy"
           minDate={minDate}
