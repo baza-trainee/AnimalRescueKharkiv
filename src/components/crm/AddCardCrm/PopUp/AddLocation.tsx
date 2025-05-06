@@ -3,17 +3,18 @@
 import { useState } from "react";
 import { TextInput } from "../../../ui/inputs/TextInput";
 import { Location } from "../types/types";
+import { useDataContext } from "@/src/context/CrmDataContext";
 
 interface PropsAddLocation {
   onAdd: (location: Location) => void;
-  locationsData: Location[];
 }
 
-export const AddLocation = ({ onAdd, locationsData }: PropsAddLocation) => {
+export const AddLocation = ({ onAdd }: PropsAddLocation) => {
+  const { locationsData } = useDataContext();
   const [customLocation, setCustomLocation] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const isDuplicatedInDataList = locationsData.some(
+  const isDuplicatedInDataList = locationsData?.some(
     (location: Location) =>
       location.name?.trim().toLowerCase() ===
       customLocation.trim().toLowerCase()

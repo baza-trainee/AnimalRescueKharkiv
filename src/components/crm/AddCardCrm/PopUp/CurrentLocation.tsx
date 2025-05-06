@@ -3,18 +3,18 @@
 import { useState } from "react";
 import { AddLocation } from "./AddLocation";
 import { Location } from "../types/types";
+import { useDataContext } from "@/src/context/CrmDataContext";
 
 interface PropsCurrentLocation {
-  locationsData: Location[];
   onChange: (value: Location) => void;
   onClose: () => void;
 }
 
 export const CurrentLocation: React.FC<PropsCurrentLocation> = ({
-  locationsData,
   onChange,
   onClose,
 }) => {
+  const { locationsData } = useDataContext();
   const [isAddingLocation, setIsAddingLocation] = useState(false);
 
   const handleSelectLocation = (location: Location) => {
@@ -25,10 +25,7 @@ export const CurrentLocation: React.FC<PropsCurrentLocation> = ({
   return (
     <>
       {isAddingLocation ? (
-        <AddLocation
-          onAdd={handleSelectLocation}
-          locationsData={locationsData}
-        />
+        <AddLocation onAdd={handleSelectLocation} />
       ) : (
         <ul className="flex flex-col gap-[8px] w-full font-medium text-[18px] max-h-[508px] overflow-y-auto">
           {locationsData?.map((location: Location) => (
