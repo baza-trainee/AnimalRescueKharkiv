@@ -69,7 +69,9 @@ export const DataProvider = ({ children }: DataProviderProps) => {
 export const useDataContext = (): DataContextType => {
   const context = useContext(DataContext);
   if (!context) {
-    throw new Error("");
+    throw new Error(
+      "Контекст DataContext не знайдено. Переконайтеся, що компонент обгорнутий у <DataProvider>."
+    );
   }
   return context;
 };
