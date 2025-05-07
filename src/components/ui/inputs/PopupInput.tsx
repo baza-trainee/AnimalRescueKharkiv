@@ -1,7 +1,7 @@
-import { ArrowUpIcon } from "../../../ui/icon/ArrowUpIcon";
-import { ArrowDownIcon } from "../../../ui/icon/ArrowDownIcon";
-import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
-import { PopUp } from "../PopUp/index";
+import { ArrowUpIcon } from "../icon/ArrowUpIcon";
+import { ArrowDownIcon } from "../icon/ArrowDownIcon";
+import { PopUp } from "../../crm/AddCardCrm/PopUp/index";
+import { TextInput } from "./TextInput";
 
 interface PropsPopupInput {
   label: string;
@@ -53,6 +53,7 @@ export const PopupInput: React.FC<PropsPopupInput> = ({
           value={value?.name || ""}
           onChange={(e) => onChange(e.target.value)}
           onClick={onClose}
+          className="bg-transparent"
           readOnly
         />
         {isOpen && (

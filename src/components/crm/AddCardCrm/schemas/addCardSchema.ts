@@ -36,18 +36,32 @@ export const addCardSchema = Yup.object().shape({
   general__animal_type: Yup.object().shape({
     id: Yup.number().nullable().required("Оберіть тип тварини"),
   }),
-  general__gender: Yup.string().required("Оберіть стать тварини"),
+  general__gender: Yup.string()
+    .oneOf(["male", "female", ""], "Оберіть стать тварини")
+    .required("Оберіть стать тварини"),
   general__weight: Yup.number()
     .nullable()
+    .min(0, "Вага не може бути від'ємною")
     .transform((value, originalValue) => (originalValue === "" ? null : value))
     .notRequired(),
   general__age: Yup.number()
     .nullable()
+    .min(0, "Вік не може бути від'ємним")
+    .max(100, "Вік не може перевищувати 100 років")
     .transform((value, originalValue) => (originalValue === "" ? null : value))
     .notRequired(),
-  general__specials: Yup.string().nullable().notRequired(),
-  owner__info: Yup.string().nullable().notRequired(),
-  comment__text: Yup.string().nullable().notRequired(),
+  general__specials: Yup.string()
+    .nullable()
+    .max(200, "Не більше 200 символів")
+    .notRequired(),
+  owner__info: Yup.string()
+    .nullable()
+    .max(500, "Не більше 500 символів")
+    .notRequired(),
+  comment__text: Yup.string()
+    .nullable()
+    .max(1000, "Не більше 1000 символів")
+    .notRequired(),
   sterilization__done: Yup.boolean().nullable().notRequired(),
   sterilization__date: Yup.mixed()
     .nullable()
@@ -66,7 +80,7 @@ export const addCardSchema = Yup.object().shape({
     .notRequired(),
   sterilization__comment: Yup.string()
     .nullable()
-    .max(500, "Коментар не може бути більше 500 символів")
+    .max(500, "Не більше 500 символів")
     .notRequired(),
   microchipping__done: Yup.boolean().nullable().notRequired(),
   microchipping__date: Yup.mixed()
@@ -86,7 +100,7 @@ export const addCardSchema = Yup.object().shape({
     .notRequired(),
   microchipping__comment: Yup.string()
     .nullable()
-    .max(500, "Коментар не може бути більше 500 символів")
+    .max(500, "Не більше 500 символів")
     .notRequired(),
   media: Yup.mixed<FileList>()
     .test("fileFormat", "Тільки фото або відео", (value) => {
@@ -100,66 +114,127 @@ export const addCardSchema = Yup.object().shape({
     })
     .notRequired(),
   locations: Yup.array().of(
-    Yup.object().shape({
-      location: Yup.object()
-        .shape({
+    Yup.object()
+      .shape({
+        location: Yup.object().shape({
           id: Yup.number().nullable(),
           name: Yup.string().nullable(),
-        })
-        .test(
-          "location-required",
-          "Оберіть локацію",
-          (value) => !!value?.id || !!value?.name
-        ),
-      date_from: Yup.mixed()
-        .transform((value) =>
-          value instanceof Date ? format(value, "dd/MM/yyyy") : value
-        )
-        .nullable()
-        .test(
-          "no-later-than-today",
-          `Не пізніше за ${formattedTodayDate}`,
-          function (value) {
-            if (!value || typeof value !== "string") return true;
-            const parsedDate = parse(value, "dd/MM/yyyy", new Date());
-            return isValid(parsedDate) && parsedDate <= today;
-          }
-        )
-        .test("required-date-from", "Оберіть дату 'З'", function (value) {
-          const { location } = this.parent;
-          if (location && !value) {
-            return this.createError({ message: "Оберіть дату 'З'" });
-          }
-          return true;
+          isCustom: Yup.boolean(),
         }),
-      date_to: Yup.mixed()
-        .transform((value) =>
-          value instanceof Date ? format(value, "dd/MM/yyyy") : value
-        )
-        .nullable()
-        .test(
-          "no-later-than-today",
-          `Не пізніше за ${formattedTodayDate}`,
-          function (value) {
-            if (!value || typeof value !== "string") return true;
-            const parsedDate = parse(value, "dd/MM/yyyy", new Date());
-            return isValid(parsedDate) && parsedDate <= today;
+        date_from: Yup.mixed()
+          .transform((value) =>
+            value instanceof Date ? format(value, "dd/MM/yyyy") : value
+          )
+          .nullable()
+          .test(
+            "no-later-than-today",
+            `Не пізніше за ${formattedTodayDate}`,
+            function (value) {
+              if (!value || typeof value !== "string") return true;
+              const parsedDate = parse(value, "dd/MM/yyyy", new Date());
+              return isValid(parsedDate) && parsedDate <= today;
+            }
+          )
+          .test(
+            "required-date-from-for-index-0",
+            "Оберіть дату 'З'",
+            function (value) {
+              const { index } = this.options as unknown as { index: number };
+              if (index === 0 && !value) {
+                return this.createError({
+                  path: `locations[${index}].date_from`,
+                  message: "Оберіть дату",
+                });
+              }
+              return true;
+            }
+          ),
+        date_to: Yup.mixed()
+          .transform((value) =>
+            value instanceof Date ? format(value, "dd/MM/yyyy") : value
+          )
+          .nullable()
+          .test(
+            "no-later-than-today",
+            `Не пізніше за ${formattedTodayDate}`,
+            function (value) {
+              if (!value || typeof value !== "string") return true;
+              const parsedDate = parse(value, "dd/MM/yyyy", new Date());
+              return isValid(parsedDate) && parsedDate <= today;
+            }
+          )
+          .test(
+            "date-to-after-from",
+            'Не раніше за дату "З"',
+            function (value) {
+              const { date_from } = this.parent;
+
+              const parsedFrom = parse(
+                String(date_from),
+                "dd/MM/yyyy",
+                new Date()
+              );
+              const parsedTo = parse(String(value), "dd/MM/yyyy", new Date());
+
+              if (!isValid(parsedFrom) || !isValid(parsedTo)) return true;
+
+              return parsedTo >= parsedFrom;
+            }
+          ),
+      })
+      .test("required-fields-by-index", "", function (value) {
+        const { index } = this.options as unknown as { index: number };
+
+        const hasLocation = !!value?.location?.id || !!value?.location?.name;
+        const hasDateFrom = !!value?.date_from;
+
+        if (index === 0) {
+          if (!hasLocation) {
+            return this.createError({
+              path: `locations[0].location`,
+              message: "Оберіть поточну локацію",
+            });
           }
-        )
-        .test("date-to-after-from", 'Не раніше дати "З"', function (value) {
-          const { date_from } = this.parent;
-          if (!date_from || !value) {
-            return true;
+        }
+
+        if (index > 0) {
+          if (hasDateFrom && !hasLocation) {
+            return this.createError({
+              path: `locations[${index}].location`,
+              message: "Оберіть локацію",
+            });
           }
-          return value >= date_from;
-        }),
-    })
+
+          if (hasLocation && !hasDateFrom) {
+            return this.createError({
+              path: `locations[${index}].date_from`,
+              message: "Оберіть дату",
+            });
+          }
+        }
+
+        if (index > 1) {
+          if (!hasLocation) {
+            return this.createError({
+              path: `locations[${index}].location`,
+              message: "Оберіть локацію",
+            });
+          }
+        }
+
+        return true;
+      })
   ),
   vaccinations: Yup.array()
     .of(
       Yup.object().shape({
-        is_vaccinated: Yup.boolean(),
-        vaccine_type: Yup.string().nullable().notRequired(),
+        is_vaccinated: Yup.boolean().notRequired(),
+        vaccine_type: Yup.string()
+          .nullable()
+          .transform((value) => (value === "" ? null : value))
+          .min(2, "Не менше 2 символів")
+          .max(100, "Не більше 100 символів")
+          .notRequired(),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>
@@ -187,12 +262,10 @@ export const addCardSchema = Yup.object().shape({
       Yup.object().shape({
         name: Yup.string()
           .nullable()
-          .when(["date", "comment"], {
-            is: (date: string, comment: string) =>
-              date !== null || comment !== null,
-            then: (schema) => schema.required("Введіть назву діагнозу"),
-            otherwise: (schema) => schema,
-          }),
+          .transform((value) => (value === "" ? null : value))
+          .min(2, "Не менше 2 символів")
+          .max(100, "Не більше 100 символів")
+          .notRequired(),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>
@@ -220,12 +293,10 @@ export const addCardSchema = Yup.object().shape({
       Yup.object().shape({
         name: Yup.string()
           .nullable()
-          .when(["date", "comment"], {
-            is: (date: string, comment: string) =>
-              date !== null || comment !== null,
-            then: (schema) => schema.required("Введіть назву діагнозу"),
-            otherwise: (schema) => schema,
-          }),
+          .transform((value) => (value === "" ? null : value))
+          .min(2, "Не менше 2 символів")
+          .max(100, "Не більше 100 символів")
+          .notRequired(),
         date: Yup.mixed()
           .nullable()
           .transform((value) =>

@@ -1,98 +1,58 @@
 "use client";
 
-import { TextInput } from "@/src/components/crm/AddCardCrm/inputs/TextInput";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
-import { addCardSchema, TypeAddCardSchema } from "./schemas/addCardSchema";
-import { FileInput } from "@/src/components/crm/AddCardCrm/inputs/FileInput";
-import { BasicInfoForm } from "./BasicInfoForm";
+import { FileInput } from "../../ui/inputs/FileInput";
+import { TextInput } from "../../ui/inputs/TextInput";
 import { useToggle } from "../../register/popUp/useToggle";
-import { RequiredValues } from "./PopUp/RequiredValues";
+import {
+  addCardSchema,
+  TypeAddCardSchema,
+} from "../AddCardCrm/schemas/addCardSchema";
+import { Controller, FormProvider, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { RequiredValues } from "../AddCardCrm/PopUp/RequiredValues";
 import { useState } from "react";
-import { MedicalInfoForm } from "./MedicalInfoForm";
 import { useQueries } from "@tanstack/react-query";
-import { fetch } from "@/src/utils/api";
+import { fetch, post } from "../../../utils/api";
+import { uploadFiles } from "../../../utils/media";
+import BasicInfo from "../BasicInfo";
+import MedicalInfo from "../MedicalInfo";
+import {
+  CreateLocationFn,
+  FormLocationItem,
+  prepareLocations,
+} from "../AddCardCrm/helpers/locations";
+import { createLocation } from "@/src/utils/locations";
+import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
+import {
+  AnimalCard,
+  AnimalTypes,
+  Location,
+  defaultValues,
+} from "../AddCardCrm/types/types";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
 const API_ANIMAL_TYPES_PATH = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
+const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
 
-export interface Location {
-  id: number | null;
-  name: string;
-}
-
-export interface AnimalTypes {
-  id: number;
-  name: string;
-}
-
-export const defaultValues: TypeAddCardSchema = {
-  name: "",
-  origin__arrival_date: null as unknown as string,
-  origin__city: "",
-  origin__address: null,
-  general__animal_type: { id: null as unknown as number },
-  general__gender: "",
-  general__weight: null,
-  general__age: null,
-  general__specials: null,
-  owner__info: null,
-  comment__text: null,
-  locations: [
-    {
-      location: { id: null, name: null },
-      date_from: "",
-      date_to: null,
-    },
-  ],
-  sterilization__done: null,
-  sterilization__date: null,
-  sterilization__comment: null,
-  microchipping__done: null,
-  microchipping__date: null,
-  microchipping__comment: null,
-  vaccinations: [
-    {
-      is_vaccinated: false,
-      vaccine_type: null,
-      date: null,
-      comment: null,
-    },
-  ],
-  diagnoses: [
-    {
-      name: null,
-      date: null,
-      comment: null,
-    },
-  ],
-  procedures: [
-    {
-      name: null,
-      date: null,
-      comment: null,
-    },
-  ],
-  media: null,
-} as const;
-
-export type AddCardFormValues = typeof defaultValues;
-
-export const AddCardForm = () => {
+const AddCardForm = () => {
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState<boolean>(false);
   const { isOpen, toggleModal } = useToggle();
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
+
+  const methods = useForm<TypeAddCardSchema>({
+    defaultValues,
+    mode: "onSubmit",
+    resolver: yupResolver(addCardSchema),
+  });
 
   const {
     control,
     handleSubmit,
     trigger,
+    getValues,
     formState: { errors, isValid, isSubmitted },
-  } = useForm<TypeAddCardSchema>({
-    defaultValues,
-    mode: "onSubmit",
-    resolver: yupResolver(addCardSchema),
-  });
+  } = methods;
 
   const results = useQueries({
     queries: [
@@ -116,42 +76,71 @@ export const AddCardForm = () => {
   if (isLoading) return <p>Завантаження даних...</p>;
   if (isError) return <p>Помилка завантаження даних</p>;
 
-  const onSubmit = (data: TypeAddCardSchema) => {
-    const processedLocations = data.locations?.map(({ location, ...rest }) => ({
-      ...rest,
-      location: location ? { id: location.id } : null,
-    }));
+  const onSubmit = async (data: TypeAddCardSchema) => {
+    try {
+      setIsLoadingSubmit(true);
+      let uploadedMedia = null;
 
-    const hasFilledDiagnosis = data.diagnoses?.some(
-      (diag) => diag.name || diag.date || diag.comment
-    );
+      if (data.media && data.media.length > 0) {
+        uploadedMedia = await uploadFiles(data.media);
+      }
 
-    const hasFilledProcedures = data.procedures?.some(
-      (procedure) => procedure.name || procedure.date || procedure.comment
-    );
+      const updatedLocations = await prepareLocations(
+        data.locations as FormLocationItem[],
+        locationsData as Location[],
+        createLocation as CreateLocationFn
+      );
 
-    const payload = {
-      ...data,
-      locations: processedLocations,
-      diagnoses: hasFilledDiagnosis ? data.diagnoses : null,
-      procedures: hasFilledProcedures ? data.procedures : null,
-    };
+      const hasFilledDiagnosis = data.diagnoses?.some(
+        (diag) => diag.name || diag.date || diag.comment
+      );
 
-    console.log(payload);
+      const hasFilledProcedures = data.procedures?.some(
+        (procedure) => procedure.name || procedure.date || procedure.comment
+      );
+
+      const updatedData = {
+        ...data,
+        media: uploadedMedia || null,
+        locations: updatedLocations,
+        diagnoses: hasFilledDiagnosis
+          ? sortDiagnosesOrProcedures(data.diagnoses || [])
+          : null,
+        procedures: hasFilledProcedures
+          ? sortDiagnosesOrProcedures(data.procedures || [])
+          : null,
+        adoption__country: null,
+        adoption__city: null,
+        adoption__date: null,
+        adoption__comment: null,
+        death__dead: null,
+        death__date: null,
+        death__comment: null,
+      };
+
+      const result = await post<AnimalCard>(
+        `${API_CRM_PATH}${API_ANIMALS_PATH}`,
+        updatedData
+      );
+
+      if (result?.id) {
+        window.location.href = "/crm/catalog";
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoadingSubmit(false);
+    }
   };
 
   return (
-    <>
+    <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-[24px] pb-[112px] bg-[#F8F9FD]"
       >
         <fieldset className="flex flex-col gap-[24px]">
-          <div
-            className={`p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] ${
-              errors.name && "pb-[26px]"
-            }`}
-          >
+          <div className="p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
             <Controller
               name="name"
               control={control}
@@ -161,15 +150,12 @@ export const AddCardForm = () => {
                   label="Ім'я*"
                   placeholder="Придумайте ім’я тварини"
                   errorMessage={errors.name?.message}
+                  className="bg-transparent"
                 />
               )}
             />
           </div>
-          <div
-            className={`min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[24px] ${
-              errors.media && "pb-[26px]"
-            }`}
-          >
+          <div className="min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[24px]">
             <Controller
               name="media"
               control={control}
@@ -212,20 +198,13 @@ export const AddCardForm = () => {
         </div>
         <div>
           <fieldset className={activeTab === "basic" ? "block" : "hidden"}>
-            <BasicInfoForm
-              control={control}
-              errors={errors}
-              trigger={trigger}
+            <BasicInfo
               locationsData={(locationsData as Location[]) || []}
               animalTypesData={(animalTypesData as AnimalTypes[]) || []}
             />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
-            <MedicalInfoForm
-              control={control}
-              errors={errors}
-              trigger={trigger}
-            />
+            <MedicalInfo />
           </fieldset>
         </div>
         <button
@@ -233,12 +212,14 @@ export const AddCardForm = () => {
           onClick={toggleModal}
           className="flex justify-center items-center w-full py-[13px] rounded-[10px] text-[20px] text-[#EDEEFA] leading-[30px] bg-[#4855CC] transition duration-[350ms] hover:bg-[#B6BBEB] focus::bg-[#B6BBEB]"
         >
-          Зберегти картку
+          {isLoadingSubmit ? "Надсилаємо..." : "Зберегти картку"}
         </button>
       </form>
       {isOpen && isSubmitted && (
         <>{!isValid ? <RequiredValues onClose={toggleModal} /> : null}</>
       )}
-    </>
+    </FormProvider>
   );
 };
+
+export default AddCardForm;

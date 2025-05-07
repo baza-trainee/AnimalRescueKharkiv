@@ -64,14 +64,24 @@ const CountryStatistic = ({ startDate, endDate }: Props) => {
       </div>
     );
   }
+
+   const combined = apiData.labels.map((label, i) => ({
+    label,
+    value: apiData.data[i],
+  }));
+  combined.sort((a, b) => a.value - b.value); 
+
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedData = combined.map((item) => item.value);
+
     const chartData = {
-      labels: apiData?.labels || [],
+       labels: sortedLabels,
       datasets: [
         {
           label: "Кількість тварин",
-          data: apiData?.data || [],
+          data: sortedData,
           backgroundColor: backgroundColors.slice(0, apiData?.data?.length || 0),
-          borderRadius: 4,
+          borderRadius: 3,
           borderWidth: 1,
         },
       ],

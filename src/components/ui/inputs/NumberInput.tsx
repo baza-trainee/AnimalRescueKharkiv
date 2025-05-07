@@ -1,18 +1,19 @@
-import { forwardRef } from "react";
 import { ErrorMessage } from "./ErrorMessage";
+import { forwardRef } from "react";
 
-interface PropsTextInput extends React.InputHTMLAttributes<HTMLInputElement> {
+interface PropsNumberInput extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
   label: string;
+  styles?: string;
 }
 
-export const TextInput: React.FC<PropsTextInput> = forwardRef(
+export const NumberInput: React.FC<PropsNumberInput> = forwardRef(
   (
-    { label, errorMessage, name, ...rest },
+    { label, errorMessage, styles, name, value, ...rest },
     _ref: React.ForwardedRef<HTMLInputElement>
   ) => {
     return (
-      <div className=" relative w-full">
+      <div className={`relative w-full `}>
         <label htmlFor={name} className=" block mb-[4px]">
           <span
             className={`${
@@ -25,15 +26,15 @@ export const TextInput: React.FC<PropsTextInput> = forwardRef(
         <input
           {...rest}
           ref={_ref}
-          type="text"
+          type="number"
           id={name}
-          className={` w-full px-[8px] py-[12px] rounded-[10px] border-[1px]  ${
+          value={value ?? ""}
+          onWheel={(e) => e.currentTarget.blur()}
+          className={`withoutArrows w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent ${
             !!errorMessage
               ? "border-[#B00000] placeholder:text-[#B00000] outline-[#B00000]"
               : "placeholder:text-[#B6BBEB] border-[#B6BBEB] outline-[#4855CC]"
-          }  transition duration-[350ms]  outline-1 text-[#070600] text-[14px] font-normal ${
-            rest.className
-          }`}
+          }  transition duration-[350ms]  outline-1 text-[#070600] text-[14px] font-normal ${styles}`}
         />
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </div>
@@ -41,4 +42,4 @@ export const TextInput: React.FC<PropsTextInput> = forwardRef(
   }
 );
 
-TextInput.displayName = "TextInput";
+NumberInput.displayName = "NumberInput";

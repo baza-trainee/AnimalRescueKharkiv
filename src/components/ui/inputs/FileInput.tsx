@@ -1,8 +1,8 @@
 "use client";
 
 import React, { forwardRef, useRef, useState } from "react";
+import { PlusIcon } from "../icon/PlusIcon";
 import { ErrorMessage } from "./ErrorMessage";
-import { PlusIcon } from "../../../ui/icon/PlusIcon";
 
 interface PropsFileInput extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
@@ -58,7 +58,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
       <div className="w-[318px] relative">
         <label
           htmlFor={name}
-          className="flex flex-col gap-8px] relative cursor-pointer"
+          className="flex flex-col gap-[8px] relative cursor-pointer"
         >
           <span
             className={`${
@@ -67,6 +67,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
           >
             {label}
           </span>
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <input
             {...rest}
             ref={(el) => {
@@ -89,11 +90,6 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
             >
               <PlusIcon style={"fill-[#F8F9FD]"} />
             </div>
-            {previews.length !== 0 && (
-              <div className="px-[16px] py-[8px] mb-[8px] bg-[#B6BBEB] rounded-[10px]">
-                <span>Вибрати інші файли</span>
-              </div>
-            )}
           </div>
         </label>
 
@@ -140,7 +136,9 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
                   className="shrink-0 overflow-hidden w-[240px] h-[240px] rounded-lg"
                 >
                   <div className="w-full h-full flex justify-center items-center bg-gray-200">
-                    <span className="font-medium">Недопустимий формат</span>
+                    <span className="text-[18px] font-medium leading-[27px]">
+                      Недопустимий формат
+                    </span>
                   </div>
                 </li>
               );
@@ -153,14 +151,12 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
             <button
               type="button"
               onClick={handleClearFiles}
-              className="px-[16px] py-[8px] bg-[#B6BBEB] rounded-[10px]"
+              className="px-[16px] py-[8px] bg-[#B6BBEB] rounded-[10px] text-[18px] font-medium leading-[27px]"
             >
               Очистити вибір
             </button>
           </div>
         )}
-
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </div>
     );
   }
