@@ -13,8 +13,8 @@ const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
 const API_ANIMAL_TYPES_PATH = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
 
 interface DataContextType {
-  locationsData: Location[] | null;
-  animalTypesData: AnimalTypes[] | null;
+  locationsData: Location[];
+  animalTypesData: AnimalTypes[];
   isLoading: boolean;
   isError: boolean;
 }
