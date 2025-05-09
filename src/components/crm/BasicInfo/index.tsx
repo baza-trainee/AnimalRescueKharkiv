@@ -14,21 +14,16 @@ import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { LocationPicker } from "../../ui/inputs/LocationPicker";
 import { AnimalTypes, Location } from "../AddCardCrm/types/types";
+import { useDataContext } from "@/src/context/CrmDataContext";
 
 const genderOptions = [
   { name: "Самець", value: "male" },
   { name: "Самка", value: "female" },
 ];
 
-interface PropsBasicInfoForm {
-  locationsData: Location[];
-  animalTypesData: AnimalTypes[];
-}
-
-const BasicInfo: React.FC<PropsBasicInfoForm> = ({
-  locationsData,
-  animalTypesData,
-}) => {
+const BasicInfo = () => {
+  const { locationsData, animalTypesData, isLoading, isError } =
+    useDataContext();
   const {
     control,
     formState: { errors },
@@ -142,7 +137,7 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
               data={animalTypesData as { id: number; name: string }[]}
               placeholder="Оберіть тип тварини"
               value={
-                animalTypesData.find((type) => type.id === field.value) || null
+                animalTypesData?.find((type) => type.id === field.value) || null
               }
               onChange={(type: { id: number; name: string }) => {
                 field.onChange(type.id);
@@ -230,7 +225,6 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
           render={({ field, fieldState }) => (
             <LocationPicker
               label="Поточна локація*"
-              locationsData={locationsData}
               value={field.value || ""}
               onChange={(location) => {
                 if (location.id) {
@@ -291,7 +285,6 @@ const BasicInfo: React.FC<PropsBasicInfoForm> = ({
                 render={({ field, fieldState }) => (
                   <LocationPicker
                     label={`Локація ${locIndex}`}
-                    locationsData={locationsData}
                     value={field.value || ""}
                     onChange={(location) => {
                       if (location.id) {

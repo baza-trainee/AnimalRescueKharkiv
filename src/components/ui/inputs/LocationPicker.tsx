@@ -1,3 +1,5 @@
+"use client";
+
 import { PopUp } from "../../crm/AddCardCrm/PopUp/index";
 import { ArrowDownIcon } from "../icon/ArrowDownIcon";
 import { ArrowUpIcon } from "../icon/ArrowUpIcon";
@@ -7,7 +9,6 @@ import { Location } from "../../crm/AddCardCrm/types/types";
 
 interface PropsLocationPicker {
   label: string;
-  locationsData: Location[];
   value: Location | null;
   onChange: (value: Location) => void;
   errorMessage?: string;
@@ -18,7 +19,6 @@ interface PropsLocationPicker {
 
 export const LocationPicker: React.FC<PropsLocationPicker> = ({
   label,
-  locationsData,
   value,
   onChange,
   errorMessage,
@@ -52,11 +52,7 @@ export const LocationPicker: React.FC<PropsLocationPicker> = ({
       </div>
       {isOpen && (
         <PopUp onClose={onClose} gap="8px">
-          <CurrentLocation
-            locationsData={locationsData}
-            onChange={onChange}
-            onClose={onClose}
-          />
+          <CurrentLocation onChange={onChange} onClose={onClose} />
         </PopUp>
       )}
     </div>

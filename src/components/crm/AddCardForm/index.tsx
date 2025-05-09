@@ -7,12 +7,12 @@ import {
   addCardSchema,
   TypeAddCardSchema,
 } from "../AddCardCrm/schemas/addCardSchema";
+import { useDataContext } from "@/src/context/CrmDataContext";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RequiredValues } from "../AddCardCrm/PopUp/RequiredValues";
 import { useState } from "react";
-import { useQueries } from "@tanstack/react-query";
-import { fetch, post } from "../../../utils/api";
+import { post } from "../../../utils/api";
 import { uploadFiles } from "../../../utils/media";
 import BasicInfo from "../BasicInfo";
 import MedicalInfo from "../MedicalInfo";
@@ -31,11 +31,10 @@ import {
 } from "../AddCardCrm/types/types";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
-const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
-const API_ANIMAL_TYPES_PATH = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
 const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
 
 const AddCardForm = () => {
+  const { locationsData, isLoading, isError } = useDataContext();
   const [isLoadingSubmit, setIsLoadingSubmit] = useState<boolean>(false);
   const { isOpen, toggleModal } = useToggle();
   const [activeTab, setActiveTab] = useState<"basic" | "medical">("basic");
@@ -53,25 +52,6 @@ const AddCardForm = () => {
     getValues,
     formState: { errors, isValid, isSubmitted },
   } = methods;
-
-  const results = useQueries({
-    queries: [
-      {
-        queryKey: ["locationsData"],
-        queryFn: () => fetch(`${API_CRM_PATH}${API_LOCATIONS_PATH}`),
-      },
-      {
-        queryKey: ["animalTypesData"],
-        queryFn: () => fetch(`${API_CRM_PATH}${API_ANIMAL_TYPES_PATH}`),
-      },
-    ],
-  });
-
-  const locationsData = results[0].data || [];
-  const animalTypesData = results[1].data || [];
-
-  const isLoading = results.some((result) => result.isLoading);
-  const isError = results.some((result) => result.isError);
 
   if (isLoading) return <p>Завантаження даних...</p>;
   if (isError) return <p>Помилка завантаження даних</p>;
@@ -198,10 +178,7 @@ const AddCardForm = () => {
         </div>
         <div>
           <fieldset className={activeTab === "basic" ? "block" : "hidden"}>
-            <BasicInfo
-              locationsData={(locationsData as Location[]) || []}
-              animalTypesData={(animalTypesData as AnimalTypes[]) || []}
-            />
+            <BasicInfo />
           </fieldset>
           <fieldset className={activeTab === "medical" ? "block" : "hidden"}>
             <MedicalInfo />
