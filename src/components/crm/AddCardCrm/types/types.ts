@@ -16,7 +16,7 @@ export const defaultValues: TypeAddCardSchema = {
   origin__arrival_date: null as unknown as string,
   origin__city: "",
   origin__address: null,
-  general__animal_type: { id: null as unknown as number },
+  general__animal_type: { id: 0 },
   general__gender: "",
   general__weight: null,
   general__age: null,

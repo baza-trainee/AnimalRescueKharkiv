@@ -23,12 +23,7 @@ import {
 } from "../AddCardCrm/helpers/locations";
 import { createLocation } from "@/src/utils/locations";
 import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
-import {
-  AnimalCard,
-  AnimalTypes,
-  Location,
-  defaultValues,
-} from "../AddCardCrm/types/types";
+import { Location, defaultValues } from "../AddCardCrm/types/types";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
@@ -71,24 +66,18 @@ const AddCardForm = () => {
         createLocation as CreateLocationFn
       );
 
-      const hasFilledDiagnosis = data.diagnoses?.some(
-        (diag) => diag.name || diag.date || diag.comment
-      );
-
-      const hasFilledProcedures = data.procedures?.some(
-        (procedure) => procedure.name || procedure.date || procedure.comment
-      );
-
       const updatedData = {
         ...data,
         media: uploadedMedia || null,
         locations: updatedLocations,
-        diagnoses: hasFilledDiagnosis
-          ? sortDiagnosesOrProcedures(data.diagnoses || [])
-          : null,
-        procedures: hasFilledProcedures
-          ? sortDiagnosesOrProcedures(data.procedures || [])
-          : null,
+        diagnoses:
+          data.diagnoses?.length === 0
+            ? null
+            : sortDiagnosesOrProcedures(data.diagnoses || []),
+        procedures:
+          data.procedures?.length === 0
+            ? null
+            : sortDiagnosesOrProcedures(data.procedures || []),
         adoption__country: null,
         adoption__city: null,
         adoption__date: null,
@@ -98,14 +87,16 @@ const AddCardForm = () => {
         death__comment: null,
       };
 
-      const result = await post<AnimalCard>(
-        `${API_CRM_PATH}${API_ANIMALS_PATH}`,
-        updatedData
-      );
+      console.log(updatedData);
 
-      if (result?.id) {
-        window.location.href = "/crm/catalog";
-      }
+      // const result = await post<AnimalCard>(
+      //   `${API_CRM_PATH}${API_ANIMALS_PATH}`,
+      //   updatedData
+      // );
+
+      // if (result?.id) {
+      //   window.location.href = "/crm/catalog";
+      // }
     } catch (error) {
       throw error;
     } finally {

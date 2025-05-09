@@ -12,11 +12,7 @@ import { BooleanRadio } from "../../ui/inputs/BooleanRadio";
 import { TextInput } from "../../ui/inputs/TextInput";
 
 const MedicalInfo = () => {
-  const {
-    control,
-    formState: { errors },
-    trigger,
-  } = useFormContext();
+  const { control, trigger } = useFormContext();
 
   const { fields: diagnosesFields, append: appendDiagnosis } = useFieldArray({
     control,
@@ -68,27 +64,23 @@ const MedicalInfo = () => {
         <Controller
           name="sterilization__done"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <BooleanRadio
               {...field}
               name="sterilization__done"
-              errorMessage={
-                errors?.sterilization__done?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
             />
           )}
         />
         <Controller
           name="sterilization__date"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <CustomDatePicker
               {...field}
               label="Дата проведення"
               selected={field.value}
-              errorMessage={
-                errors?.sterilization__date?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
               labelMargin={false}
             />
           )}
@@ -96,15 +88,13 @@ const MedicalInfo = () => {
         <Controller
           name="sterilization__comment"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <CommentInput
               {...field}
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
-              errorMessage={
-                errors?.sterilization__comment?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
               initialHeight="45px"
               labelMargin={false}
             />
@@ -118,27 +108,23 @@ const MedicalInfo = () => {
         <Controller
           name="microchipping__done"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <BooleanRadio
               {...field}
               name="microchipping__done"
-              errorMessage={
-                errors?.microchipping__done?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
             />
           )}
         />
         <Controller
           name="microchipping__date"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <CustomDatePicker
               {...field}
               label="Дата проведення"
               selected={field.value}
-              errorMessage={
-                errors?.microchipping__date?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
               labelMargin={false}
             />
           )}
@@ -146,15 +132,13 @@ const MedicalInfo = () => {
         <Controller
           name="microchipping__comment"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <CommentInput
               {...field}
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
-              errorMessage={
-                errors?.microchipping__comment?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
               initialHeight="45px"
               labelMargin={false}
             />
@@ -169,28 +153,24 @@ const MedicalInfo = () => {
           <Controller
             name={`vaccinations.0.is_vaccinated`}
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <BooleanRadio
                 {...field}
                 name={`vaccinations.0.is_vaccinated`}
-                errorMessage={
-                  (errors.vaccinations as any)?.[0]?.is_vaccinated?.message
-                }
+                errorMessage={fieldState.error?.message}
               />
             )}
           />
           <Controller
             name={`vaccinations.0.vaccine_type`}
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <CommentInput
                 {...field}
                 label="Тип вакцини/препарат"
                 placeholder="Від чого провакциновано та яким препаратом"
                 value={field.value || ""}
-                errorMessage={
-                  (errors.vaccinations as any)?.[0]?.vaccine_type?.message
-                }
+                errorMessage={fieldState.error?.message}
                 styles="h-[66px]"
               />
             )}
@@ -198,27 +178,25 @@ const MedicalInfo = () => {
           <Controller
             name={`vaccinations.0.date`}
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <CustomDatePicker
                 {...field}
                 label="Дата проведення"
                 selected={field.value}
-                errorMessage={(errors.vaccinations as any)?.[0]?.date?.message}
+                errorMessage={fieldState.error?.message}
               />
             )}
           />
           <Controller
             name={`vaccinations.0.comment`}
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <CommentInput
                 {...field}
                 label="Рекомендації/коментар"
                 placeholder="Залиште рекомендації"
                 value={field.value || ""}
-                errorMessage={
-                  (errors.vaccinations as any)?.[0]?.comment?.message
-                }
+                errorMessage={fieldState.error?.message}
                 initialHeight="45px"
               />
             )}
