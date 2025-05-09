@@ -1,34 +1,19 @@
-"use client";
-
 import {
   Controller,
   useFieldArray,
   useFormContext,
   useWatch,
 } from "react-hook-form";
-import { useState } from "react";
 import { TextInput } from "../../ui/inputs/TextInput";
 import { NumberInput } from "../../ui/inputs/NumberInput";
 import { CommentInput } from "../../ui/inputs/CommentInput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
-import { LocationPicker } from "../../ui/inputs/LocationPicker";
 import { AnimalTypesPopup } from "../../ui/popUp/AnimalTypesPopup";
 import { GendersPopup } from "../../ui/popUp/GendersPopup";
+import { LocationsPopup } from "../../ui/popUp/LocationsPopup";
 
 const BasicInfo = () => {
   const { control, trigger } = useFormContext();
-
-  const [activeLocationPicker, setActiveLocationPicker] = useState<
-    string | null
-  >(null);
-
-  const handleOpenLocationPicker = (id: string) => {
-    setActiveLocationPicker(id);
-  };
-
-  const handleCloseLocationPicker = () => {
-    setActiveLocationPicker(null);
-  };
 
   const { fields: locationsFields, append: appendLocation } = useFieldArray({
     control,
@@ -173,9 +158,8 @@ const BasicInfo = () => {
           name="locations.0.location"
           control={control}
           render={({ field, fieldState }) => (
-            <LocationPicker
+            <LocationsPopup
               label="Поточна локація*"
-              value={field.value || ""}
               onChange={(location) => {
                 if (location.id) {
                   field.onChange({
@@ -193,9 +177,6 @@ const BasicInfo = () => {
                 trigger("locations");
               }}
               errorMessage={fieldState.error?.message}
-              isOpen={activeLocationPicker === "currentLocation"}
-              onOpen={() => handleOpenLocationPicker("currentLocation")}
-              onClose={handleCloseLocationPicker}
             />
           )}
         />
@@ -233,9 +214,8 @@ const BasicInfo = () => {
                 name={location}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <LocationPicker
+                  <LocationsPopup
                     label={`Локація ${locIndex}`}
-                    value={field.value || ""}
                     onChange={(location) => {
                       if (location.id) {
                         field.onChange({
@@ -253,9 +233,6 @@ const BasicInfo = () => {
                       trigger("locations");
                     }}
                     errorMessage={fieldState.error?.message}
-                    isOpen={activeLocationPicker === location}
-                    onOpen={() => handleOpenLocationPicker(location)}
-                    onClose={handleCloseLocationPicker}
                   />
                 )}
               />

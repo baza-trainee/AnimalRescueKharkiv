@@ -1,4 +1,4 @@
-import { PopUp } from "./index";
+import { PopUp } from ".";
 
 export const RequiredValues = ({ onClose }: { onClose: () => void }) => {
   return (

@@ -143,7 +143,6 @@ export const addCardSchema = Yup.object().shape({
               "Оберіть дату 'З'",
               function (value) {
                 const { index } = this.options as unknown as { index: number };
-                console.log(this.options);
 
                 if (index === 0 && !value) {
                   return this.createError({

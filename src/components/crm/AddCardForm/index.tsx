@@ -10,7 +10,7 @@ import {
 import { useDataContext } from "@/src/context/CrmDataContext";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { RequiredValues } from "../AddCardCrm/PopUp/RequiredValues";
+import { RequiredValues } from "../../ui/popUp/RequiredValues";
 import { useState } from "react";
 import { post } from "../../../utils/api";
 import { uploadFiles } from "../../../utils/media";
@@ -45,7 +45,7 @@ const AddCardForm = () => {
     handleSubmit,
     trigger,
     getValues,
-    formState: { errors, isValid, isSubmitted },
+    formState: { isValid, isSubmitted },
   } = methods;
 
   if (isLoading) return <p>Завантаження даних...</p>;
@@ -115,12 +115,12 @@ const AddCardForm = () => {
             <Controller
               name="name"
               control={control}
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextInput
                   {...field}
                   label="Ім'я*"
                   placeholder="Придумайте ім’я тварини"
-                  errorMessage={errors.name?.message}
+                  errorMessage={fieldState.error?.message}
                   className="bg-transparent"
                 />
               )}
@@ -130,14 +130,13 @@ const AddCardForm = () => {
             <Controller
               name="media"
               control={control}
-              render={({ field: { onChange, value, ...field } }) => (
+              render={({ field, fieldState }) => (
                 <FileInput
-                  {...field}
                   label={"Додайте фото та відео"}
                   accept="image/*, video/*"
                   multiple
-                  onChange={onChange}
-                  errorMessage={errors.media?.message}
+                  onChange={field.onChange}
+                  errorMessage={fieldState.error?.message}
                 />
               )}
             />

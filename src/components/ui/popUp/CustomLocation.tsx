@@ -1,23 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { TextInput } from "../../../ui/inputs/TextInput";
-import { Location } from "../types/types";
 import { useDataContext } from "@/src/context/CrmDataContext";
+import { Location } from "../../crm/AddCardCrm/types/types";
+import { TextInput } from "../inputs/TextInput";
 
-interface PropsAddLocation {
+interface PropsCustomLocation {
   onAdd: (location: Location) => void;
 }
 
-export const AddLocation = ({ onAdd }: PropsAddLocation) => {
+export const CustomLocation = ({ onAdd }: PropsCustomLocation) => {
   const { locationsData } = useDataContext();
-  const [customLocation, setCustomLocation] = useState("");
+  const [selectCustomLocation, setSelectCustomLocation] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const isDuplicatedInDataList = locationsData?.some(
     (location: Location) =>
       location.name?.trim().toLowerCase() ===
-      customLocation.trim().toLowerCase()
+      selectCustomLocation.trim().toLowerCase()
   );
 
   const handleAdd = () => {
@@ -26,8 +26,8 @@ export const AddLocation = ({ onAdd }: PropsAddLocation) => {
       return;
     }
 
-    onAdd({ id: null, name: customLocation.trim(), isCustom: true });
-    setCustomLocation("");
+    onAdd({ id: null, name: selectCustomLocation.trim(), isCustom: true });
+    setSelectCustomLocation("");
     setErrorMessage("");
   };
 
@@ -36,9 +36,9 @@ export const AddLocation = ({ onAdd }: PropsAddLocation) => {
       <TextInput
         label="Додайте назву нової локації"
         placeholder="Назва"
-        value={customLocation}
+        value={selectCustomLocation}
         onChange={(e) => {
-          setCustomLocation(e.target.value);
+          setSelectCustomLocation(e.target.value);
           setErrorMessage("");
         }}
         errorMessage={errorMessage}
@@ -48,9 +48,9 @@ export const AddLocation = ({ onAdd }: PropsAddLocation) => {
       <button
         type="button"
         onClick={handleAdd}
-        disabled={customLocation.trim() === ""}
+        disabled={selectCustomLocation.trim() === ""}
         className={`bg-[#4855CC] transition duration-[350ms] rounded-[10px] w-full py-[13px] text-[20px] leading-[30px] font-normal ${
-          customLocation.trim() === ""
+          selectCustomLocation.trim() === ""
             ? "bg-[#ACACAC] text-[#F6F6F6] cursor-not-allowed"
             : "bg-[#4855CC] hover:bg-[#3442c7] focus:bg-[#3442c7] text-[#F8F9FD]"
         }`}

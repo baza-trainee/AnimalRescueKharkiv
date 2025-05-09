@@ -18,7 +18,7 @@ export const AnimalTypesPopup: React.FC<PropsAnimalTypesPopup> = ({
   ...rest
 }) => {
   const { isOpen, openModal, closeModal } = useToggle();
-  const { animalTypesData, isLoading, isError } = useDataContext();
+  const { animalTypesData } = useDataContext();
   const [selectAnimalType, setSelectAnimalType] = useState<string>("");
 
   const handleSelectValue = (value: number) => {
