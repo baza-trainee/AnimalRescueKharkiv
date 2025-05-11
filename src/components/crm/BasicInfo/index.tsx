@@ -8,9 +8,9 @@ import { TextInput } from "../../ui/inputs/TextInput";
 import { NumberInput } from "../../ui/inputs/NumberInput";
 import { CommentInput } from "../../ui/inputs/CommentInput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
-import { AnimalTypesPopup } from "../../ui/popUp/AnimalTypesPopup";
-import { GendersPopup } from "../../ui/popUp/GendersPopup";
-import { LocationsPopup } from "../../ui/popUp/LocationsPopup";
+import { AnimalTypesInput } from "../../ui/inputs/AnimalTypesInput";
+import { GendersInput } from "../../ui/inputs/GendersInput";
+import { LocationsInput } from "../../ui/inputs/LocationsInput";
 
 const BasicInfo = () => {
   const { control, trigger } = useFormContext();
@@ -96,7 +96,7 @@ const BasicInfo = () => {
           name="general__animal_type.id"
           control={control}
           render={({ field, fieldState }) => (
-            <AnimalTypesPopup
+            <AnimalTypesInput
               onChange={field.onChange}
               errorMessage={fieldState.error?.message}
             />
@@ -106,7 +106,7 @@ const BasicInfo = () => {
           name="general__gender"
           control={control}
           render={({ field, fieldState }) => (
-            <GendersPopup
+            <GendersInput
               onChange={field.onChange}
               errorMessage={fieldState.error?.message}
             />
@@ -158,7 +158,7 @@ const BasicInfo = () => {
           name="locations.0.location"
           control={control}
           render={({ field, fieldState }) => (
-            <LocationsPopup
+            <LocationsInput
               label="Поточна локація*"
               onChange={(location) => {
                 if (location.id) {
@@ -214,7 +214,7 @@ const BasicInfo = () => {
                 name={location}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <LocationsPopup
+                  <LocationsInput
                     label={`Локація ${locIndex}`}
                     onChange={(location) => {
                       if (location.id) {
