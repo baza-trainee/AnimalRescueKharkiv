@@ -11,7 +11,7 @@ import { CommentInput } from "../../ui/inputs/CommentInput";
 import { BooleanRadio } from "../../ui/inputs/BooleanRadio";
 import { TextInput } from "../../ui/inputs/TextInput";
 
-const MedicalInfo: React.FC = () => {
+const MedicalInfo = () => {
   const {
     control,
     formState: { errors },
