@@ -1,27 +1,30 @@
 import { useDataContext } from "@/src/context/CrmDataContext";
 import { PopUp } from ".";
-import { Location } from "../../crm/AddCardCrm/types/types";
-import { useToggle } from "./useToggle";
+import { Location } from "../../../app/types/addCard";
 import { CustomLocationPopup } from "./CustomLocationPopup";
 
 interface PropsLocationsPopup {
-  isAddingLocation: boolean;
-  setIsAddingLocation: (location: boolean) => void;
+  closeModal: () => void;
+  isCustomLocation: boolean;
+  setIsCustomLocation: (location: boolean) => void;
   handleSelectLocation: (value: Location) => void;
 }
 
 export const LocationsPopup: React.FC<PropsLocationsPopup> = ({
-  isAddingLocation,
-  setIsAddingLocation,
+  closeModal,
+  isCustomLocation,
+  setIsCustomLocation,
   handleSelectLocation,
 }) => {
   const { locationsData } = useDataContext();
-  const { closeModal } = useToggle();
 
   return (
     <>
-      {isAddingLocation ? (
-        <CustomLocationPopup onAdd={handleSelectLocation} />
+      {isCustomLocation ? (
+        <CustomLocationPopup
+          onAdd={handleSelectLocation}
+          closeModal={closeModal}
+        />
       ) : (
         <PopUp onClose={closeModal} gap="8px">
           <ul className="flex flex-col gap-[8px] w-full font-medium text-[18px] max-h-[508px] overflow-y-auto">
@@ -42,7 +45,7 @@ export const LocationsPopup: React.FC<PropsLocationsPopup> = ({
             ))}
             <li
               onClick={() => {
-                setIsAddingLocation(true);
+                setIsCustomLocation(true);
               }}
               className="h-[35px] cursor-pointer border-b border-b-[#EDEEFA] last:border-b-0"
             >

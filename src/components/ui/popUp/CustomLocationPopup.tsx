@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { useDataContext } from "@/src/context/CrmDataContext";
-import { Location } from "../../crm/AddCardCrm/types/types";
+import { Location } from "../../../app/types/addCard";
 import { TextInput } from "../inputs/TextInput";
 import { PopUp } from ".";
-import { useToggle } from "./useToggle";
 
 interface PropsCustomLocationPopup {
   onAdd: (location: Location) => void;
+  closeModal: () => void;
 }
 
-export const CustomLocationPopup = ({ onAdd }: PropsCustomLocationPopup) => {
+export const CustomLocationPopup = ({
+  onAdd,
+  closeModal,
+}: PropsCustomLocationPopup) => {
   const { locationsData } = useDataContext();
-  const { closeModal } = useToggle();
   const [selectCustomLocation, setSelectCustomLocation] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 

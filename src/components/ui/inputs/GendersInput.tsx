@@ -51,7 +51,12 @@ export const GendersInput: React.FC<PropsGendersInput> = ({
           className="bg-transparent"
           readOnly
         />
-        {isOpen && <GendersPopup handleSelectValue={handleSelectValue} />}
+        {isOpen && (
+          <GendersPopup
+            handleSelectValue={handleSelectValue}
+            closeModal={closeModal}
+          />
+        )}
       </div>
     </>
   );

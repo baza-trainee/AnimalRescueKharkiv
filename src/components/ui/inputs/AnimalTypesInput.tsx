@@ -2,7 +2,7 @@ import { ArrowUpIcon } from "@/src/components/ui/icon/ArrowUpIcon";
 import { ArrowDownIcon } from "@/src/components/ui/icon/ArrowDownIcon";
 import { TextInput } from "@/src/components/ui/inputs/TextInput";
 import { useState } from "react";
-import { AnimalTypes } from "../../crm/AddCardCrm/types/types";
+import { AnimalTypes } from "../../../app/types/addCard";
 import { useToggle } from "../popUp/useToggle";
 import { AnimalTypesPopup } from "../popUp/AnimalTypesPopup";
 
@@ -50,7 +50,12 @@ export const AnimalTypesInput: React.FC<PropsAnimalTypesInput> = ({
           className="bg-transparent"
           readOnly
         />
-        {isOpen && <AnimalTypesPopup handleSelectValue={handleSelectValue} />}
+        {isOpen && (
+          <AnimalTypesPopup
+            handleSelectValue={handleSelectValue}
+            closeModal={closeModal}
+          />
+        )}
       </div>
     </>
   );

@@ -1,5 +1,6 @@
 import { parse } from "date-fns";
-import { AddCardFormValues, Location } from "../types/types";
+import { TypeAddCardSchema } from "../schemas/addCardSchema";
+import { Location } from "@/src/app/types/addCard";
 
 export type FormLocationItem = {
   location: Location;
@@ -8,7 +9,7 @@ export type FormLocationItem = {
 export type CreateLocationFn = (name: string) => Promise<Location>;
 
 export const getCleanLocations = (
-  locations: AddCardFormValues["locations"]
+  locations: TypeAddCardSchema["locations"]
 ) => {
   const cleaned = locations?.filter((location, index) => {
     const hasLocation = !!location.location?.id || !!location.location?.name;

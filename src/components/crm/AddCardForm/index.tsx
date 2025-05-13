@@ -21,9 +21,10 @@ import {
   FormLocationItem,
   prepareLocations,
 } from "../AddCardCrm/helpers/locations";
+import { defaultValues } from "../AddCardCrm/defaultValues/defaultValues";
 import { createLocation } from "@/src/utils/locations";
 import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
-import { AnimalCard, Location, defaultValues } from "../AddCardCrm/types/types";
+import { Location } from "@/src/app/types/addCard";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
@@ -86,14 +87,16 @@ const AddCardForm = () => {
         death__comment: null,
       };
 
-      const result = await post<AnimalCard>(
-        `${API_CRM_PATH}${API_ANIMALS_PATH}`,
-        updatedData
-      );
+      console.log(updatedData);
 
-      if (result?.id) {
-        window.location.href = "/crm/catalog";
-      }
+      // const result = await post<AnimalCard>(
+      //   `${API_CRM_PATH}${API_ANIMALS_PATH}`,
+      //   updatedData
+      // );
+
+      // if (result?.id) {
+      //   window.location.href = "/crm/catalog";
+      // }
     } catch (error) {
       throw error;
     } finally {

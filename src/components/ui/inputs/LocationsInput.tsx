@@ -2,7 +2,7 @@ import { ArrowUpIcon } from "@/src/components/ui/icon/ArrowUpIcon";
 import { ArrowDownIcon } from "@/src/components/ui/icon/ArrowDownIcon";
 import { TextInput } from "@/src/components/ui/inputs/TextInput";
 import { useState } from "react";
-import { Location } from "../../crm/AddCardCrm/types/types";
+import { Location } from "../../../app/types/addCard";
 import { useToggle } from "../popUp/useToggle";
 import { LocationsPopup } from "../popUp/LocationsPopup";
 
@@ -20,11 +20,11 @@ export const LocationsInput: React.FC<PropsLocationsInput> = ({
 }) => {
   const { isOpen, openModal, closeModal } = useToggle();
   const [selectLocation, setSelectLocation] = useState<Location>();
-  const [isAddingLocation, setIsAddingLocation] = useState(false);
+  const [isCustomLocation, setIsCustomLocation] = useState(false);
 
   const handleSelectLocation = (location: Location) => {
     onChange(location);
-    setIsAddingLocation(false);
+    setIsCustomLocation(false);
     setSelectLocation(location);
     closeModal();
   };
@@ -54,8 +54,9 @@ export const LocationsInput: React.FC<PropsLocationsInput> = ({
       />
       {isOpen && (
         <LocationsPopup
-          isAddingLocation={isAddingLocation}
-          setIsAddingLocation={setIsAddingLocation}
+          closeModal={closeModal}
+          isCustomLocation={isCustomLocation}
+          setIsCustomLocation={setIsCustomLocation}
           handleSelectLocation={handleSelectLocation}
         />
       )}

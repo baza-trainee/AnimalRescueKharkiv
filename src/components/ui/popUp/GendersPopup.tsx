@@ -1,5 +1,4 @@
 import { PopUp } from ".";
-import { useToggle } from "./useToggle";
 
 const genderOptions = [
   { name: "Самець", value: "male" },
@@ -7,14 +6,14 @@ const genderOptions = [
 ];
 
 interface PropsGendersPopup {
+  closeModal: () => void;
   handleSelectValue: (gender: { name: string; value: string }) => void;
 }
 
 export const GendersPopup: React.FC<PropsGendersPopup> = ({
+  closeModal,
   handleSelectValue,
 }) => {
-  const { closeModal } = useToggle();
-
   return (
     <PopUp onClose={closeModal} gap="8px">
       <ul className="flex flex-col gap-[8px] w-[310px] font-medium text-[18px]">

@@ -1,16 +1,16 @@
 import { useDataContext } from "@/src/context/CrmDataContext";
 import { PopUp } from ".";
-import { AnimalTypes } from "../../crm/AddCardCrm/types/types";
-import { useToggle } from "./useToggle";
+import { AnimalTypes } from "../../../app/types/addCard";
 
 interface PropsAnimalTypesPopup {
+  closeModal: () => void;
   handleSelectValue: (value: AnimalTypes) => void;
 }
 
 export const AnimalTypesPopup: React.FC<PropsAnimalTypesPopup> = ({
+  closeModal,
   handleSelectValue,
 }) => {
-  const { closeModal } = useToggle();
   const { animalTypesData } = useDataContext();
 
   return (
