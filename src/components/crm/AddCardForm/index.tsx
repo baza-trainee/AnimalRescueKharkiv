@@ -10,7 +10,7 @@ import {
 import { useDataContext } from "@/src/context/CrmDataContext";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { RequiredValues } from "../AddCardCrm/PopUp/RequiredValues";
+import { RequiredValues } from "../../ui/popUp/RequiredValues";
 import { useState } from "react";
 import { post } from "../../../utils/api";
 import { uploadFiles } from "../../../utils/media";
@@ -21,14 +21,10 @@ import {
   FormLocationItem,
   prepareLocations,
 } from "../AddCardCrm/helpers/locations";
+import { defaultValues } from "../AddCardCrm/defaultValues/defaultValues";
 import { createLocation } from "@/src/utils/locations";
 import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
-import {
-  AnimalCard,
-  AnimalTypes,
-  Location,
-  defaultValues,
-} from "../AddCardCrm/types/types";
+import { AnimalCard, Location } from "@/src/app/types/addCard";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
@@ -49,8 +45,7 @@ const AddCardForm = () => {
     control,
     handleSubmit,
     trigger,
-    getValues,
-    formState: { errors, isValid, isSubmitted },
+    formState: { isValid, isSubmitted },
   } = methods;
 
   if (isLoading) return <p>Завантаження даних...</p>;
@@ -71,24 +66,18 @@ const AddCardForm = () => {
         createLocation as CreateLocationFn
       );
 
-      const hasFilledDiagnosis = data.diagnoses?.some(
-        (diag) => diag.name || diag.date || diag.comment
-      );
-
-      const hasFilledProcedures = data.procedures?.some(
-        (procedure) => procedure.name || procedure.date || procedure.comment
-      );
-
       const updatedData = {
         ...data,
         media: uploadedMedia || null,
         locations: updatedLocations,
-        diagnoses: hasFilledDiagnosis
-          ? sortDiagnosesOrProcedures(data.diagnoses || [])
-          : null,
-        procedures: hasFilledProcedures
-          ? sortDiagnosesOrProcedures(data.procedures || [])
-          : null,
+        diagnoses:
+          data.diagnoses?.length === 0
+            ? null
+            : sortDiagnosesOrProcedures(data.diagnoses || []),
+        procedures:
+          data.procedures?.length === 0
+            ? null
+            : sortDiagnosesOrProcedures(data.procedures || []),
         adoption__country: null,
         adoption__city: null,
         adoption__date: null,
@@ -124,12 +113,12 @@ const AddCardForm = () => {
             <Controller
               name="name"
               control={control}
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextInput
                   {...field}
                   label="Ім'я*"
                   placeholder="Придумайте ім’я тварини"
-                  errorMessage={errors.name?.message}
+                  errorMessage={fieldState.error?.message}
                   className="bg-transparent"
                 />
               )}
@@ -139,14 +128,13 @@ const AddCardForm = () => {
             <Controller
               name="media"
               control={control}
-              render={({ field: { onChange, value, ...field } }) => (
+              render={({ field, fieldState }) => (
                 <FileInput
-                  {...field}
                   label={"Додайте фото та відео"}
                   accept="image/*, video/*"
                   multiple
-                  onChange={onChange}
-                  errorMessage={errors.media?.message}
+                  onChange={field.onChange}
+                  errorMessage={fieldState.error?.message}
                 />
               )}
             />

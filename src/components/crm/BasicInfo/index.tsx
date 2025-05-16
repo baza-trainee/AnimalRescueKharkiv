@@ -1,51 +1,19 @@
-"use client";
-
 import {
   Controller,
   useFieldArray,
   useFormContext,
   useWatch,
 } from "react-hook-form";
-import { useState } from "react";
 import { TextInput } from "../../ui/inputs/TextInput";
 import { NumberInput } from "../../ui/inputs/NumberInput";
 import { CommentInput } from "../../ui/inputs/CommentInput";
-import { PopupInput } from "../../ui/inputs/PopupInput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
-import { LocationPicker } from "../../ui/inputs/LocationPicker";
-import { AnimalTypes, Location } from "../AddCardCrm/types/types";
-import { useDataContext } from "@/src/context/CrmDataContext";
-
-const genderOptions = [
-  { name: "Самець", value: "male" },
-  { name: "Самка", value: "female" },
-];
+import { AnimalTypesInput } from "../../ui/inputs/AnimalTypesInput";
+import { GendersInput } from "../../ui/inputs/GendersInput";
+import { LocationsInput } from "../../ui/inputs/LocationsInput";
 
 const BasicInfo = () => {
-  const { locationsData, animalTypesData, isLoading, isError } =
-    useDataContext();
-  const {
-    control,
-    formState: { errors },
-    trigger,
-  } = useFormContext();
-
-  const [openPopup, setOpenPopup] = useState<string | null>(null);
-  const [activeLocationPicker, setActiveLocationPicker] = useState<
-    string | null
-  >(null);
-
-  const handleTogglePopup = (name: string) => {
-    setOpenPopup((prev) => (prev === name ? null : name));
-  };
-
-  const handleOpenLocationPicker = (id: string) => {
-    setActiveLocationPicker(id);
-  };
-
-  const handleCloseLocationPicker = () => {
-    setActiveLocationPicker(null);
-  };
+  const { control, trigger } = useFormContext();
 
   const { fields: locationsFields, append: appendLocation } = useFieldArray({
     control,
@@ -86,25 +54,23 @@ const BasicInfo = () => {
         <Controller
           name="origin__arrival_date"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <CustomDatePicker
               {...field}
               label="Дата прибуття*"
               selected={field.value}
-              errorMessage={
-                errors?.origin__arrival_date?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
             />
           )}
         />
         <Controller
           name="origin__city"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextInput
               label="Звідки (місто)*"
               placeholder="Введіть назву міста"
-              errorMessage={errors?.origin__city?.message as string | undefined}
+              errorMessage={fieldState.error?.message}
               className="bg-transparent"
               {...field}
             />
@@ -113,15 +79,13 @@ const BasicInfo = () => {
         <Controller
           name="origin__address"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextInput
               {...field}
               label="Адреса"
               placeholder="Введіть назву вулиці та номер будинку"
               value={field.value ?? ""}
-              errorMessage={
-                errors?.origin__address?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
               className="bg-transparent"
             />
           )}
@@ -131,88 +95,59 @@ const BasicInfo = () => {
         <Controller
           name="general__animal_type.id"
           control={control}
-          render={({ field }) => (
-            <PopupInput
-              label="Тип тварини*"
-              data={animalTypesData as { id: number; name: string }[]}
-              placeholder="Оберіть тип тварини"
-              value={
-                animalTypesData?.find((type) => type.id === field.value) || null
-              }
-              onChange={(type: { id: number; name: string }) => {
-                field.onChange(type.id);
-              }}
-              errorMessage={
-                errors.general__animal_type?.message as string | undefined
-              }
-              isOpen={openPopup === "animalType"}
-              onClose={() => handleTogglePopup("animalType")}
+          render={({ field, fieldState }) => (
+            <AnimalTypesInput
+              onChange={field.onChange}
+              errorMessage={fieldState.error?.message}
             />
           )}
         />
         <Controller
           name="general__gender"
           control={control}
-          render={({ field }) => (
-            <PopupInput
-              label="Стать*"
-              data={genderOptions as { name: string; value: string }[]}
-              placeholder="Оберіть стать тварини"
-              value={
-                genderOptions.find((gender) => gender.value === field.value) ||
-                null
-              }
-              onChange={(gender: { name: string; value: string }) => {
-                field.onChange(gender.value);
-              }}
-              errorMessage={
-                errors.general__gender?.message as string | undefined
-              }
-              isOpen={openPopup === "gender"}
-              onClose={() => handleTogglePopup("gender")}
+          render={({ field, fieldState }) => (
+            <GendersInput
+              onChange={field.onChange}
+              errorMessage={fieldState.error?.message}
             />
           )}
         />
         <Controller
           name="general__weight"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <NumberInput
               {...field}
               label="Вага тварини"
               placeholder="Введіть вагу"
               value={field.value}
-              errorMessage={
-                errors?.general__weight?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
             />
           )}
         />
         <Controller
           name="general__age"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <NumberInput
               {...field}
               label="Вік тварини"
               placeholder="Введіть вік"
               value={field.value}
-              errorMessage={errors?.general__age?.message as string | undefined}
+              errorMessage={fieldState.error?.message}
             />
           )}
         />
         <Controller
           name="general__specials"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <CommentInput
               {...field}
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
               value={field.value ?? ""}
-              errorMessage={
-                errors?.general__specials?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
               initialHeight="45px"
             />
           )}
@@ -223,9 +158,8 @@ const BasicInfo = () => {
           name="locations.0.location"
           control={control}
           render={({ field, fieldState }) => (
-            <LocationPicker
+            <LocationsInput
               label="Поточна локація*"
-              value={field.value || ""}
               onChange={(location) => {
                 if (location.id) {
                   field.onChange({
@@ -243,9 +177,6 @@ const BasicInfo = () => {
                 trigger("locations");
               }}
               errorMessage={fieldState.error?.message}
-              isOpen={activeLocationPicker === "currentLocation"}
-              onOpen={() => handleOpenLocationPicker("currentLocation")}
-              onClose={handleCloseLocationPicker}
             />
           )}
         />
@@ -283,9 +214,8 @@ const BasicInfo = () => {
                 name={location}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <LocationPicker
+                  <LocationsInput
                     label={`Локація ${locIndex}`}
-                    value={field.value || ""}
                     onChange={(location) => {
                       if (location.id) {
                         field.onChange({
@@ -303,9 +233,6 @@ const BasicInfo = () => {
                       trigger("locations");
                     }}
                     errorMessage={fieldState.error?.message}
-                    isOpen={activeLocationPicker === location}
-                    onOpen={() => handleOpenLocationPicker(location)}
-                    onClose={handleCloseLocationPicker}
                   />
                 )}
               />
@@ -365,13 +292,13 @@ const BasicInfo = () => {
         <Controller
           name="owner__info"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextInput
               {...field}
               label="Інформація про власника"
               placeholder="Введіть інформацію"
               value={field.value ?? "Відсутня"}
-              errorMessage={errors?.owner__info?.message as string | undefined}
+              errorMessage={fieldState.error?.message}
               className="bg-transparent"
             />
           )}
@@ -381,15 +308,13 @@ const BasicInfo = () => {
         <Controller
           name="comment__text"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <CommentInput
               {...field}
               label="Загальний коментар"
               placeholder="Додайте інформацію, яку вважаєте важливою"
               value={field.value ?? ""}
-              errorMessage={
-                errors?.comment__text?.message as string | undefined
-              }
+              errorMessage={fieldState.error?.message}
             />
           )}
         />

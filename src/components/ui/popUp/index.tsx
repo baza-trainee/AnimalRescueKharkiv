@@ -1,5 +1,5 @@
 import { FC, ReactNode, SyntheticEvent, useEffect } from "react";
-import { CloseModalIcon } from "../../../ui/icon/CloseModalIcon";
+import { CloseModalIcon } from "../icon/CloseModalIcon";
 
 interface PropsPopUp {
   onClose: () => void;

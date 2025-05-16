@@ -2,10 +2,7 @@
 
 import { createContext, useContext } from "react";
 import { useQueries } from "@tanstack/react-query";
-import {
-  AnimalTypes,
-  Location,
-} from "../components/crm/AddCardCrm/types/types";
+import { AnimalTypes, Location } from "../app/types/addCard";
 import apiClient from "../utils/api";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;

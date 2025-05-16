@@ -33,8 +33,10 @@ export const addCardSchema = Yup.object().shape({
     .max(100, "Місто має бути не більше 100 символів")
     .required("Введіть місто"),
   origin__address: Yup.string().nullable().notRequired(),
-  general__animal_type: Yup.object().shape({
-    id: Yup.number().nullable().required("Оберіть тип тварини"),
+  general__animal_type: Yup.object({
+    id: Yup.number()
+      .min(1, "Оберіть тип тварини")
+      .required("Оберіть тип тварини"),
   }),
   general__gender: Yup.string()
     .oneOf(["male", "female", ""], "Оберіть стать тварини")
@@ -140,6 +142,7 @@ export const addCardSchema = Yup.object().shape({
             "Оберіть дату 'З'",
             function (value) {
               const { index } = this.options as unknown as { index: number };
+
               if (index === 0 && !value) {
                 return this.createError({
                   path: `locations[${index}].date_from`,
@@ -204,22 +207,13 @@ export const addCardSchema = Yup.object().shape({
               message: "Оберіть локацію",
             });
           }
-
-          if (hasLocation && !hasDateFrom) {
-            return this.createError({
-              path: `locations[${index}].date_from`,
-              message: "Оберіть дату",
-            });
-          }
         }
 
-        if (index > 1) {
-          if (!hasLocation) {
-            return this.createError({
-              path: `locations[${index}].location`,
-              message: "Оберіть локацію",
-            });
-          }
+        if (hasLocation && !hasDateFrom) {
+          return this.createError({
+            path: `locations[${index}].date_from`,
+            message: "Оберіть дату",
+          });
         }
 
         return true;
@@ -287,6 +281,7 @@ export const addCardSchema = Yup.object().shape({
           .notRequired(),
       })
     )
+    .compact((obj) => !obj.name && !obj.date && !obj.comment)
     .notRequired(),
   procedures: Yup.array()
     .of(
@@ -318,6 +313,7 @@ export const addCardSchema = Yup.object().shape({
           .notRequired(),
       })
     )
+    .compact((obj) => !obj.name && !obj.date && !obj.comment)
     .notRequired(),
 });
 
