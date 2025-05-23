@@ -109,7 +109,7 @@ const AddCardForm = () => {
         className="p-[24px] pb-[112px] bg-[#F8F9FD]"
       >
         <fieldset className="flex flex-col gap-[24px]">
-          <div className="p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+          <div className="p-[12px] pt-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
             <Controller
               name="name"
               control={control}
@@ -124,13 +124,13 @@ const AddCardForm = () => {
               )}
             />
           </div>
-          <div className="min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[24px]">
+          <div className="p-[12px] pt-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[21px]">
             <Controller
               name="media"
               control={control}
               render={({ field, fieldState }) => (
                 <FileInput
-                  label={"Додайте фото та відео"}
+                  label="Додайте фото та відео"
                   accept="image/*, video/*"
                   multiple
                   onChange={field.onChange}
@@ -148,7 +148,7 @@ const AddCardForm = () => {
               activeTab === "basic"
                 ? "bg-[#4855CC] text-[#EDEEFA]"
                 : "bg-transparent text-[#4855CC]"
-            } px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
+            } h-[80px] px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
           >
             Основна інформація
           </button>
@@ -159,7 +159,7 @@ const AddCardForm = () => {
               activeTab === "medical"
                 ? "bg-[#4855CC] text-[#EDEEFA]"
                 : "bg-transparent text-[#4855CC]"
-            } px-[16px] py-[4px] border-[1px] border-l-0 border-[#4855CC] rounded-r-lg text-[24px] font-bold leading-[36px]`}
+            } h-[80px] px-[16px] py-[4px] border-[1px] border-l-0 border-[#4855CC] rounded-r-lg text-[24px] font-bold leading-[36px]`}
           >
             Медична інформація
           </button>

@@ -1,10 +1,8 @@
-import { ArrowUpIcon } from "@/src/components/ui/icon/ArrowUpIcon";
-import { ArrowDownIcon } from "@/src/components/ui/icon/ArrowDownIcon";
-import { TextInput } from "@/src/components/ui/inputs/TextInput";
 import { useState } from "react";
 import { AnimalTypes } from "../../../app/types/addCard";
 import { useToggle } from "../popUp/useToggle";
 import { AnimalTypesPopup } from "../popUp/AnimalTypesPopup";
+import { TextInputWithArrow } from "./TextInputWithArrow";
 
 interface PropsAnimalTypesInput {
   onChange: (value: number) => void;
@@ -27,36 +25,23 @@ export const AnimalTypesInput: React.FC<PropsAnimalTypesInput> = ({
 
   return (
     <>
-      <div className="relative">
-        <span
-          onClick={closeModal}
-          className={`absolute top-[46px] right-[8px] z-[5] cursor-pointer ${
-            !!errorMessage ? "stroke-[#B00000]" : "stroke-[#B6BBEB]"
-          }  transition duration-[350ms]`}
-        >
-          {isOpen ? (
-            <ArrowUpIcon style={"w-[18px] h-[18px]"} />
-          ) : (
-            <ArrowDownIcon style={"s w-[18px] h-[18px]"} />
-          )}
-        </span>
-        <TextInput
-          {...rest}
-          label="Тип тварини*"
-          placeholder="Оберіть тип тварини"
-          errorMessage={errorMessage}
-          value={selectAnimalType}
-          onClick={openModal}
-          className="bg-transparent"
-          readOnly
+      <TextInputWithArrow
+        {...rest}
+        label="Тип тварини*"
+        placeholder="Оберіть тип тварини"
+        errorMessage={errorMessage}
+        isOpen={isOpen}
+        value={selectAnimalType}
+        onClick={openModal}
+        className="bg-transparent"
+        readOnly
+      />
+      {isOpen && (
+        <AnimalTypesPopup
+          handleSelectValue={handleSelectValue}
+          closeModal={closeModal}
         />
-        {isOpen && (
-          <AnimalTypesPopup
-            handleSelectValue={handleSelectValue}
-            closeModal={closeModal}
-          />
-        )}
-      </div>
+      )}
     </>
   );
 };

@@ -17,7 +17,6 @@ interface PropsCustomDataPicker {
   label: string;
   errorMessage?: string;
   labelStyles?: string;
-  labelMargin?: boolean;
   wrapperClassName?: string;
 }
 
@@ -35,7 +34,7 @@ const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
       <div className="relative">
         <span
           onClick={onClick}
-          className={`absolute top-[14px] right-[8px] z-[5] cursor-pointer ${
+          className={`absolute top-[13px] right-[8px] z-[5] cursor-pointer ${
             !!errorMessage ? "stroke-[#B00000]" : "stroke-[#B6BBEB]"
           }  transition duration-[350ms]`}
         >
@@ -78,16 +77,7 @@ export const CustomDatePicker = forwardRef<
   PropsCustomDataPicker
 >(
   (
-    {
-      selected,
-      minDate,
-      maxDate,
-      label,
-      errorMessage,
-      labelStyles,
-      labelMargin = true,
-      ...rest
-    },
+    { selected, minDate, maxDate, label, errorMessage, labelStyles, ...rest },
     _ref
   ) => {
     const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
@@ -104,11 +94,9 @@ export const CustomDatePicker = forwardRef<
       <div ref={_ref} className="relative w-full">
         {label && (
           <span
-            className={`${
+            className={`block ${
               !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
-            } font-medium leading-[27px] block ${
-              labelStyles ? labelStyles : "text-[18px]"
-            } ${labelMargin ? "block" : ""}`}
+            } leading-[27px] block ${labelStyles ?? "text-[18px] font-medium"}`}
           >
             {label}
           </span>

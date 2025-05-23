@@ -1,21 +1,21 @@
-import { ArrowUpIcon } from "@/src/components/ui/icon/ArrowUpIcon";
-import { ArrowDownIcon } from "@/src/components/ui/icon/ArrowDownIcon";
-import { TextInput } from "@/src/components/ui/inputs/TextInput";
 import { useState } from "react";
 import { Location } from "../../../app/types/addCard";
 import { useToggle } from "../popUp/useToggle";
 import { LocationsPopup } from "../popUp/LocationsPopup";
+import { TextInputWithArrow } from "./TextInputWithArrow";
 
 interface PropsLocationsInput {
   label: string;
   onChange: (value: Location) => void;
   errorMessage?: string;
+  labelStyles?: string;
 }
 
 export const LocationsInput: React.FC<PropsLocationsInput> = ({
   label,
   onChange,
   errorMessage,
+  labelStyles,
   ...rest
 }) => {
   const { isOpen, openModal, closeModal } = useToggle();
@@ -29,20 +29,8 @@ export const LocationsInput: React.FC<PropsLocationsInput> = ({
     closeModal();
   };
   return (
-    <div className="relative">
-      <span
-        onClick={closeModal}
-        className={`absolute top-[46px] right-[8px] z-[5] cursor-pointer ${
-          !!errorMessage ? "stroke-[#B00000]" : "stroke-[#B6BBEB]"
-        }  transition duration-[350ms]`}
-      >
-        {isOpen ? (
-          <ArrowUpIcon style={"w-[18px] h-[18px]"} />
-        ) : (
-          <ArrowDownIcon style={"s w-[18px] h-[18px]"} />
-        )}
-      </span>
-      <TextInput
+    <>
+      <TextInputWithArrow
         {...rest}
         label={label}
         placeholder="Оберіть локацію"
@@ -50,6 +38,8 @@ export const LocationsInput: React.FC<PropsLocationsInput> = ({
         value={selectLocation?.name || ""}
         onClick={openModal}
         className="bg-transparent"
+        labelStyles={labelStyles}
+        isOpen={isOpen}
         readOnly
       />
       {isOpen && (
@@ -60,6 +50,6 @@ export const LocationsInput: React.FC<PropsLocationsInput> = ({
           handleSelectLocation={handleSelectLocation}
         />
       )}
-    </div>
+    </>
   );
 };

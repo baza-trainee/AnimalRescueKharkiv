@@ -30,7 +30,7 @@ export const NumberInput: React.FC<PropsNumberInput> = forwardRef(
           id={name}
           value={value ?? ""}
           onWheel={(e) => e.currentTarget.blur()}
-          className={`withoutArrows w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent ${
+          className={`withoutArrows h-[45px] w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent ${
             !!errorMessage
               ? "border-[#B00000] placeholder:text-[#B00000] outline-[#B00000]"
               : "placeholder:text-[#B6BBEB] border-[#B6BBEB] outline-[#4855CC]"

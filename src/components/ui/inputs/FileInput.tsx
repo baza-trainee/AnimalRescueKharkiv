@@ -56,10 +56,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
 
     return (
       <div className="w-[318px] relative">
-        <label
-          htmlFor={name}
-          className="flex flex-col gap-[8px] relative cursor-pointer"
-        >
+        <label htmlFor={name} className="flex flex-col relative cursor-pointer">
           <span
             className={`${
               !!errorMessage ? "text-[#B00000]" : "text-[#070600]"

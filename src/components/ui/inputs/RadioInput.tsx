@@ -15,7 +15,7 @@ export const RadioInput: React.FC<PropsRadioInput> = forwardRef(
   ) => {
     return (
       <>
-        <label className="flex justify-start items-center gap-[4px] w-[151px]">
+        <label className="flex justify-start items-center gap-[4px]">
           <span
             className={!!errorMessage ? "text-[#B00000]" : "text-[#212833]"}
           >

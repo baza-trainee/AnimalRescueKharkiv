@@ -54,7 +54,7 @@ const MedicalInfo = () => {
   };
 
   return (
-    <div className="flex flex-col gap-[16px]">
+    <div className="flex flex-col gap-[16px] mb-[16px]">
       <fieldset className="flex flex-col gap-[16px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Стерилізація/кастрація
@@ -79,7 +79,6 @@ const MedicalInfo = () => {
               label="Дата проведення"
               selected={field.value}
               errorMessage={fieldState.error?.message}
-              labelMargin={false}
             />
           )}
         />
@@ -123,7 +122,6 @@ const MedicalInfo = () => {
               label="Дата проведення"
               selected={field.value}
               errorMessage={fieldState.error?.message}
-              labelMargin={false}
             />
           )}
         />
@@ -144,7 +142,7 @@ const MedicalInfo = () => {
         />
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+        <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Вакцинація
         </h3>
         <div className="flex flex-col gap-[8px]">
@@ -182,6 +180,7 @@ const MedicalInfo = () => {
                 label="Дата проведення"
                 selected={field.value}
                 errorMessage={fieldState.error?.message}
+                labelStyles="mb-[4px]"
               />
             )}
           />
@@ -202,7 +201,7 @@ const MedicalInfo = () => {
         </div>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+        <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Хвороби і діагнози
         </h3>
         {diagnosesFields.map((field, index) => {
@@ -243,6 +242,7 @@ const MedicalInfo = () => {
                       trigger("diagnoses");
                     }}
                     errorMessage={fieldState.error?.message}
+                    labelStyles="mb-[4px]"
                   />
                 )}
               />
@@ -272,7 +272,7 @@ const MedicalInfo = () => {
         </button>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+        <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Процедури
         </h3>
         {proceduresFields.map((field, index) => {
@@ -313,6 +313,7 @@ const MedicalInfo = () => {
                       trigger("procedures");
                     }}
                     errorMessage={fieldState.error?.message}
+                    labelStyles="mb-[4px]"
                   />
                 )}
               />
