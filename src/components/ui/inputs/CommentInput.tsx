@@ -2,6 +2,7 @@
 
 import { ErrorMessage } from "./ErrorMessage";
 import { forwardRef } from "react";
+import { useState } from "react";
 
 interface PropsCommentInput
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -11,7 +12,6 @@ interface PropsCommentInput
   initialHeight?: string;
   labelMargin?: boolean;
 }
-import { useState } from "react";
 
 export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
   (

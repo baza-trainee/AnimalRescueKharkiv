@@ -73,11 +73,15 @@ const BasicInfo = () => {
           control={control}
           render={({ field, fieldState }) => (
             <TextInput
+              {...field}
               label="Звідки (місто)*"
               placeholder="Введіть назву міста"
+              onChange={(city) => {
+                field.onChange(city);
+                trigger("origin__city");
+              }}
               errorMessage={fieldState.error?.message}
               className="bg-transparent"
-              {...field}
             />
           )}
         />
@@ -90,6 +94,10 @@ const BasicInfo = () => {
               label="Адреса"
               placeholder="Введіть назву вулиці та номер будинку"
               value={field.value ?? ""}
+              onChange={(address) => {
+                field.onChange(address);
+                trigger("origin__address");
+              }}
               errorMessage={fieldState.error?.message}
               className="bg-transparent"
             />
@@ -126,6 +134,10 @@ const BasicInfo = () => {
               label="Вага тварини"
               placeholder="Введіть вагу"
               value={field.value}
+              onChange={(weight) => {
+                field.onChange(weight);
+                trigger("general__weight");
+              }}
               errorMessage={fieldState.error?.message}
             />
           )}
@@ -139,6 +151,10 @@ const BasicInfo = () => {
               label="Вік тварини"
               placeholder="Введіть вік"
               value={field.value}
+              onChange={(age) => {
+                field.onChange(age);
+                trigger("general__age");
+              }}
               errorMessage={fieldState.error?.message}
             />
           )}
@@ -152,6 +168,10 @@ const BasicInfo = () => {
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
               value={field.value ?? ""}
+              onChange={(specials) => {
+                field.onChange(specials);
+                trigger("general__specials");
+              }}
               errorMessage={fieldState.error?.message}
               initialHeight="45px"
             />
@@ -180,7 +200,7 @@ const BasicInfo = () => {
                       isCustom: true,
                     });
                   }
-                  trigger("locations");
+                  trigger("locations.0.location");
                 }}
                 errorMessage={fieldState.error?.message}
               />
@@ -196,7 +216,7 @@ const BasicInfo = () => {
                 selected={field.value || null}
                 onChange={(date) => {
                   field.onChange(date);
-                  trigger("locations");
+                  trigger("locations.0.date_from");
                 }}
                 errorMessage={fieldState.error?.message}
                 labelStyles="h-[21px] font-normal text-[14px]"
@@ -310,6 +330,10 @@ const BasicInfo = () => {
               label="Інформація про власника"
               placeholder="Введіть інформацію"
               value={field.value ?? "Відсутня"}
+              onChange={(info) => {
+                field.onChange(info);
+                trigger("owner__info");
+              }}
               errorMessage={fieldState.error?.message}
               className="bg-transparent"
             />
@@ -326,6 +350,10 @@ const BasicInfo = () => {
               label="Загальний коментар"
               placeholder="Додайте інформацію, яку вважаєте важливою"
               value={field.value ?? ""}
+              onChange={(comment) => {
+                field.onChange(comment);
+                trigger("comment__text");
+              }}
               errorMessage={fieldState.error?.message}
             />
           )}

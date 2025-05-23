@@ -78,6 +78,10 @@ const MedicalInfo = () => {
               {...field}
               label="Дата проведення"
               selected={field.value}
+              onChange={(date) => {
+                field.onChange(date);
+                trigger("sterilization__date");
+              }}
               errorMessage={fieldState.error?.message}
             />
           )}
@@ -91,6 +95,10 @@ const MedicalInfo = () => {
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
+              onChange={(comment) => {
+                field.onChange(comment);
+                trigger("sterilization__comment");
+              }}
               errorMessage={fieldState.error?.message}
               initialHeight="45px"
               labelMargin={false}
@@ -121,6 +129,10 @@ const MedicalInfo = () => {
               {...field}
               label="Дата проведення"
               selected={field.value}
+              onChange={(date) => {
+                field.onChange(date);
+                trigger("microchipping__date");
+              }}
               errorMessage={fieldState.error?.message}
             />
           )}
@@ -134,6 +146,10 @@ const MedicalInfo = () => {
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
+              onChange={(comment) => {
+                field.onChange(comment);
+                trigger("microchipping__comment");
+              }}
               errorMessage={fieldState.error?.message}
               initialHeight="45px"
               labelMargin={false}
@@ -166,6 +182,10 @@ const MedicalInfo = () => {
                 label="Тип вакцини/препарат"
                 placeholder="Від чого провакциновано та яким препаратом"
                 value={field.value || ""}
+                onChange={(vaccine) => {
+                  field.onChange(vaccine);
+                  trigger("vaccinations.0.vaccine_type");
+                }}
                 errorMessage={fieldState.error?.message}
                 styles="h-[66px]"
               />
@@ -179,6 +199,10 @@ const MedicalInfo = () => {
                 {...field}
                 label="Дата проведення"
                 selected={field.value}
+                onChange={(date) => {
+                  field.onChange(date);
+                  trigger("vaccinations.0.date");
+                }}
                 errorMessage={fieldState.error?.message}
                 labelStyles="mb-[4px]"
               />
@@ -193,6 +217,10 @@ const MedicalInfo = () => {
                 label="Рекомендації/коментар"
                 placeholder="Залиште рекомендації"
                 value={field.value || ""}
+                onChange={(comment) => {
+                  field.onChange(comment);
+                  trigger("vaccinations.0.comment");
+                }}
                 errorMessage={fieldState.error?.message}
                 initialHeight="45px"
               />
@@ -255,6 +283,10 @@ const MedicalInfo = () => {
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
+                    onChange={(comment) => {
+                      field.onChange(comment);
+                      trigger("diagnoses");
+                    }}
                     errorMessage={fieldState.error?.message}
                     initialHeight="45px"
                   />
@@ -326,6 +358,10 @@ const MedicalInfo = () => {
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
+                    onChange={(comment) => {
+                      field.onChange(comment);
+                      trigger("procedures");
+                    }}
                     errorMessage={fieldState.error?.message}
                     initialHeight="45px"
                   />

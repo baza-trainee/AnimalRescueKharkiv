@@ -12,6 +12,11 @@ export const NumberInput: React.FC<PropsNumberInput> = forwardRef(
     { label, errorMessage, styles, name, value, ...rest },
     _ref: React.ForwardedRef<HTMLInputElement>
   ) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (["-", "+"].includes(e.key)) {
+        e.preventDefault();
+      }
+    };
     return (
       <div className={`relative w-full `}>
         <label htmlFor={name} className=" block mb-[4px]">
@@ -27,8 +32,10 @@ export const NumberInput: React.FC<PropsNumberInput> = forwardRef(
           {...rest}
           ref={_ref}
           type="number"
+          inputMode="numeric"
           id={name}
           value={value ?? ""}
+          onKeyDown={handleKeyDown}
           onWheel={(e) => e.currentTarget.blur()}
           className={`withoutArrows h-[45px] w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent ${
             !!errorMessage

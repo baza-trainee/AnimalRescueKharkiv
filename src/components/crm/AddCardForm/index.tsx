@@ -118,6 +118,10 @@ const AddCardForm = () => {
                   {...field}
                   label="Ім'я*"
                   placeholder="Придумайте ім’я тварини"
+                  onChange={(name) => {
+                    field.onChange(name);
+                    trigger("name");
+                  }}
                   errorMessage={fieldState.error?.message}
                   className="bg-transparent"
                 />
@@ -133,7 +137,10 @@ const AddCardForm = () => {
                   label="Додайте фото та відео"
                   accept="image/*, video/*"
                   multiple
-                  onChange={field.onChange}
+                  onChange={(media) => {
+                    field.onChange(media);
+                    trigger("media");
+                  }}
                   errorMessage={fieldState.error?.message}
                 />
               )}

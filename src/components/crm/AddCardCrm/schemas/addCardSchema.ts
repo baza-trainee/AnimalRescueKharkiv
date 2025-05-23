@@ -10,6 +10,7 @@ const formattedTodayDate = format(new Date(), "dd.MM.yyyy");
 export const addCardSchema = Yup.object().shape({
   name: Yup.string()
     .matches(nameRegExp, "Введіть коректне ім'я")
+    .transform((value) => (value === "" ? null : value))
     .min(2, "Ім’я має бути не менше 2 символів")
     .max(30, "Ім’я має бути не більше 30 символів")
     .required("Введіть ім’я"),
@@ -32,7 +33,12 @@ export const addCardSchema = Yup.object().shape({
     .min(2, "Місто має бути не менше 2 символів")
     .max(100, "Місто має бути не більше 100 символів")
     .required("Введіть місто"),
-  origin__address: Yup.string().nullable().notRequired(),
+  origin__address: Yup.string()
+    .nullable()
+    .transform((value) => (value === "" ? null : value))
+    .min(2, "Адреса має бути не менше 2 символів")
+    .max(100, "Адреса має бути не більше 100 символів")
+    .notRequired(),
   general__animal_type: Yup.object({
     id: Yup.number()
       .min(1, "Оберіть тип тварини")
