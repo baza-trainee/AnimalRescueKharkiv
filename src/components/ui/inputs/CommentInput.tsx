@@ -29,12 +29,14 @@ export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
     },
     _ref: React.ForwardedRef<HTMLTextAreaElement>
   ) => {
-    const textareaRef = useRef(null);
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     useEffect(() => {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height =
-        textareaRef.current.scrollHeight + "px";
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+        textareaRef.current.style.height =
+          textareaRef.current.scrollHeight + "px";
+      }
     }, [value]);
 
     return (
@@ -56,7 +58,6 @@ export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
           ref={textareaRef}
           id={name}
           value={value}
-          // onInput={handleInput}
           rows={1}
           style={{ minHeight: height }}
           className={`overflow-hidden block w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent resize-none ${
