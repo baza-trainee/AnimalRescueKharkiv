@@ -23,22 +23,26 @@ export const BooleanRadio: React.FC<PropsBooleanRadio> = forwardRef(
           Проведено?
         </h4>
         <div className="flex">
-          <RadioInput
-            {...rest}
-            label="Так"
-            name={name}
-            value={true}
-            onChange={rest.onChange}
-            errorMessage={errorMessage}
-          />
-          <RadioInput
-            {...rest}
-            label="Ні"
-            name={name}
-            value={false}
-            onChange={rest.onChange}
-            errorMessage={errorMessage}
-          />
+          <div className="w-[167px]">
+            <RadioInput
+              {...rest}
+              label="Так"
+              name={name}
+              value={true}
+              onChange={rest.onChange}
+              errorMessage={errorMessage}
+            />
+          </div>
+          <div className="w-[151px]">
+            <RadioInput
+              {...rest}
+              label="Ні"
+              name={name}
+              value={false}
+              onChange={rest.onChange}
+              errorMessage={errorMessage}
+            />
+          </div>
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </div>
       </div>

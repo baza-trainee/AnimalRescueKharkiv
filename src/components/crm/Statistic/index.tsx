@@ -8,7 +8,6 @@ import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 
-
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_STATS_PATH = process.env.NEXT_PUBLIC_API_STATS_PATH;
 
@@ -18,7 +17,6 @@ interface ApiResponse {
   dead: number;
   total: number;
 }
-
 
 const today = new Date();
 const oneMonthAgo = new Date();
@@ -35,12 +33,15 @@ export default function DateRangePicker({
   setStartDate: React.Dispatch<React.SetStateAction<Date | null>>;
   setEndDate: React.Dispatch<React.SetStateAction<Date | null>>;
 }) {
-  
-   const { data, isLoading, isError } = useQuery<ApiResponse>({
+  const { data, isLoading, isError } = useQuery<ApiResponse>({
     queryKey: ["arkStats", startDate, endDate],
     queryFn: () => {
-      const formattedStartDate = startDate ? format(startDate, "dd/MM/yyyy") : undefined;
-      const formattedEndDate = endDate ? format(endDate, "dd/MM/yyyy") : undefined;
+      const formattedStartDate = startDate
+        ? format(startDate, "dd/MM/yyyy")
+        : undefined;
+      const formattedEndDate = endDate
+        ? format(endDate, "dd/MM/yyyy")
+        : undefined;
 
       return fetch<ApiResponse>(`${API_CRM_PATH}${API_STATS_PATH}/animals`, {
         from_date: formattedStartDate,
@@ -49,62 +50,66 @@ export default function DateRangePicker({
     },
   });
   return (
-      <div className=" container">
-          <div className="flex flex-row justify-between w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
-              <div className="--font-inter font-semibold text-2xl leading-9 text-crm-black">Всього тварин в АRK </div>
-              <div className="--font-inter font-semibold text-2xl leading-9 text-center text-mainBlue">{data?.total ?? "..."}</div>          
-          </div>
-        
-      <h2 className="--font-inter w-[342px] ml-6 mr-6 font-bold text-2xl leading-9 text-crm-black text-center mb-4">Статистика по ARK</h2>
-          < div className="flex flex-row gap-4 w-auto mb-6 ml-6 mr-6 mt-4">
+    <div className=" container">
+      <div className="flex flex-row justify-between w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
+        <div className="--font-inter font-semibold text-2xl leading-9 text-crm-black">
+          Всього тварин в АRK{" "}
+        </div>
+        <div className="--font-inter font-semibold text-2xl leading-9 text-center text-mainBlue">
+          {data?.total ?? "..."}
+        </div>
+      </div>
+
+      <h2 className="--font-inter w-[342px] ml-6 mr-6 font-bold text-2xl leading-9 text-crm-black text-center mb-4">
+        Статистика по ARK
+      </h2>
+      <div className="flex flex-row gap-4 w-auto mb-6 ml-6 mr-6 mt-4">
         <div className=" w-[163px]">
           <CustomDatePicker
-  label="З"
-  selected={startDate}
+            label="З"
+            selected={startDate}
             onChange={(date: Date | null) => {
-    if (!date) return;
-              
-setStartDate(new Date(date));
-  }}
-            maxDate={endDate ?? today} 
+              if (!date) return;
+
+              setStartDate(new Date(date));
+            }}
+            maxDate={endDate ?? today}
             labelStyles="text-crm-black text-sm font-normal"
-          
-/>
+            isHasLabelMargin={false}
+          />
         </div>
-         
+
         <div className="w-[163px]">
           <CustomDatePicker
             label="По"
             selected={endDate}
-             onChange={(date) => {
-if (!date) return;
+            onChange={(date) => {
+              if (!date) return;
 
-    
-
-    setEndDate(new Date(date));
-  }}
-            minDate={startDate ?? undefined}   
-            maxDate={today}  
+              setEndDate(new Date(date));
+            }}
+            minDate={startDate ?? undefined}
+            maxDate={today}
             labelStyles="text-crm-black text-sm font-normal"
+            isHasLabelMargin={false}
           />
         </div>
-        
       </div>
       {isLoading ? (
         <p>Завантаження даних...</p>
       ) : isError ? (
         <p>Помилка завантаження даних</p>
-      ) :  !data || data.total === 0 ? (
-  <p>Немає даних за вибраний період.</p>
-) : (
+      ) : !data || data.total === 0 ? (
+        <p>Немає даних за вибраний період.</p>
+      ) : (
         <div className="flex flex-col gap-2 w-[342px] px-4 py-2 m-6 border-[1px] border-solid border-mainBlue rounded-[10px] shadow-[4px_4px_10px_rgba(182,187,235,0.3),-4px_-4px_10px_rgba(182,187,235,0.3)]">
           <div className="flex flex-row justify-between py-0 px-1 shadow-statistic w-[310px] h-[30px] bg-crm-backgraund">
             <h3 className="--font-inter font-normal text-xl text-crm-black">
               Стерилізовано
             </h3>
             <p className="--font-inter font-normal text-xl text-mainBlue">
-             {data?.sterilized ?? "..."}
-             <span className="pl-2">тварин</span>
+              {data?.sterilized ?? "..."}
+              <span className="pl-2">тварин</span>
             </p>
           </div>
           <div className="flex flex-row justify-between py-0 px-1 shadow-statistic w-[310px] h-[30px] bg-crm-backgraund">
@@ -112,8 +117,8 @@ if (!date) return;
               Прилаштовано
             </h3>
             <p className="--font-inter font-normal text-xl text-mainBlue">
-              {data?.adopted ?? "..."} 
-             <span className="pl-2">тварин</span>
+              {data?.adopted ?? "..."}
+              <span className="pl-2">тварин</span>
             </p>
           </div>
           <div className="flex flex-row justify-between py-0 px-1 shadow-statistic w-[310px] h-[30px] bg-crm-backgraund">
@@ -126,7 +131,7 @@ if (!date) return;
             </p>
           </div>
         </div>
-)}
+      )}
     </div>
   );
 }

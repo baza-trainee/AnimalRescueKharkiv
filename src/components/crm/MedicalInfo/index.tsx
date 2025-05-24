@@ -54,7 +54,7 @@ const MedicalInfo = () => {
   };
 
   return (
-    <div className="flex flex-col gap-[16px]">
+    <div className="flex flex-col gap-[16px] mb-[16px]">
       <fieldset className="flex flex-col gap-[16px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Стерилізація/кастрація
@@ -78,8 +78,12 @@ const MedicalInfo = () => {
               {...field}
               label="Дата проведення"
               selected={field.value}
+              onChange={(date) => {
+                field.onChange(date);
+                trigger("sterilization__date");
+              }}
               errorMessage={fieldState.error?.message}
-              labelMargin={false}
+              isHasLabelMargin={false}
             />
           )}
         />
@@ -92,9 +96,12 @@ const MedicalInfo = () => {
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
+              onChange={(comment) => {
+                field.onChange(comment);
+                trigger("sterilization__comment");
+              }}
               errorMessage={fieldState.error?.message}
-              initialHeight="45px"
-              labelMargin={false}
+              isHasLabelMargin={false}
             />
           )}
         />
@@ -122,8 +129,12 @@ const MedicalInfo = () => {
               {...field}
               label="Дата проведення"
               selected={field.value}
+              onChange={(date) => {
+                field.onChange(date);
+                trigger("microchipping__date");
+              }}
               errorMessage={fieldState.error?.message}
-              labelMargin={false}
+              isHasLabelMargin={false}
             />
           )}
         />
@@ -136,15 +147,18 @@ const MedicalInfo = () => {
               label="Рекомендації/коментар"
               placeholder="Залиште рекомендації"
               value={field.value || ""}
+              onChange={(comment) => {
+                field.onChange(comment);
+                trigger("microchipping__comment");
+              }}
               errorMessage={fieldState.error?.message}
-              initialHeight="45px"
-              labelMargin={false}
+              isHasLabelMargin={false}
             />
           )}
         />
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+        <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Вакцинація
         </h3>
         <div className="flex flex-col gap-[8px]">
@@ -168,8 +182,12 @@ const MedicalInfo = () => {
                 label="Тип вакцини/препарат"
                 placeholder="Від чого провакциновано та яким препаратом"
                 value={field.value || ""}
+                onChange={(vaccine) => {
+                  field.onChange(vaccine);
+                  trigger("vaccinations.0.vaccine_type");
+                }}
                 errorMessage={fieldState.error?.message}
-                styles="h-[66px]"
+                height="66px"
               />
             )}
           />
@@ -181,6 +199,10 @@ const MedicalInfo = () => {
                 {...field}
                 label="Дата проведення"
                 selected={field.value}
+                onChange={(date) => {
+                  field.onChange(date);
+                  trigger("vaccinations.0.date");
+                }}
                 errorMessage={fieldState.error?.message}
               />
             )}
@@ -194,15 +216,18 @@ const MedicalInfo = () => {
                 label="Рекомендації/коментар"
                 placeholder="Залиште рекомендації"
                 value={field.value || ""}
+                onChange={(comment) => {
+                  field.onChange(comment);
+                  trigger("vaccinations.0.comment");
+                }}
                 errorMessage={fieldState.error?.message}
-                initialHeight="45px"
               />
             )}
           />
         </div>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+        <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Хвороби і діагнози
         </h3>
         {diagnosesFields.map((field, index) => {
@@ -255,8 +280,11 @@ const MedicalInfo = () => {
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
+                    onChange={(comment) => {
+                      field.onChange(comment);
+                      trigger("diagnoses");
+                    }}
                     errorMessage={fieldState.error?.message}
-                    initialHeight="45px"
                   />
                 )}
               />
@@ -272,7 +300,7 @@ const MedicalInfo = () => {
         </button>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <h3 className="h-[36px] text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
+        <h3 className="text-[24px] font-semibold leading-[36px] border-b border-[#EDEEFA]">
           Процедури
         </h3>
         {proceduresFields.map((field, index) => {
@@ -325,8 +353,11 @@ const MedicalInfo = () => {
                     label="Рекомендації/коментар"
                     placeholder="Залиште рекомендації"
                     value={field.value || ""}
+                    onChange={(comment) => {
+                      field.onChange(comment);
+                      trigger("procedures");
+                    }}
                     errorMessage={fieldState.error?.message}
-                    initialHeight="45px"
                   />
                 )}
               />

@@ -49,8 +49,8 @@ const BasicInfo = () => {
   };
 
   return (
-    <div className="flex flex-col gap-[16px]">
-      <fieldset className="flex flex-col gap-[8px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+    <div className="flex flex-col gap-[16px] mb-[16px]">
+      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
           name="origin__arrival_date"
           control={control}
@@ -59,6 +59,10 @@ const BasicInfo = () => {
               {...field}
               label="Дата прибуття*"
               selected={field.value}
+              onChange={(date) => {
+                field.onChange(date);
+                trigger("origin__arrival_date");
+              }}
               errorMessage={fieldState.error?.message}
             />
           )}
@@ -68,11 +72,15 @@ const BasicInfo = () => {
           control={control}
           render={({ field, fieldState }) => (
             <TextInput
+              {...field}
               label="Звідки (місто)*"
               placeholder="Введіть назву міста"
+              onChange={(city) => {
+                field.onChange(city);
+                trigger("origin__city");
+              }}
               errorMessage={fieldState.error?.message}
               className="bg-transparent"
-              {...field}
             />
           )}
         />
@@ -85,6 +93,10 @@ const BasicInfo = () => {
               label="Адреса"
               placeholder="Введіть назву вулиці та номер будинку"
               value={field.value ?? ""}
+              onChange={(address) => {
+                field.onChange(address);
+                trigger("origin__address");
+              }}
               errorMessage={fieldState.error?.message}
               className="bg-transparent"
             />
@@ -121,6 +133,10 @@ const BasicInfo = () => {
               label="Вага тварини"
               placeholder="Введіть вагу"
               value={field.value}
+              onChange={(weight) => {
+                field.onChange(weight);
+                trigger("general__weight");
+              }}
               errorMessage={fieldState.error?.message}
             />
           )}
@@ -134,6 +150,10 @@ const BasicInfo = () => {
               label="Вік тварини"
               placeholder="Введіть вік"
               value={field.value}
+              onChange={(age) => {
+                field.onChange(age);
+                trigger("general__age");
+              }}
               errorMessage={fieldState.error?.message}
             />
           )}
@@ -147,164 +167,180 @@ const BasicInfo = () => {
               label="Особливі прикмети"
               placeholder="Напишіть особливі прикмети"
               value={field.value ?? ""}
+              onChange={(specials) => {
+                field.onChange(specials);
+                trigger("general__specials");
+              }}
               errorMessage={fieldState.error?.message}
-              initialHeight="45px"
             />
           )}
         />
       </fieldset>
-      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
-        <Controller
-          name="locations.0.location"
-          control={control}
-          render={({ field, fieldState }) => (
-            <LocationsInput
-              label="Поточна локація*"
-              onChange={(location) => {
-                if (location.id) {
-                  field.onChange({
-                    id: location.id,
-                    name: location.name,
-                    isCustom: false,
-                  });
-                } else {
-                  field.onChange({
-                    id: null,
-                    name: location.name,
-                    isCustom: true,
-                  });
-                }
-                trigger("locations");
-              }}
-              errorMessage={fieldState.error?.message}
-            />
-          )}
-        />
-        <Controller
-          name="locations.0.date_from"
-          control={control}
-          render={({ field, fieldState }) => (
-            <CustomDatePicker
-              {...field}
-              label="З"
-              selected={field.value || null}
-              onChange={(date) => {
-                field.onChange(date);
-                trigger("locations");
-              }}
-              errorMessage={fieldState.error?.message}
-              labelStyles="font-normal text-[14px]"
-            />
-          )}
-        />
-
-        <h3 className="text-[18px] text-[#212833] font-medium leading-[27px] mt-4">
-          Історія переміщень
-        </h3>
-
-        {locationsFields.slice(1).map((field, index) => {
-          const locIndex = index + 1;
-          const location = `locations.${locIndex}.location`;
-          const date_from = `locations.${locIndex}.date_from`;
-          const date_to = `locations.${locIndex}.date_to`;
-
-          return (
-            <div key={field.id}>
-              <Controller
-                name={location}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <LocationsInput
-                    label={`Локація ${locIndex}`}
-                    onChange={(location) => {
-                      if (location.id) {
-                        field.onChange({
-                          id: location.id,
-                          name: location.name,
-                          isCustom: false,
-                        });
-                      } else {
-                        field.onChange({
-                          id: null,
-                          name: location.name,
-                          isCustom: true,
-                        });
-                      }
-                      trigger("locations");
-                    }}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
+      <fieldset className="flex flex-col gap-[16px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+        <div className="flex flex-col gap-[8px]">
+          <Controller
+            name="locations.0.location"
+            control={control}
+            render={({ field, fieldState }) => (
+              <LocationsInput
+                label="Поточна локація*"
+                onChange={(location) => {
+                  if (location.id) {
+                    field.onChange({
+                      id: location.id,
+                      name: location.name,
+                      isCustom: false,
+                    });
+                  } else {
+                    field.onChange({
+                      id: null,
+                      name: location.name,
+                      isCustom: true,
+                    });
+                  }
+                  trigger("locations.0.location");
+                }}
+                errorMessage={fieldState.error?.message}
               />
+            )}
+          />
+          <Controller
+            name="locations.0.date_from"
+            control={control}
+            render={({ field, fieldState }) => (
+              <CustomDatePicker
+                {...field}
+                label="З"
+                selected={field.value || null}
+                onChange={(date) => {
+                  field.onChange(date);
+                  trigger("locations.0.date_from");
+                }}
+                errorMessage={fieldState.error?.message}
+                labelStyles="h-[21px] font-normal text-[14px]"
+                isHasLabelMargin={false}
+              />
+            )}
+          />
+        </div>
 
-              <div className="flex gap-[16px]">
-                <div className="flex-grow w-[151px]">
+        <div className="flex flex-col gap-[8px]">
+          <h3 className="text-[18px] text-[#212833] font-medium leading-[27px]">
+            Історія переміщень
+          </h3>
+
+          {locationsFields.slice(1).map((field, index) => {
+            const locIndex = index + 1;
+            const location = `locations.${locIndex}.location`;
+            const date_from = `locations.${locIndex}.date_from`;
+            const date_to = `locations.${locIndex}.date_to`;
+
+            return (
+              <div key={field.id}>
+                <div className="mb-[8px]">
                   <Controller
-                    name={date_from}
+                    name={location}
                     control={control}
                     render={({ field, fieldState }) => (
-                      <CustomDatePicker
-                        {...field}
-                        label="З"
-                        selected={field.value || null}
-                        onChange={(date) => {
-                          field.onChange(date);
+                      <LocationsInput
+                        label={`Локація ${locIndex}`}
+                        onChange={(location) => {
+                          if (location.id) {
+                            field.onChange({
+                              id: location.id,
+                              name: location.name,
+                              isCustom: false,
+                            });
+                          } else {
+                            field.onChange({
+                              id: null,
+                              name: location.name,
+                              isCustom: true,
+                            });
+                          }
                           trigger("locations");
                         }}
                         errorMessage={fieldState.error?.message}
-                        labelStyles="font-normal text-[14px]"
+                        labelStyles="h-[21px] font-normal text-[14px]"
                       />
                     )}
                   />
                 </div>
-                <div className="flex-grow w-[151px]">
-                  <Controller
-                    name={date_to}
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <CustomDatePicker
-                        {...field}
-                        label="По"
-                        selected={field.value || null}
-                        onChange={(date) => {
-                          field.onChange(date);
-                          trigger("locations");
-                        }}
-                        errorMessage={fieldState.error?.message}
-                        labelStyles="font-normal text-[14px]"
-                      />
-                    )}
-                  />
+
+                <div className="flex gap-[16px]">
+                  <div className="flex-grow w-[151px]">
+                    <Controller
+                      name={date_from}
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <CustomDatePicker
+                          {...field}
+                          label="З"
+                          selected={field.value || null}
+                          onChange={(date) => {
+                            field.onChange(date);
+                            trigger("locations");
+                          }}
+                          errorMessage={fieldState.error?.message}
+                          labelStyles="h-[21px] font-normal text-[14px]"
+                          isHasLabelMargin={false}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex-grow w-[151px]">
+                    <Controller
+                      name={date_to}
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <CustomDatePicker
+                          {...field}
+                          label="По"
+                          selected={field.value || null}
+                          onChange={(date) => {
+                            field.onChange(date);
+                            trigger("locations");
+                          }}
+                          errorMessage={fieldState.error?.message}
+                          labelStyles="h-[21px] font-normal text-[14px]"
+                          isHasLabelMargin={false}
+                        />
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-        <button
-          type="button"
-          onClick={handleAddLocation}
-          className="flex justify-center items-center w-full h-[56px] py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
-        >
-          Додати локацію
-        </button>
+            );
+          })}
+          <button
+            type="button"
+            onClick={handleAddLocation}
+            className="flex justify-center items-center w-full h-[56px] py-[13px] border-[1px] border-[#4855CC] rounded-[10px] text-[20px] text-[#4855CC] leading-[30px] bg-[#F8F9FD] transition duration-[350ms] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] hover:border-[#B6BBEB] focus:border-[#B6BBEB] hover:text-[#B6BBEB] focus:text-[#B6BBEB]"
+          >
+            Додати локацію
+          </button>
+        </div>
       </fieldset>
       <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
           name="owner__info"
           control={control}
           render={({ field, fieldState }) => (
-            <TextInput
+            <CommentInput
               {...field}
               label="Інформація про власника"
               placeholder="Введіть інформацію"
               value={field.value ?? "Відсутня"}
+              onChange={(info) => {
+                field.onChange(info);
+                trigger("owner__info");
+              }}
               errorMessage={fieldState.error?.message}
-              className="bg-transparent"
             />
           )}
         />
       </fieldset>
-      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[16px]">
+      <fieldset className="flex flex-col gap-[8px] px-[12px] py-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
         <Controller
           name="comment__text"
           control={control}
@@ -314,7 +350,12 @@ const BasicInfo = () => {
               label="Загальний коментар"
               placeholder="Додайте інформацію, яку вважаєте важливою"
               value={field.value ?? ""}
+              onChange={(comment) => {
+                field.onChange(comment);
+                trigger("comment__text");
+              }}
               errorMessage={fieldState.error?.message}
+              height="66px"
             />
           )}
         />

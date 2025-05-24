@@ -25,6 +25,7 @@ import { defaultValues } from "../AddCardCrm/defaultValues/defaultValues";
 import { createLocation } from "@/src/utils/locations";
 import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
 import { AnimalCard, Location } from "@/src/app/types/addCard";
+import { cleanString } from "../AddCardCrm/helpers/fieldFormatters";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
@@ -54,8 +55,8 @@ const AddCardForm = () => {
   const onSubmit = async (data: TypeAddCardSchema) => {
     try {
       setIsLoadingSubmit(true);
-      let uploadedMedia = null;
 
+      let uploadedMedia = null;
       if (data.media && data.media.length > 0) {
         uploadedMedia = await uploadFiles(data.media);
       }
@@ -66,10 +67,42 @@ const AddCardForm = () => {
         createLocation as CreateLocationFn
       );
 
+      let updatedVaccinations = null;
+      if (data.vaccinations) {
+        updatedVaccinations = data.vaccinations.map((vaccination) => ({
+          ...vaccination,
+          vaccine_type: vaccination.vaccine_type
+            ? cleanString(vaccination.vaccine_type)
+            : null,
+          comment: vaccination.comment
+            ? cleanString(vaccination.comment)
+            : null,
+        }));
+      }
+
       const updatedData = {
         ...data,
+        name: data.name ? cleanString(data.name) : null,
+        origin__city: data.origin__city ? cleanString(data.origin__city) : null,
+        origin__address: data.origin__address
+          ? cleanString(data.origin__address)
+          : null,
+        general__specials: data.general__specials
+          ? cleanString(data.general__specials)
+          : null,
+        owner__info: data.owner__info ? cleanString(data.owner__info) : null,
+        comment__text: data.comment__text
+          ? cleanString(data.comment__text)
+          : null,
+        sterilization__comment: data.sterilization__comment
+          ? cleanString(data.sterilization__comment)
+          : null,
+        microchipping__comment: data.microchipping__comment
+          ? cleanString(data.microchipping__comment)
+          : null,
         media: uploadedMedia || null,
         locations: updatedLocations,
+        vaccinations: updatedVaccinations,
         diagnoses:
           data.diagnoses?.length === 0
             ? null
@@ -109,7 +142,7 @@ const AddCardForm = () => {
         className="p-[24px] pb-[112px] bg-[#F8F9FD]"
       >
         <fieldset className="flex flex-col gap-[24px]">
-          <div className="p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
+          <div className="p-[12px] pt-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px]">
             <Controller
               name="name"
               control={control}
@@ -118,22 +151,29 @@ const AddCardForm = () => {
                   {...field}
                   label="Ім'я*"
                   placeholder="Придумайте ім’я тварини"
+                  onChange={(name) => {
+                    field.onChange(name);
+                    trigger("name");
+                  }}
                   errorMessage={fieldState.error?.message}
                   className="bg-transparent"
                 />
               )}
             />
           </div>
-          <div className="min-h-[291px] p-[12px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[24px]">
+          <div className="p-[12px] pt-[8px] shadow-[4px_4px_10px_0px_#B6BBEB4D,_-4px_-4px_10px_0px_#B6BBEB4D] rounded-[10px] mb-[21px]">
             <Controller
               name="media"
               control={control}
               render={({ field, fieldState }) => (
                 <FileInput
-                  label={"Додайте фото та відео"}
+                  label="Додайте фото та відео"
                   accept="image/*, video/*"
                   multiple
-                  onChange={field.onChange}
+                  onChange={(media) => {
+                    field.onChange(media);
+                    trigger("media");
+                  }}
                   errorMessage={fieldState.error?.message}
                 />
               )}
@@ -148,7 +188,7 @@ const AddCardForm = () => {
               activeTab === "basic"
                 ? "bg-[#4855CC] text-[#EDEEFA]"
                 : "bg-transparent text-[#4855CC]"
-            } px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
+            } h-[80px] px-[16px] py-[4px] border-[1px] border-r-0 border-[#4855CC] rounded-l-lg text-[24px] font-bold leading-[36px]`}
           >
             Основна інформація
           </button>
@@ -159,7 +199,7 @@ const AddCardForm = () => {
               activeTab === "medical"
                 ? "bg-[#4855CC] text-[#EDEEFA]"
                 : "bg-transparent text-[#4855CC]"
-            } px-[16px] py-[4px] border-[1px] border-l-0 border-[#4855CC] rounded-r-lg text-[24px] font-bold leading-[36px]`}
+            } h-[80px] px-[16px] py-[4px] border-[1px] border-l-0 border-[#4855CC] rounded-r-lg text-[24px] font-bold leading-[36px]`}
           >
             Медична інформація
           </button>

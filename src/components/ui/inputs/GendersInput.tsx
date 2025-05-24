@@ -1,11 +1,7 @@
-"use client";
-
-import { ArrowUpIcon } from "@/src/components/ui/icon/ArrowUpIcon";
-import { ArrowDownIcon } from "@/src/components/ui/icon/ArrowDownIcon";
-import { TextInput } from "@/src/components/ui/inputs/TextInput";
 import { useState } from "react";
 import { useToggle } from "../popUp/useToggle";
 import { GendersPopup } from "../popUp/GendersPopup";
+import { TextInputWithArrow } from "./TextInputWithArrow";
 
 interface PropsGendersInput {
   onChange: (gender: string) => void;
@@ -28,36 +24,23 @@ export const GendersInput: React.FC<PropsGendersInput> = ({
 
   return (
     <>
-      <div className="relative">
-        <span
-          onClick={closeModal}
-          className={`absolute top-[46px] right-[8px] z-[5] cursor-pointer ${
-            !!errorMessage ? "stroke-[#B00000]" : "stroke-[#B6BBEB]"
-          }  transition duration-[350ms]`}
-        >
-          {isOpen ? (
-            <ArrowUpIcon style={"w-[18px] h-[18px]"} />
-          ) : (
-            <ArrowDownIcon style={"s w-[18px] h-[18px]"} />
-          )}
-        </span>
-        <TextInput
-          {...rest}
-          label="Стать*"
-          placeholder="Оберіть стать тварини"
-          errorMessage={errorMessage}
-          value={selectGender}
-          onClick={openModal}
-          className="bg-transparent"
-          readOnly
+      <TextInputWithArrow
+        {...rest}
+        label="Стать*"
+        placeholder="Оберіть стать тварини"
+        errorMessage={errorMessage}
+        isOpen={isOpen}
+        value={selectGender}
+        onClick={openModal}
+        className="bg-transparent"
+        readOnly
+      />
+      {isOpen && (
+        <GendersPopup
+          handleSelectValue={handleSelectValue}
+          closeModal={closeModal}
         />
-        {isOpen && (
-          <GendersPopup
-            handleSelectValue={handleSelectValue}
-            closeModal={closeModal}
-          />
-        )}
-      </div>
+      )}
     </>
   );
 };
