@@ -25,6 +25,7 @@ import { defaultValues } from "../AddCardCrm/defaultValues/defaultValues";
 import { createLocation } from "@/src/utils/locations";
 import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
 import { AnimalCard, Location } from "@/src/app/types/addCard";
+import { cleanString } from "../AddCardCrm/helpers/fieldFormatters";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_ANIMALS_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
@@ -54,8 +55,8 @@ const AddCardForm = () => {
   const onSubmit = async (data: TypeAddCardSchema) => {
     try {
       setIsLoadingSubmit(true);
-      let uploadedMedia = null;
 
+      let uploadedMedia = null;
       if (data.media && data.media.length > 0) {
         uploadedMedia = await uploadFiles(data.media);
       }
@@ -66,10 +67,42 @@ const AddCardForm = () => {
         createLocation as CreateLocationFn
       );
 
+      let updatedVaccinations = null;
+      if (data.vaccinations) {
+        updatedVaccinations = data.vaccinations.map((vaccination) => ({
+          ...vaccination,
+          vaccine_type: vaccination.vaccine_type
+            ? cleanString(vaccination.vaccine_type)
+            : null,
+          comment: vaccination.comment
+            ? cleanString(vaccination.comment)
+            : null,
+        }));
+      }
+
       const updatedData = {
         ...data,
+        name: data.name ? cleanString(data.name) : null,
+        origin__city: data.origin__city ? cleanString(data.origin__city) : null,
+        origin__address: data.origin__address
+          ? cleanString(data.origin__address)
+          : null,
+        general__specials: data.general__specials
+          ? cleanString(data.general__specials)
+          : null,
+        owner__info: data.owner__info ? cleanString(data.owner__info) : null,
+        comment__text: data.comment__text
+          ? cleanString(data.comment__text)
+          : null,
+        sterilization__comment: data.sterilization__comment
+          ? cleanString(data.sterilization__comment)
+          : null,
+        microchipping__comment: data.microchipping__comment
+          ? cleanString(data.microchipping__comment)
+          : null,
         media: uploadedMedia || null,
         locations: updatedLocations,
+        vaccinations: updatedVaccinations,
         diagnoses:
           data.diagnoses?.length === 0
             ? null

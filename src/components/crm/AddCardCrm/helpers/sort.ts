@@ -1,4 +1,5 @@
 import { format, parse } from "date-fns";
+import { cleanString } from "./fieldFormatters";
 
 export const sortDiagnosesOrProcedures = (array: Array<any>) => {
   return array
@@ -22,6 +23,8 @@ export const sortDiagnosesOrProcedures = (array: Array<any>) => {
     })
     .map((item) => ({
       ...item,
+      name: item.name ? cleanString(item.name) : null,
       date: item.date ? format(item.date, "dd/MM/yyyy") : null,
+      comment: item.comment ? cleanString(item.comment) : null,
     }));
 };

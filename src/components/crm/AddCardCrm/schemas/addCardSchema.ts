@@ -16,6 +16,10 @@ export const addCardSchema = Yup.object().shape({
     .transform((value) => (value === "" ? null : value))
     .min(2, "Ім’я має бути не менше 2 символів")
     .max(30, "Ім’я має бути не більше 30 символів")
+    .test("not-only-spaces", "Поле не може містити лише пробіли", (value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return value.trim() !== "";
+    })
     .required("Введіть ім’я"),
   origin__arrival_date: Yup.mixed()
     .nullable()
@@ -35,12 +39,20 @@ export const addCardSchema = Yup.object().shape({
   origin__city: Yup.string()
     .min(2, "Місто має бути не менше 2 символів")
     .max(100, "Місто має бути не більше 100 символів")
+    .test("not-only-spaces", "Поле не може містити лише пробіли", (value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return value.trim() !== "";
+    })
     .required("Введіть місто"),
   origin__address: Yup.string()
     .nullable()
     .transform((value) => (value === "" ? null : value))
     .min(2, "Адреса має бути не менше 2 символів")
     .max(100, "Адреса має бути не більше 100 символів")
+    .test("not-only-spaces", "Поле не може містити лише пробіли", (value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return value.trim() !== "";
+    })
     .notRequired(),
   general__animal_type: Yup.object({
     id: Yup.number()
@@ -64,14 +76,26 @@ export const addCardSchema = Yup.object().shape({
   general__specials: Yup.string()
     .nullable()
     .max(200, "Не більше 200 символів")
+    .test("not-only-spaces", "Поле не може містити лише пробіли", (value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return value.trim() !== "";
+    })
     .notRequired(),
   owner__info: Yup.string()
     .nullable()
     .max(500, "Не більше 500 символів")
+    .test("not-only-spaces", "Поле не може містити лише пробіли", (value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return value.trim() !== "";
+    })
     .notRequired(),
   comment__text: Yup.string()
     .nullable()
     .max(1000, "Не більше 1000 символів")
+    .test("not-only-spaces", "Поле не може містити лише пробіли", (value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return value.trim() !== "";
+    })
     .notRequired(),
   sterilization__done: Yup.boolean().nullable().notRequired(),
   sterilization__date: Yup.mixed()
@@ -92,6 +116,10 @@ export const addCardSchema = Yup.object().shape({
   sterilization__comment: Yup.string()
     .nullable()
     .max(500, "Не більше 500 символів")
+    .test("not-only-spaces", "Поле не може містити лише пробіли", (value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return value.trim() !== "";
+    })
     .notRequired(),
   microchipping__done: Yup.boolean().nullable().notRequired(),
   microchipping__date: Yup.mixed()
@@ -112,6 +140,10 @@ export const addCardSchema = Yup.object().shape({
   microchipping__comment: Yup.string()
     .nullable()
     .max(500, "Не більше 500 символів")
+    .test("not-only-spaces", "Поле не може містити лише пробіли", (value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return value.trim() !== "";
+    })
     .notRequired(),
   media: Yup.mixed<FileList>()
     .test("fileFormat", "Тільки фото або відео", (value) => {
@@ -151,7 +183,6 @@ export const addCardSchema = Yup.object().shape({
             "Оберіть дату 'З'",
             function (value) {
               const { index } = this.options as unknown as { index: number };
-
               if (index === 0 && !value) {
                 return this.createError({
                   path: `locations[${index}].date_from`,
@@ -180,26 +211,21 @@ export const addCardSchema = Yup.object().shape({
             'Не раніше за дату "З"',
             function (value) {
               const { date_from } = this.parent;
-
               const parsedFrom = parse(
                 String(date_from),
                 "dd/MM/yyyy",
                 new Date()
               );
               const parsedTo = parse(String(value), "dd/MM/yyyy", new Date());
-
               if (!isValid(parsedFrom) || !isValid(parsedTo)) return true;
-
               return parsedTo >= parsedFrom;
             }
           ),
       })
       .test("required-fields-by-index", "", function (value) {
         const { index } = this.options as unknown as { index: number };
-
         const hasLocation = !!value?.location?.id || !!value?.location?.name;
         const hasDateFrom = !!value?.date_from;
-
         if (index === 0) {
           if (!hasLocation) {
             return this.createError({
@@ -208,7 +234,6 @@ export const addCardSchema = Yup.object().shape({
             });
           }
         }
-
         if (index > 0) {
           if (hasDateFrom && !hasLocation) {
             return this.createError({
@@ -217,14 +242,12 @@ export const addCardSchema = Yup.object().shape({
             });
           }
         }
-
         if (hasLocation && !hasDateFrom) {
           return this.createError({
             path: `locations[${index}].date_from`,
             message: "Оберіть дату",
           });
         }
-
         return true;
       })
   ),
@@ -237,6 +260,15 @@ export const addCardSchema = Yup.object().shape({
           .transform((value) => (value === "" ? null : value))
           .min(2, "Не менше 2 символів")
           .max(100, "Не більше 100 символів")
+          .test(
+            "not-only-spaces",
+            "Поле не може містити лише пробіли",
+            (value) => {
+              if (value === null || value === undefined || value === "")
+                return true;
+              return value.trim() !== "";
+            }
+          )
           .notRequired(),
         date: Yup.mixed()
           .nullable()
@@ -256,6 +288,15 @@ export const addCardSchema = Yup.object().shape({
         comment: Yup.string()
           .nullable()
           .max(500, "Коментар не може бути більше 500 символів")
+          .test(
+            "not-only-spaces",
+            "Поле не може містити лише пробіли",
+            (value) => {
+              if (value === null || value === undefined || value === "")
+                return true;
+              return value.trim() !== "";
+            }
+          )
           .notRequired(),
       })
     )
@@ -268,6 +309,15 @@ export const addCardSchema = Yup.object().shape({
           .transform((value) => (value === "" ? null : value))
           .min(2, "Не менше 2 символів")
           .max(100, "Не більше 100 символів")
+          .test(
+            "not-only-spaces",
+            "Поле не може містити лише пробіли",
+            (value) => {
+              if (value === null || value === undefined || value === "")
+                return true;
+              return value.trim() !== "";
+            }
+          )
           .notRequired(),
         date: Yup.mixed()
           .nullable()
@@ -287,6 +337,15 @@ export const addCardSchema = Yup.object().shape({
         comment: Yup.string()
           .nullable()
           .max(500, "Коментар не може бути більше 500 символів")
+          .test(
+            "not-only-spaces",
+            "Поле не може містити лише пробіли",
+            (value) => {
+              if (value === null || value === undefined || value === "")
+                return true;
+              return value.trim() !== "";
+            }
+          )
           .notRequired(),
       })
     )
@@ -300,6 +359,15 @@ export const addCardSchema = Yup.object().shape({
           .transform((value) => (value === "" ? null : value))
           .min(2, "Не менше 2 символів")
           .max(100, "Не більше 100 символів")
+          .test(
+            "not-only-spaces",
+            "Поле не може містити лише пробіли",
+            (value) => {
+              if (value === null || value === undefined || value === "")
+                return true;
+              return value.trim() !== "";
+            }
+          )
           .notRequired(),
         date: Yup.mixed()
           .nullable()
@@ -319,6 +387,15 @@ export const addCardSchema = Yup.object().shape({
         comment: Yup.string()
           .nullable()
           .max(500, "Коментар не може бути більше 500 символів")
+          .test(
+            "not-only-spaces",
+            "Поле не може містити лише пробіли",
+            (value) => {
+              if (value === null || value === undefined || value === "")
+                return true;
+              return value.trim() !== "";
+            }
+          )
           .notRequired(),
       })
     )
