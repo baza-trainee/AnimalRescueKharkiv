@@ -64,7 +64,6 @@ const BasicInfo = () => {
                 trigger("origin__arrival_date");
               }}
               errorMessage={fieldState.error?.message}
-              labelStyles="mb-[4px] text-[18px]"
             />
           )}
         />
@@ -173,7 +172,6 @@ const BasicInfo = () => {
                 trigger("general__specials");
               }}
               errorMessage={fieldState.error?.message}
-              initialHeight="45px"
             />
           )}
         />
@@ -220,6 +218,7 @@ const BasicInfo = () => {
                 }}
                 errorMessage={fieldState.error?.message}
                 labelStyles="h-[21px] font-normal text-[14px]"
+                isHasLabelMargin={false}
               />
             )}
           />
@@ -284,6 +283,7 @@ const BasicInfo = () => {
                           }}
                           errorMessage={fieldState.error?.message}
                           labelStyles="h-[21px] font-normal text-[14px]"
+                          isHasLabelMargin={false}
                         />
                       )}
                     />
@@ -303,6 +303,7 @@ const BasicInfo = () => {
                           }}
                           errorMessage={fieldState.error?.message}
                           labelStyles="h-[21px] font-normal text-[14px]"
+                          isHasLabelMargin={false}
                         />
                       )}
                     />
@@ -325,7 +326,7 @@ const BasicInfo = () => {
           name="owner__info"
           control={control}
           render={({ field, fieldState }) => (
-            <TextInput
+            <CommentInput
               {...field}
               label="Інформація про власника"
               placeholder="Введіть інформацію"
@@ -335,7 +336,6 @@ const BasicInfo = () => {
                 trigger("owner__info");
               }}
               errorMessage={fieldState.error?.message}
-              className="bg-transparent"
             />
           )}
         />
@@ -355,6 +355,7 @@ const BasicInfo = () => {
                 trigger("comment__text");
               }}
               errorMessage={fieldState.error?.message}
+              height="66px"
             />
           )}
         />

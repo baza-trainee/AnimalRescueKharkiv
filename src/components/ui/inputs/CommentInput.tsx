@@ -1,16 +1,18 @@
 "use client";
 
 import { ErrorMessage } from "./ErrorMessage";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { useState } from "react";
+import { UseFormTrigger } from "react-hook-form";
 
 interface PropsCommentInput
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  errorMessage?: string;
   label: string;
+  value: string;
+  errorMessage?: string;
   styles?: string;
-  initialHeight?: string;
-  labelMargin?: boolean;
+  height?: string;
+  isHasLabelMargin?: boolean;
 }
 
 export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
@@ -18,27 +20,28 @@ export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
     {
       label,
       errorMessage,
+      value,
       styles,
       name,
-      initialHeight = "66px",
-      labelMargin = true,
+      height = "45px",
+      isHasLabelMargin = true,
       ...rest
     },
     _ref: React.ForwardedRef<HTMLTextAreaElement>
   ) => {
-    const [height, setHeight] = useState(initialHeight);
+    const textareaRef = useRef(null);
 
-    const handleInput = (event: React.FormEvent<HTMLTextAreaElement>) => {
-      const textarea = event.target as HTMLTextAreaElement;
-      setHeight("auto");
-      setHeight(`${textarea.scrollHeight}px`);
-    };
+    useEffect(() => {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
+    }, [value]);
 
     return (
       <div className="relative w-full">
         <label
           htmlFor={name}
-          className={`${labelMargin ? "block mb-[4px]" : ""}`}
+          className={`${isHasLabelMargin ? "block mb-[4px]" : ""}`}
         >
           <span
             className={`${
@@ -50,10 +53,12 @@ export const CommentInput: React.FC<PropsCommentInput> = forwardRef(
         </label>
         <textarea
           {...rest}
-          ref={_ref}
+          ref={textareaRef}
           id={name}
-          onInput={handleInput}
-          style={{ height }}
+          value={value}
+          // onInput={handleInput}
+          rows={1}
+          style={{ minHeight: height }}
           className={`overflow-hidden block w-full px-[8px] py-[12px] rounded-[10px] border-[1px] bg-transparent resize-none ${
             !!errorMessage
               ? "border-[#B00000] placeholder:text-[#B00000] outline-[#B00000]"

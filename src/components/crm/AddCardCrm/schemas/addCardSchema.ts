@@ -9,7 +9,10 @@ const formattedTodayDate = format(new Date(), "dd.MM.yyyy");
 
 export const addCardSchema = Yup.object().shape({
   name: Yup.string()
-    .matches(nameRegExp, "Введіть коректне ім'я")
+    .matches(
+      nameRegExp,
+      "Ім’я може містити лише літери українського або латинського алфавіту, апостроф, дефіс і пробіли"
+    )
     .transform((value) => (value === "" ? null : value))
     .min(2, "Ім’я має бути не менше 2 символів")
     .max(30, "Ім’я має бути не більше 30 символів")

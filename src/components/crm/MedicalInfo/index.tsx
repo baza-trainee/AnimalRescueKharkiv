@@ -83,6 +83,7 @@ const MedicalInfo = () => {
                 trigger("sterilization__date");
               }}
               errorMessage={fieldState.error?.message}
+              isHasLabelMargin={false}
             />
           )}
         />
@@ -100,8 +101,7 @@ const MedicalInfo = () => {
                 trigger("sterilization__comment");
               }}
               errorMessage={fieldState.error?.message}
-              initialHeight="45px"
-              labelMargin={false}
+              isHasLabelMargin={false}
             />
           )}
         />
@@ -134,6 +134,7 @@ const MedicalInfo = () => {
                 trigger("microchipping__date");
               }}
               errorMessage={fieldState.error?.message}
+              isHasLabelMargin={false}
             />
           )}
         />
@@ -151,8 +152,7 @@ const MedicalInfo = () => {
                 trigger("microchipping__comment");
               }}
               errorMessage={fieldState.error?.message}
-              initialHeight="45px"
-              labelMargin={false}
+              isHasLabelMargin={false}
             />
           )}
         />
@@ -187,7 +187,7 @@ const MedicalInfo = () => {
                   trigger("vaccinations.0.vaccine_type");
                 }}
                 errorMessage={fieldState.error?.message}
-                styles="h-[66px]"
+                height="66px"
               />
             )}
           />
@@ -204,7 +204,6 @@ const MedicalInfo = () => {
                   trigger("vaccinations.0.date");
                 }}
                 errorMessage={fieldState.error?.message}
-                labelStyles="mb-[4px]"
               />
             )}
           />
@@ -222,7 +221,6 @@ const MedicalInfo = () => {
                   trigger("vaccinations.0.comment");
                 }}
                 errorMessage={fieldState.error?.message}
-                initialHeight="45px"
               />
             )}
           />
@@ -270,7 +268,6 @@ const MedicalInfo = () => {
                       trigger("diagnoses");
                     }}
                     errorMessage={fieldState.error?.message}
-                    labelStyles="mb-[4px]"
                   />
                 )}
               />
@@ -288,7 +285,6 @@ const MedicalInfo = () => {
                       trigger("diagnoses");
                     }}
                     errorMessage={fieldState.error?.message}
-                    initialHeight="45px"
                   />
                 )}
               />
@@ -345,7 +341,6 @@ const MedicalInfo = () => {
                       trigger("procedures");
                     }}
                     errorMessage={fieldState.error?.message}
-                    labelStyles="mb-[4px]"
                   />
                 )}
               />
@@ -363,7 +358,6 @@ const MedicalInfo = () => {
                       trigger("procedures");
                     }}
                     errorMessage={fieldState.error?.message}
-                    initialHeight="45px"
                   />
                 )}
               />

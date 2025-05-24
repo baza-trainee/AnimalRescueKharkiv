@@ -17,6 +17,7 @@ interface PropsCustomDataPicker {
   label: string;
   errorMessage?: string;
   labelStyles?: string;
+  isHasLabelMargin?: boolean;
   wrapperClassName?: string;
 }
 
@@ -77,7 +78,16 @@ export const CustomDatePicker = forwardRef<
   PropsCustomDataPicker
 >(
   (
-    { selected, minDate, maxDate, label, errorMessage, labelStyles, ...rest },
+    {
+      selected,
+      minDate,
+      maxDate,
+      label,
+      errorMessage,
+      labelStyles,
+      isHasLabelMargin = true,
+      ...rest
+    },
     _ref
   ) => {
     const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
@@ -96,7 +106,9 @@ export const CustomDatePicker = forwardRef<
           <span
             className={`block ${
               !!errorMessage ? "text-[#B00000]" : "text-[#212833]"
-            } leading-[27px] block ${labelStyles ?? "text-[18px] font-medium"}`}
+            } leading-[27px] block ${
+              labelStyles ? labelStyles : "text-[18px] font-medium"
+            } ${isHasLabelMargin ? "mb-[4px]" : ""}`}
           >
             {label}
           </span>
