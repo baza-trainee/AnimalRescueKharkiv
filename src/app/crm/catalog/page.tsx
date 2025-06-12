@@ -1,5 +1,6 @@
 import CatalogCrm from "@/src/components/crm/CatalogCrm";
 import FooterCrm from "@/src/components/crm/Footer";
+import { DataProvider } from "@/src/context/CrmDataContext";
 // import MenuDesktop from "@/src/components/crm/MenuDesktop";
 
 export default function CatalogPage() {
@@ -8,7 +9,10 @@ export default function CatalogPage() {
       {/* <HeaderCrm /> */}
       <section className="w-[390px] mx-auto px-4">
         {/* <MenuDesktop /> */}
-        <CatalogCrm />
+        <DataProvider>
+          <CatalogCrm />
+        </DataProvider>
+
       </section>
       <FooterCrm />
     </>

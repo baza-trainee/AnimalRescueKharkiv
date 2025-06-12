@@ -12,12 +12,11 @@ import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { fetch } from "../../../utils/api";
 import { Animal } from "@/src/app/types/animal";
 import { format } from "date-fns";
+import { useDataContext } from "@/src/context/CrmDataContext";
 
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LATEST_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
-const API_LOCATIONS_PATH = process.env.NEXT_PUBLIC_API_LOCATIONS_PATH;
-const API_ANIMAL_TYPE = process.env.NEXT_PUBLIC_API_ANIMAL_TYPES_PATH;
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function useAnimalsCatalog() {
@@ -60,6 +59,7 @@ const handleCardClick = (animal: Animal) => {
 };
 
 const CatalogCrm: React.FC = () => {
+    const { locationsData, animalTypesData, isLoading, isError } = useDataContext();
     const [filteredAnimals, setFilteredAnimals] = useState<Animal[]>([]);
     const [isFiltering, setIsFiltering] = useState(false);
     const [filterPopupVisible, setFilterPopupVisible] = useState(false);
@@ -67,8 +67,6 @@ const CatalogCrm: React.FC = () => {
     const { animals, fallbackImage, formatDate } = useAnimalsCatalog();
     const [sortOption, setSortOption] = useState<string>("");
     const [pendingSort, setPendingSort] = useState<string>("");
-    const [currentLocations, setCurrentLocations] = useState<{ id: number; name: string }[]>([]);
-    const [animalTypes, setAnimalTypes] = useState<{ id: number; name: string }[]>([]);
     const [selectedFilters, setSelectedFilters] = useState({
         search: "",
         arrivalDate: null as Date | null,
@@ -141,29 +139,6 @@ const CatalogCrm: React.FC = () => {
             };
         });
     };
-
-    // локації і типи
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [locationsData, typesData] = await Promise.all([
-                    fetch<{ id: number; name: string }[]>(`${API_CRM_PATH}${API_LOCATIONS_PATH}`),
-                    fetch<{ id: number; name: string }[]>(`${API_CRM_PATH}${API_ANIMAL_TYPE}`)
-                ]);
-
-                // console.log("Локації:", locationsData);
-                // console.log("Типи тварин:", typesData);
-
-                setCurrentLocations(locationsData);
-                setAnimalTypes(typesData);
-            } catch (error) {
-                console.error("Не вдалося завантажити дані", error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
 
     // фільтри
     useEffect(() => {
@@ -297,7 +272,7 @@ const CatalogCrm: React.FC = () => {
             title: "Тип тварин",
             content: (
                 <div className="w-full flex flex-wrap gap-4 font-medium">
-                    {animalTypes.map((type) => (
+                    {animalTypesData.map((type) => (
                         <label key={type.id} className="w-100 flex items-center gap-[8px] text-lg">
                             <input
                                 type="checkbox"
@@ -348,13 +323,13 @@ const CatalogCrm: React.FC = () => {
             title: "Поточна локація",
             content: (
                 <div className="w-full flex flex-wrap gap-4 font-medium my-3">
-                    {currentLocations.map((location) => (
+                    {locationsData.map((location) => (
                         <label key={location.id} className="w-100 flex items-center gap-[8px] text-lg">
                             <input
                                 type="checkbox"
                                 name="currentlocation"
-                                value={location.id}
-                                checked={selectedFilters.currentLocation.includes(location.id)}
+                                value={location.id ?? ""}
+                                checked={selectedFilters.currentLocation.includes(location.id ?? 0)}
                                 onChange={(e) => handleMultiSelectChange("currentLocation", Number(e.target.value))}
                                 id="checkbox1"
                                 className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
@@ -366,7 +341,7 @@ const CatalogCrm: React.FC = () => {
             ),
         },
         {
-            title: "Статус", // Є (dead 404)
+            title: "Статус",
             content: (
                 <div className="w-full flex flex-col items-center justify-start gap-4  font-medium">
                     <div className="w-full flex flex-col gap-4 text-lg my-3">
@@ -556,6 +531,9 @@ const CatalogCrm: React.FC = () => {
             return newContentVisibility;
         });
     };
+
+    if (isLoading) return <p>Завантаження...</p>;
+    if (isError) return <p>Помилка при завантаженні даних</p>;
 
     return (
         <>
