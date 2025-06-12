@@ -8,10 +8,12 @@ import FilterIcon from "./CatalogCrmIcons/FilterIcon";
 import SetIcon from "./CatalogCrmIcons/Set";
 import CloseBtb from "./CatalogCrmIcons/Closebtn";
 import DownArrow from "./CatalogCrmIcons/DownArrow";
-import DateInput from "./Dateinput";
 import { CustomDatePicker } from "../../ui/inputs/CustomDatePicker";
 import { fetch } from "../../../utils/api";
 import { Animal } from "@/src/app/types/animal";
+import { format } from "date-fns";
+import { useDataContext } from "@/src/context/CrmDataContext";
+
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LATEST_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH;
@@ -57,30 +59,29 @@ const handleCardClick = (animal: Animal) => {
 };
 
 const CatalogCrm: React.FC = () => {
+    const { locationsData, animalTypesData, isLoading, isError } = useDataContext();
+    const [filteredAnimals, setFilteredAnimals] = useState<Animal[]>([]);
     const [isFiltering, setIsFiltering] = useState(false);
     const [filterPopupVisible, setFilterPopupVisible] = useState(false);
     const [sortingPopupVisible, setSortingPopupVisible] = useState(false);
     const { animals, fallbackImage, formatDate } = useAnimalsCatalog();
-    const [sortType, setSortType] = useState<"date-new" | "date-old" | "name-asc" | "name-desc">("date-new");
-    const [pendingSort, setPendingSort] = useState<typeof sortType>(sortType);
+    const [sortOption, setSortOption] = useState<string>("");
+    const [pendingSort, setPendingSort] = useState<string>("");
     const [selectedFilters, setSelectedFilters] = useState({
-        search: '',
-        id: '',
-        name: '',
-        date: '',
-        fromCity: '',
-        type: [] as string[],
-        gender: '',
-        location: [] as string[],
-        animal_status: '',
-        microchipping: '',
-        microchipping_date: '',
-        sterilization: '',
-        sterilization_date: '',
-        vaccination: '',
-        vaccination_date: ''
+        search: "",
+        arrivalDate: null as Date | null,
+        city: "",
+        animalType: [] as number[],
+        gender: "",
+        currentLocation: [] as number[],
+        animalStatus: "",
+        isMicrochipping: "",
+        microchippingDate: null as Date | null,
+        isSterilized: "",
+        sterilizedDate: null as Date | null,
+        isVaccinated: "",
+        vaccinatedDate: null as Date | null,
     });
-
 
     // onClick на Popup фільтра
     const applyFilters = () => {
@@ -89,256 +90,157 @@ const CatalogCrm: React.FC = () => {
     };
 
     // onClick на Popup сортування
+
     const applySorting = () => {
-        setSortType(pendingSort);
+        setSortOption(pendingSort);
+        setIsFiltering(true);
         setSortingPopupVisible(false);
     };
 
     // скидання фільтрів
     const resetFilters = () => {
-        setSelectedFilters({
-            search: '',
-            id: '',
-            name: '',
-            date: '',
-            fromCity: '',
-            type: [] as string[],
-            gender: '',
-            location: [] as string[],
-            animal_status: '',
-            microchipping: '',
-            microchipping_date: '',
-            sterilization: '',
-            sterilization_date: '',
-            vaccination: '',
-            vaccination_date: ''
-        });
         setIsFiltering(false);
+        setFilteredAnimals([]);
         setFilterPopupVisible(false);
+        setSelectedFilters({
+            search: "",
+            arrivalDate: null as Date | null,
+            city: "",
+            animalType: [] as number[],
+            gender: "",
+            currentLocation: [] as number[],
+            animalStatus: "",
+            isMicrochipping: "",
+            microchippingDate: null as Date | null,
+            isSterilized: "",
+            sterilizedDate: null as Date | null,
+            isVaccinated: "",
+            vaccinatedDate: null as Date | null,
+        })
     };
 
-    const handleSearchChange = (value: string) => {
+    const handleFilterChange = (key: keyof typeof selectedFilters, value: any) => {
         setSelectedFilters((prev) => ({
             ...prev,
-            search: value,
+            [key]: value
         }));
-        setIsFiltering(true);
     };
 
-
-    const parseDateSlash = (dateString: string) => {
-        const [day, month, year] = dateString.split("/").map(Number);
-        return new Date(year, month - 1, day);
-    };
-
-    const parseDateDash = (dateString: string) => {
-        const [year, month, day] = dateString.split("-").map(Number);
-        return new Date(year, month - 1, day);
-    };
-
-
-    const handleDateChange = (date: Date | null) => {
-        if (date) {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            const formattedDate = `${day}/${month}/${year}`;
-            handleFilterChange("date", formattedDate);
-        } else {
-            handleFilterChange("date", "");
-        }
-    };
-
-    const handleChippingDateChange = (date: Date | null) => {
-        if (date) {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            const formattedDate = `${day}/${month}/${year}`;
-            handleFilterChange("microchipping_date", formattedDate);
-        } else {
-            handleFilterChange("microchipping_date", "");
-        }
-    };
-
-    const handleSterelizationDateChange = (date: Date | null) => {
-        if (date) {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            const formattedDate = `${day}/${month}/${year}`;
-            handleFilterChange("sterilization_date", formattedDate);
-        } else {
-            handleFilterChange("sterilization_date", "");
-        }
-    };
-
-    const handleVaccinationDateChange = (date: Date | null) => {
-        if (date) {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            const formattedDate = `${year}-${month}-${day}`;
-            handleFilterChange("vaccination_date", formattedDate);
-        } else {
-            handleFilterChange("vaccination_date", "");
-        }
-    };
-
-    const handleTypeChange = (value: string) => {
+    const handleMultiSelectChange = (key: keyof typeof selectedFilters, value: number) => {
         setSelectedFilters((prev) => {
-            const updatedType = prev.type.includes(value)
-                ? prev.type.filter((type) => type !== value)
-                : [...prev.type, value];
+            const selectedArray = prev[key] as number[];
+            const newArray = selectedArray.includes(value)
+                ? selectedArray.filter((v) => v !== value)
+                : [...selectedArray, value];
 
             return {
                 ...prev,
-                type: updatedType,
+                [key]: newArray,
             };
         });
     };
 
-    const handleLocationChange = (value: string) => {
-        setSelectedFilters((prev) => {
-            const updatedLocation = prev.location.includes(value)
-                ? prev.location.filter((location) => location !== value)
-                : [...prev.location, value];
+    // фільтри
+    useEffect(() => {
+        const fetchFilteredAnimals = async () => {
+            const { arrivalDate, city, animalType, gender, currentLocation, animalStatus, isMicrochipping, microchippingDate, isSterilized, sterilizedDate, isVaccinated, vaccinatedDate } = selectedFilters;
 
-            return {
-                ...prev,
-                location: updatedLocation,
-            };
-        });
-    };
+            if (!arrivalDate && !city && !animalType && !gender && !currentLocation && !animalStatus && !isMicrochipping && !microchippingDate && !isSterilized && !sterilizedDate && !isVaccinated && !vaccinatedDate) return;
 
-    const handleFilterChange = (field: keyof FiltersType, value: any) => {
-        setSelectedFilters((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
-        setIsFiltering(true);
-    };
+            const params = new URLSearchParams();
 
-    // useMemo для фільтрів і сортування
-    const catalogAnimals = useMemo(() => {
-        const baseAnimals = isFiltering
-            ? animals.filter((animal) => {
-                const matchSearch = selectedFilters.search
-                    ? animal.id.toLowerCase().includes(selectedFilters.search.toLowerCase()) ||
-                    animal.name.toLowerCase().includes(selectedFilters.search.toLowerCase())
-                    : true;
+            if (arrivalDate) {
+                const formattedDate = format(arrivalDate, "dd-MM-yyyy");
+                params.append("arrival_date", formattedDate);
+            }
 
-                const matchDate = selectedFilters.date
-                    ? (animal.origin.origin__arrival_date === selectedFilters.date)
-                    : true;
+            if (city) {
+                params.append("city", city)
+            }
 
-                const matchCity = selectedFilters.fromCity
-                    ? animal.origin.origin__city.toLowerCase().includes(selectedFilters.fromCity.toLowerCase())
-                    : true;
+            if (animalType.length > 0) {
+                animalType.forEach((typeId) => {
+                    params.append("animal_types", String(typeId))
+                })
+            }
 
-                const matchType = selectedFilters.type.length > 0
-                    ? selectedFilters.type.some(
-                        (type) =>
-                            type.toLowerCase() ===
-                            animal.general.general__animal_type.name.toLowerCase()
-                    )
-                    : true;
+            if (gender) {
+                params.append("gender", gender)
+            }
 
-                const matchGender = selectedFilters.gender
-                    ? animal.general.general__gender === selectedFilters.gender
-                    : true;
+            if (currentLocation.length > 0) {
+                currentLocation.forEach((locId) => {
+                    params.append("current_locations", String(locId))
+                })
+            }
 
-                const matchLocation = selectedFilters.location.length > 0
-                    ? selectedFilters.location.some(
-                        (location) =>
-                            location.toLowerCase() ===
-                            animal.current_location.location.name.toLowerCase()
-                    )
-                    : true;
+            if (animalStatus) {
+                params.append("animal_state", animalStatus)
+            }
 
-                const matchStatus = selectedFilters.animal_status !== ""
-                    ? (selectedFilters.animal_status === "active" && animal.death.death__dead === false) ||
-                    (selectedFilters.animal_status === "death" && animal.death.death__dead === true) ||
-                    (selectedFilters.animal_status === "placed" && animal.death.death__dead === true)
-                    : true;
+            if (isMicrochipping) {
+                params.append("is_microchpped", isMicrochipping)
+            }
 
-                const matchChipping = selectedFilters.microchipping !== ""
-                    ? (selectedFilters.microchipping === "true" && animal.microchipping.microchipping__done === true) ||
-                    (selectedFilters.microchipping === "false" && animal.microchipping.microchipping__done === false)
-                    : true;
+            if (microchippingDate) {
+                const formattedDate = format(microchippingDate, "dd-MM-yyyy");
+                params.append("microchpping_date", formattedDate);
+            }
 
-                const matchChippingData = selectedFilters.microchipping_date
-                    ? animal.microchipping.microchipping__date === selectedFilters.microchipping_date
-                    : true;
+            if (isSterilized) {
+                params.append("is_sterilized", isSterilized)
+            }
 
-                const matchSterilization = selectedFilters.sterilization !== ""
-                    ? (selectedFilters.sterilization === "true" && animal.sterilization.sterilization__done === true) ||
-                    (selectedFilters.sterilization === "false" && animal.sterilization.sterilization__done === false)
-                    : true;
+            if (sterilizedDate) {
+                const formattedDate = format(sterilizedDate, "dd-MM-yyyy");
+                params.append("sterilization_date", formattedDate);
+            }
 
-                const matchSterilizationData = selectedFilters.sterilization_date
-                    ? animal.sterilization.sterilization__date === selectedFilters.sterilization_date
-                    : true;
+            if (isVaccinated) {
+                params.append("is_vaccinated", isVaccinated)
+            }
 
-                const matchVaccination = selectedFilters.vaccination !== ""
-                    ? (selectedFilters.vaccination === "true" &&
-                        animal.vaccinations?.some((v) => v.is_vaccinated === true)) ||
-                    (selectedFilters.vaccination === "false" &&
-                        (animal.vaccinations?.every((v) => v.is_vaccinated === false) ||
-                            animal.vaccinations?.length === 0))
-                    : true;
+            if (vaccinatedDate) {
+                const formattedDate = format(vaccinatedDate, "dd-MM-yyyy");
+                params.append("vaccination_date", formattedDate);
+            }
 
-                const matchVaccinationData = selectedFilters.vaccination_date
-                    ? animal.vaccinations?.some(
-                        (vaccination) =>
-                            vaccination.date && vaccination.date === selectedFilters.vaccination_date
-                    )
-                    : true;
+            if (sortOption) {
+                params.append("sort", sortOption);
+            }
 
-                return (
-                    matchSearch &&
-                    matchDate &&
-                    matchCity &&
-                    matchType &&
-                    matchGender &&
-                    matchLocation &&
-                    matchStatus &&
-                    matchChipping &&
-                    matchChippingData &&
-                    matchSterilization &&
-                    matchSterilizationData &&
-                    matchVaccination &&
-                    matchVaccinationData
-                );
-            })
-            : animals;
+            try {
+                const data = await fetch<Animal[]>(`${API_CRM_PATH}${API_LATEST_PATH}`, params);
+                setFilteredAnimals(data);
+            } catch (err) {
+                console.error("Fetch error:", err);
+            } finally {
+                setIsFiltering(false);
+            }
 
-        const sorted = [...baseAnimals];
-        const getDate = (date: string | null): number => {
-            return date ? parseDateSlash(date).getTime() : 0;
         };
 
-
-        switch (sortType) {
-            case "date-new":
-                return sorted.sort(
-                    (a, b) =>
-                        getDate(b.origin.origin__arrival_date) - getDate(a.origin.origin__arrival_date)
-                );
-            case "date-old":
-                return sorted.sort(
-                    (a, b) =>
-                        getDate(a.origin.origin__arrival_date) - getDate(b.origin.origin__arrival_date)
-                );
-
-            case "name-asc":
-                return sorted.sort((a, b) => a.name.localeCompare(b.name));
-            case "name-desc":
-                return sorted.sort((a, b) => b.name.localeCompare(a.name));
-            default:
-                return sorted;
+        if (isFiltering) {
+            fetchFilteredAnimals();
         }
-    }, [animals, selectedFilters, isFiltering, sortType]);
+
+
+
+    }, [isFiltering, sortOption]);
+
+    const visibleAnimals = useMemo(() => {
+        const baseList = filteredAnimals.length > 0 ? filteredAnimals : animals;
+        const search = selectedFilters.search?.toLowerCase().trim();
+
+        if (!search) return baseList;
+
+        return baseList.filter((animal) => {
+            return (
+                animal.name.toLowerCase().includes(search) ||
+                animal.id.toLowerCase().includes(search)
+            );
+        });
+    }, [animals, filteredAnimals, selectedFilters.search]);
 
     const filters = [
         {
@@ -346,8 +248,8 @@ const CatalogCrm: React.FC = () => {
             content: (
                 <div>
                     <CustomDatePicker
-                        selected={selectedFilters.date ? parseDateSlash(selectedFilters.date) : null}
-                        onChange={handleDateChange}
+                        selected={selectedFilters.arrivalDate}
+                        onChange={(date) => handleFilterChange("arrivalDate", date)}
                         label="Оберіть дату"
                     />
                 </div>
@@ -359,8 +261,8 @@ const CatalogCrm: React.FC = () => {
                 <div className="w-full h-[48px] flex item-center justify-center border rounded-[10px]">
                     <input
                         type="text"
-                        value={selectedFilters.fromCity}
-                        onChange={(e) => handleFilterChange("fromCity", e.target.value)}
+                        value={selectedFilters.city}
+                        onChange={(e) => handleFilterChange("city", e.target.value)}
                         placeholder="Введіть назву міста"
                         className="focus:outline-none" />
                 </div>
@@ -370,114 +272,21 @@ const CatalogCrm: React.FC = () => {
             title: "Тип тварин",
             content: (
                 <div className="w-full flex flex-wrap gap-4 font-medium">
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Кіт"
-                            checked={selectedFilters.type.includes("Кіт")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            id="checkbox1"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Кіт
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Собака"
-                            checked={selectedFilters.type.includes("Собака")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            id="checkbox2"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Собака
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Кінь"
-                            checked={selectedFilters.type.includes("Кінь")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            id="checkbox3"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Коні
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Корова"
-                            checked={selectedFilters.type.includes("Корова")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            id="checkbox4"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Корова
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Коза"
-                            checked={selectedFilters.type.includes("Коза")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            id="checkbox5"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Кози
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Кролі"
-                            checked={selectedFilters.type.includes("Кролі")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            id="checkbox6"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Кролі
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Птахи"
-                            checked={selectedFilters.type.includes("Птахи")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            id="checkbox7"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Птахи
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Лис"
-                            checked={selectedFilters.type.includes("Лис")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            id="checkbox8"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Лисиці
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="type"
-                            value="Інші"
-                            id="checkbox9"
-                            checked={selectedFilters.type.includes("Інші")}
-                            onChange={(e) => handleTypeChange(e.target.value)}
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Інші
-                    </label>
+                    {animalTypesData.map((type) => (
+                        <label key={type.id} className="w-100 flex items-center gap-[8px] text-lg">
+                            <input
+                                type="checkbox"
+                                name="type"
+                                value={type.id}
+                                checked={selectedFilters.animalType.includes(type.id)}
+                                onChange={(e) => handleMultiSelectChange("animalType", Number(e.target.value))}
+                                id="checkbox1"
+                                className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
+                            />
+                            {type.name}
+                        </label>
+                    ))}
+
                 </div>
             ),
         },
@@ -491,9 +300,9 @@ const CatalogCrm: React.FC = () => {
                             type="radio"
                             name="gender"
                             value="male"
-                            className="size-[20px] "
                             checked={selectedFilters.gender === "male"}
-                            onChange={(e) => handleFilterChange("gender", e.target.value as "male" | "female")}
+                            onChange={() => handleFilterChange("gender", "male")}
+                            className="size-[20px] "
                         />
                     </label>
                     <label className="w-full flex items-center gap-[4px]">
@@ -502,9 +311,9 @@ const CatalogCrm: React.FC = () => {
                             type="radio"
                             name="gender"
                             value="female"
-                            className="size-[20px]"
                             checked={selectedFilters.gender === "female"}
-                            onChange={(e) => handleFilterChange("gender", e.target.value as "male" | "female")}
+                            onChange={() => handleFilterChange("gender", "female")}
+                            className="size-[20px]"
                         />
                     </label>
                 </div>
@@ -514,155 +323,25 @@ const CatalogCrm: React.FC = () => {
             title: "Поточна локація",
             content: (
                 <div className="w-full flex flex-wrap gap-4 font-medium my-3">
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Клініка"
-                            checked={selectedFilters.location.includes("Клініка")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox1"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Клініка
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Іподром"
-                            checked={selectedFilters.location.includes("Іподром")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox2"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Іподром
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Есеніна"
-                            checked={selectedFilters.location.includes("Есеніна")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox3"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Есеніна
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Перетримка Зоя"
-                            checked={selectedFilters.location.includes("Перетримка Зоя")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox4"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Перетримка Зоя
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Перетримка Яна"
-                            checked={selectedFilters.location.includes("Перетримка Яна")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox5"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Перетримка Яна
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Перетримка Марина"
-                            checked={selectedFilters.location.includes("Перетримка Марина")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox6"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Перетримка Марина
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Бабаї"
-                            checked={selectedFilters.location.includes("Бабаї")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox7"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Бабаї
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Жихор"
-                            checked={selectedFilters.location.includes("Жихор")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox8"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Жихор
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Первомайськ"
-                            checked={selectedFilters.location.includes("Первомайськ")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox9"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Первомайськ
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Войтенко"
-                            checked={selectedFilters.location.includes("Войтенко")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox9"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Войтенко
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Павлиш"
-                            checked={selectedFilters.location.includes("Павлиш")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox9"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Павлиш
-                    </label>
-                    <label className="w-100 flex items-center gap-[8px] text-lg">
-                        <input
-                            type="checkbox"
-                            name="currentlocation"
-                            value="Інше"
-                            checked={selectedFilters.location.includes("Інше")}
-                            onChange={(e) => handleLocationChange(e.target.value)}
-                            id="checkbox9"
-                            className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
-                        />
-                        Інше
-                    </label>
+                    {locationsData.map((location) => (
+                        <label key={location.id} className="w-100 flex items-center gap-[8px] text-lg">
+                            <input
+                                type="checkbox"
+                                name="currentlocation"
+                                value={location.id ?? ""}
+                                checked={selectedFilters.currentLocation.includes(location.id ?? 0)}
+                                onChange={(e) => handleMultiSelectChange("currentLocation", Number(e.target.value))}
+                                id="checkbox1"
+                                className="appearance-none size-[20px] border rounded-[4px] border-mainBlue checked:bg-mainBlue"
+                            />
+                            {location.name}
+                        </label>
+                    ))}
                 </div>
             ),
         },
         {
-            title: "Статус", // треба взнати про Placed
+            title: "Статус",
             content: (
                 <div className="w-full flex flex-col items-center justify-start gap-4  font-medium">
                     <div className="w-full flex flex-col gap-4 text-lg my-3">
@@ -672,8 +351,8 @@ const CatalogCrm: React.FC = () => {
                                 type="radio"
                                 name="status"
                                 value="active"
-                                checked={selectedFilters.animal_status === "active"}
-                                onChange={(e) => handleFilterChange("animal_status", e.target.value as "active" | "death" | "placed")}
+                                checked={selectedFilters.animalStatus === "active"}
+                                onChange={(e) => handleFilterChange("animalStatus", e.target.value as "active" | "dead" | "adopted")}
                                 className="size-[20px] "
                             />
                         </label>
@@ -682,9 +361,9 @@ const CatalogCrm: React.FC = () => {
                             <input
                                 type="radio"
                                 name="status"
-                                value="death"
-                                checked={selectedFilters.animal_status === "death"}
-                                onChange={(e) => handleFilterChange("animal_status", e.target.value as "active" | "death" | "placed")}
+                                value="dead"
+                                checked={selectedFilters.animalStatus === "dead"}
+                                onChange={(e) => handleFilterChange("animalStatus", e.target.value as "active" | "dead" | "adopted")}
                                 className="size-[20px]"
                             />
                         </label>
@@ -693,9 +372,9 @@ const CatalogCrm: React.FC = () => {
                             <input
                                 type="radio"
                                 name="status"
-                                value="placed"
-                                checked={selectedFilters.animal_status === "placed"}
-                                onChange={(e) => handleFilterChange("animal_status", e.target.value as "active" | "death" | "placed")}
+                                value="adopted"
+                                checked={selectedFilters.animalStatus === "adopted"}
+                                onChange={(e) => handleFilterChange("animalStatus", e.target.value as "active" | "dead" | "adopted")}
                                 className="size-[20px]"
                             />
                         </label>
@@ -716,8 +395,8 @@ const CatalogCrm: React.FC = () => {
                                     type="radio"
                                     name="chipping"
                                     value="true"
-                                    checked={selectedFilters.microchipping === "true"}
-                                    onChange={(e) => handleFilterChange("microchipping", e.target.value as "true" | "false")}
+                                    checked={selectedFilters.isMicrochipping === "true"}
+                                    onChange={(e) => handleFilterChange("isMicrochipping", e.target.value as "true" | "false")}
                                     className="size-[20px] "
                                 />
                             </label>
@@ -727,8 +406,8 @@ const CatalogCrm: React.FC = () => {
                                     type="radio"
                                     name="chipping"
                                     value="false"
-                                    checked={selectedFilters.microchipping === "false"}
-                                    onChange={(e) => handleFilterChange("microchipping", e.target.value as "true" | "false")}
+                                    checked={selectedFilters.isMicrochipping === "false"}
+                                    onChange={(e) => handleFilterChange("isMicrochipping", e.target.value as "true" | "false")}
                                     className="size-[20px]"
                                 />
                             </label>
@@ -737,9 +416,8 @@ const CatalogCrm: React.FC = () => {
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Дата проведення</span>
                         <CustomDatePicker
-                            selected={selectedFilters.microchipping_date ?
-                                parseDateSlash(selectedFilters.microchipping_date) : null}
-                            onChange={handleChippingDateChange}
+                            selected={selectedFilters.microchippingDate}
+                            onChange={(date) => handleFilterChange("microchippingDate", date)}
                             label=""
                         />
                     </div>
@@ -759,8 +437,8 @@ const CatalogCrm: React.FC = () => {
                                     type="radio"
                                     name="sterelization"
                                     value="true"
-                                    checked={selectedFilters.sterilization === "true"}
-                                    onChange={(e) => handleFilterChange("sterilization", e.target.value as "true" | "false")}
+                                    checked={selectedFilters.isSterilized === "true"}
+                                    onChange={(e) => handleFilterChange("isSterilized", e.target.value as "true" | "false")}
                                     className="size-[20px] "
                                 />
                             </label>
@@ -770,8 +448,8 @@ const CatalogCrm: React.FC = () => {
                                     type="radio"
                                     name="sterelization"
                                     value="false"
-                                    checked={selectedFilters.sterilization === "false"}
-                                    onChange={(e) => handleFilterChange("sterilization", e.target.value as "true" | "false")}
+                                    checked={selectedFilters.isSterilized === "false"}
+                                    onChange={(e) => handleFilterChange("isSterilized", e.target.value as "true" | "false")}
                                     className="size-[20px]"
                                 />
                             </label>
@@ -780,9 +458,8 @@ const CatalogCrm: React.FC = () => {
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Дата проведення</span>
                         <CustomDatePicker
-                            selected={selectedFilters.sterilization_date ?
-                                parseDateSlash(selectedFilters.sterilization_date) : null}
-                            onChange={handleSterelizationDateChange}
+                            selected={selectedFilters.sterilizedDate}
+                            onChange={(date) => handleFilterChange("sterilizedDate", date)}
                             label=""
                         />
                     </div>
@@ -802,8 +479,8 @@ const CatalogCrm: React.FC = () => {
                                     type="radio"
                                     name="vaccination"
                                     value="true"
-                                    checked={selectedFilters.vaccination === "true"}
-                                    onChange={(e) => handleFilterChange("vaccination", e.target.value as "true" | "false")}
+                                    checked={selectedFilters.isVaccinated === "true"}
+                                    onChange={(e) => handleFilterChange("isVaccinated", e.target.value as "true" | "false")}
                                     className="size-[20px] "
                                 />
                             </label>
@@ -813,8 +490,8 @@ const CatalogCrm: React.FC = () => {
                                     type="radio"
                                     name="vaccination"
                                     value="false"
-                                    checked={selectedFilters.vaccination === "false"}
-                                    onChange={(e) => handleFilterChange("vaccination", e.target.value as "true" | "false")}
+                                    checked={selectedFilters.isVaccinated === "false"}
+                                    onChange={(e) => handleFilterChange("isVaccinated", e.target.value as "true" | "false")}
                                     className="size-[20px]"
                                 />
                             </label>
@@ -823,9 +500,8 @@ const CatalogCrm: React.FC = () => {
                     <div className="w-full flex flex-col justify-start">
                         <span className="text-lg">Дата проведення</span>
                         <CustomDatePicker
-                            selected={selectedFilters.vaccination_date ?
-                                parseDateDash(selectedFilters.vaccination_date) : null}
-                            onChange={handleVaccinationDateChange}
+                            selected={selectedFilters.vaccinatedDate}
+                            onChange={(date) => handleFilterChange("vaccinatedDate", date)}
                             label=""
                         />
                     </div>
@@ -856,6 +532,9 @@ const CatalogCrm: React.FC = () => {
         });
     };
 
+    if (isLoading) return <p>Завантаження...</p>;
+    if (isError) return <p>Помилка при завантаженні даних</p>;
+
     return (
         <>
             <section>
@@ -866,7 +545,7 @@ const CatalogCrm: React.FC = () => {
                         <input
                             type="text"
                             value={selectedFilters.search}
-                            onChange={(e) => handleSearchChange(e.target.value)}
+                            onChange={(e) => setSelectedFilters(prev => ({ ...prev, search: e.target.value }))}
                             placeholder="Введіть ім’я тварини або ID"
                             className="w-full focus:outline-none"
                         />
@@ -944,10 +623,10 @@ const CatalogCrm: React.FC = () => {
                                                 <input
                                                     type="radio"
                                                     name="sorting"
-                                                    value="date-new"
+                                                    value="created_at|desc"
+                                                    checked={pendingSort === "created_at|desc"}
+                                                    onChange={(e) => setPendingSort(e.target.value as typeof sortOption)}
                                                     className="size-[20px] "
-                                                    checked={pendingSort === "date-new"}
-                                                    onChange={() => setPendingSort("date-new")}
                                                 />
                                                 Від найновіших
                                             </label>
@@ -957,10 +636,10 @@ const CatalogCrm: React.FC = () => {
                                                 <input
                                                     type="radio"
                                                     name="sorting"
-                                                    value="date-old"
+                                                    value="created_at|asc"
+                                                    checked={pendingSort === "created_at|asc"}
+                                                    onChange={(e) => setPendingSort(e.target.value as typeof sortOption)}
                                                     className="size-[20px] "
-                                                    checked={pendingSort === "date-old"}
-                                                    onChange={() => setPendingSort("date-old")}
                                                 />
                                                 Від найстарших
                                             </label>
@@ -973,10 +652,10 @@ const CatalogCrm: React.FC = () => {
                                                 <input
                                                     type="radio"
                                                     name="sorting"
-                                                    value="name-asc"
+                                                    value="name|asc"
                                                     className="size-[20px] "
-                                                    checked={pendingSort === "name-asc"}
-                                                    onChange={() => setPendingSort("name-asc")}
+                                                    checked={pendingSort === "name|asc"}
+                                                    onChange={(e) => setPendingSort(e.target.value as typeof sortOption)}
                                                 />
                                                 А-Я
                                             </label>
@@ -986,10 +665,10 @@ const CatalogCrm: React.FC = () => {
                                                 <input
                                                     type="radio"
                                                     name="sorting"
-                                                    value="name-desc"
+                                                    value="name|desc"
                                                     className="size-[20px] "
-                                                    checked={pendingSort === "name-desc"}
-                                                    onChange={() => setPendingSort("name-desc")}
+                                                    checked={pendingSort === "name|desc"}
+                                                    onChange={(e) => setPendingSort(e.target.value as typeof sortOption)}
                                                 />
                                                 Я-А
                                             </label>
@@ -1004,7 +683,7 @@ const CatalogCrm: React.FC = () => {
                     </div>
                     <div>
                         <div className="w-full flex flex-wrap gap-4 m-auto pb-14">
-                            {catalogAnimals.map((animal) => (
+                            {visibleAnimals.map((animal) => (
                                 <div key={animal.id} className="!w-[163px]  shadow-[1px_1px_5px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] mb-2 relative" onClick={() => handleCardClick(animal)}>
                                     <div className="p-1">
                                         <img src={
