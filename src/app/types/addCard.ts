@@ -1,5 +1,3 @@
-import { TypeAddCardSchema } from "../../components/crm/AddCardCrm/schemas/addCardSchema";
-
 export interface Location {
   id: number | null;
   name: string | null;

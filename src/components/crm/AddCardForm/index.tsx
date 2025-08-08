@@ -23,7 +23,7 @@ import {
 } from "../AddCardCrm/helpers/locations";
 import { defaultValues } from "../AddCardCrm/defaultValues/defaultValues";
 import { createLocation } from "@/src/utils/locations";
-import { sortDiagnosesOrProcedures } from "../AddCardCrm/helpers/sort";
+import { filterAndCleanItems } from "../AddCardCrm/helpers/filterAndCleanItems";
 import { AnimalCard, Location } from "@/src/app/types/addCard";
 import { cleanString } from "../AddCardCrm/helpers/fieldFormatters";
 
@@ -106,11 +106,11 @@ const AddCardForm = () => {
         diagnoses:
           data.diagnoses?.length === 0
             ? null
-            : sortDiagnosesOrProcedures(data.diagnoses || []),
+            : filterAndCleanItems(data.diagnoses || []),
         procedures:
           data.procedures?.length === 0
             ? null
-            : sortDiagnosesOrProcedures(data.procedures || []),
+            : filterAndCleanItems(data.procedures || []),
         adoption__country: null,
         adoption__city: null,
         adoption__date: null,
