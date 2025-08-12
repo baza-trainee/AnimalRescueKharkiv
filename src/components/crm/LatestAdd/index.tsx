@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { useEffect, useState } from "react";
 import { fetch } from "../../../utils/api";
-
+import Link from "next/link";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_LATEST_PATH = process.env.NEXT_PUBLIC_API_ANIMALS_PATH; 
@@ -68,10 +68,12 @@ useEffect(() => {
        
       >
         {animals.map((animal) => (
+          
           <SwiperSlide
             key={animal.id}
             className="!w-[163px] shadow-[3px_4px_10px_rgba(182,187,235,0.3),-0px_-4px_10px_rgba(182,187,235,0.3)] mb-[1px]  relative">
-            <div className="p-[4px]">
+            <Link href={`/crm/animals/${animal.id}`} >
+              <div className="p-[4px]">
               <img src={
                     animal.media?.[0]?.uri
                     ? `${BASE_URL}${animal.media[0].uri}`
@@ -88,8 +90,10 @@ useEffect(() => {
                 <p className="text-xl leading-[30px] font-normal text-text mb-[2px]">{animal.origin.origin__city|| "Невідомо"}</p>
                 <p className="text-xl leading-[30px]  font-normal text-text">{formatDate(animal.origin.origin__arrival_date) || ""}</p>
               </div>
-            </div>
-          </SwiperSlide>
+              </div>
+              </Link>
+            </SwiperSlide>
+       
         ))}
       </Swiper>
     </div>
