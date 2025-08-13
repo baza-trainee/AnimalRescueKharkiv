@@ -12,7 +12,7 @@ export const updateAnimalSection = async (
     );
     return res.data;
   } catch (error) {
-    console.error("Ошибка обновления раздела:", error);
+    console.error("Помилка при оновленні секції:", error);
     throw error;
   }
 };
@@ -24,7 +24,7 @@ export const lockSection = async (
   try {
     await apiClient.post(`/crm/animals/${animal_id}/${section_name}/lock`);
   } catch (error) {
-    console.error("Ошибка при блокировке раздела:", error);
+    console.error("Помилка при блокуванні секції:", error);
     throw error;
   }
 };
@@ -36,7 +36,7 @@ export const unlockSection = async (
   try {
     await apiClient.delete(`/crm/animals/${animal_id}/${section_name}/lock`);
   } catch (error) {
-    console.error("Ошибка при разблокировке раздела:", error);
+    console.error("Помилка при розблокуванні секції:", error);
     throw error;
   }
 };

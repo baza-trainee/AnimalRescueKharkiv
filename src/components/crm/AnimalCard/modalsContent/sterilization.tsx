@@ -35,14 +35,22 @@ const SterilizationModalContent: React.FC<Props> = ({ data,animalId,onClose }) =
 
   
   useEffect(() => {
-    lockSection(animalId, section);
-  }, [animalId]);
+  const lock = async () => {
+    try {
+      await lockSection(animalId, section);
+    } catch (error) {
+      console.error("Помилка при блокуванні секції:", error);
+    }
+  };
+  lock();
+}, [animalId, section]);
+
 
     const handleClose = async () => {
     try {
       await unlockSection(animalId, section);
     } catch (error) {
-      console.error("Ошибка при разблокировке:", error);
+      console.error("Помилка при розблокуванні:", error);
     }
     onClose();
   };
@@ -57,7 +65,7 @@ const SterilizationModalContent: React.FC<Props> = ({ data,animalId,onClose }) =
       await updateAnimalSection(animalId, section, payload);
       await handleClose();
     } catch (error) {
-      console.error("Ошибка при сохранении:", error);
+      console.error("Помилка при збереженні:", error);
     } finally {
     
       setIsLoading(false);
