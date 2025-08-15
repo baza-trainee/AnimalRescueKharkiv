@@ -43,15 +43,16 @@ interface Props {
 }
 
 export default function MadicalInfoCard({ animal,openModal }: Props) {
-  const formatDateLong = (dateStr: string | null | undefined) => {
-  if (!dateStr) return "-";
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return "-";
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = String(date.getFullYear()); 
-  return `${day}.${month}.${year}`;
-};
+  const formatDateDDMMYYYY = (date: any) => {
+    if (!date) return "-";
+    if (typeof date === "string" && /^\d{2}\.\d{2}\.\d{4}$/.test(date)) return date;
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "-";
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = String(d.getFullYear());
+    return `${day}.${month}.${year}`;
+  };
   return (
     <>
     <InfoCardBlock
@@ -73,7 +74,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
         <div className="w-1/2">
           <p className="font-medium text-lg text-crm-secondary-blue">Дата проведення</p>
           <div className="font-normal text-xl text-crm-black break-words">
-           {animal.sterilization.sterilization__date ? formatDateLong(animal.sterilization.sterilization__date) : "-"}
+           {animal.sterilization.sterilization__date ? formatDateDDMMYYYY (animal.sterilization.sterilization__date) : "-"}
           </div>
         </div>
       </div>
@@ -101,7 +102,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
         <div className="w-1/2">
           <p className="font-medium text-lg text-crm-secondary-blue">Дата проведення</p>
           <div className="font-normal text-xl text-crm-black break-words">
-           {animal.microchipping.microchipping__date ? formatDateLong(animal.microchipping.microchipping__date) : "-"}
+           {animal.microchipping.microchipping__date ? formatDateDDMMYYYY (animal.microchipping.microchipping__date) : "-"}
           </div>
         </div>
       </div>
@@ -122,36 +123,23 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
       }>
         {Array.isArray(animal.vaccinations) && animal.vaccinations.length > 0 ? (
           <div className="flex flex-col gap-4">
-         { animal.vaccinations.map((vaccine, index) => {
-            const formatDate = (date: string | null) => {
-              if (!date) return "-";
-              const d = new Date(date);
-              const day = String(d.getDate()).padStart(2, "0");
-              const month = String(d.getMonth() + 1).padStart(2, "0");
-              const year = String(d.getFullYear());
-              return `${day}.${month}.${year}`;
-            };
-
-            return (
-              <div key={index} className="">
-                  
+          {animal.vaccinations.map((vaccine, i) => (
+              <div key={i}>
                 <div className="grid grid-cols-2 text-base font-medium text-crm-secondary-blue mb-1">
-                  <span>Вакцина {index + 1}</span>
+                  <span>Вакцина {i + 1}</span>
                   <span className="text-right">Дата проведення</span>
                 </div>
                 <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
                   <span>{vaccine.vaccine_type || "-"}</span>
-                  <span className="text-right">{formatDate(vaccine.date)}</span>
+                  <span className="text-right">{formatDateDDMMYYYY(vaccine.date)}</span>
                 </div>
-
-         
                 <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації/коментар</p>
                 <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
                   {vaccine.comment || "-"}
                 </p>
               </div>
-            );
-          })}
+            ))}
+         
         </div>
   ) : (
     <p className="text-crm-black text-[20px]">Немає інформації про вакцинацію</p>
@@ -164,36 +152,22 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
       }>
         {Array.isArray(animal.diagnoses) && animal.diagnoses.length > 0 ? (
           <div className="flex flex-col gap-4">
-          {animal.diagnoses.map((diagnose, index) => {
-            const formatDate = (date: string | null) => {
-              if (!date) return "-";
-              const d = new Date(date);
-              const day = String(d.getDate()).padStart(2, "0");
-              const month = String(d.getMonth() + 1).padStart(2, "0");
-              const year = String(d.getFullYear());
-              return `${day}.${month}.${year}`;
-            };
-
-            return (
-              <div key={index} className="">
-                  
+          {animal.diagnoses.map((diagnose, i) => (
+              <div key={i}>
                 <div className="grid grid-cols-2 text-base font-medium text-crm-secondary-blue mb-1">
-                  <span>Діагноз {index + 1}</span>
+                  <span>Діагноз {i + 1}</span>
                   <span className="text-right">Дата постановки</span>
                 </div>
                 <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
                   <span>{diagnose.name || "-"}</span>
-                  <span className="text-right">{formatDate(diagnose.date)}</span>
+                  <span className="text-right">{formatDateDDMMYYYY(diagnose.date)}</span>
                 </div>
-
-         
                 <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації</p>
                 <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
                   {diagnose.comment || "-"}
                 </p>
               </div>
-            );
-          })}
+            ))}
           </div>
   ) : (
     <p className="text-crm-black text-[20px]">Немає інформації про вакцинацію</p>
@@ -207,33 +181,22 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
 }>
   {Array.isArray(animal.procedures) && animal.procedures.length > 0 ? (
     <div className="flex flex-col gap-4">
-      {animal.procedures.map((procedure, index) => {
-        const formatDate = (date: string | null) => {
-          if (!date) return "-";
-          const d = new Date(date);
-          const day = String(d.getDate()).padStart(2, "0");
-          const month = String(d.getMonth() + 1).padStart(2, "0");
-          const year = String(d.getFullYear());
-          return `${day}.${month}.${year}`;
-        };
-
-        return (
-          <div key={index}>
-            <div className="grid grid-cols-2 text-base font-medium text-crm-secondary-blue mb-1">
-              <span>Процедура {index + 1}</span>
-              <span className="text-right">Дата постановки</span>
-            </div>
-            <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
-              <span>{procedure.name || "-"}</span>
-              <span className="text-right">{formatDate(procedure.date)}</span>
-            </div>
-            <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації</p>
-            <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
-              {procedure.comment || "-"}
-            </p>
-          </div>
-        );
-      })}
+      {animal.procedures.map((procedure, i) => (
+              <div key={i}>
+                <div className="grid grid-cols-2 text-base font-medium text-crm-secondary-blue mb-1">
+                  <span>Процедура {i + 1}</span>
+                  <span className="text-right">Дата постановки</span>
+                </div>
+                <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
+                  <span>{procedure.name || "-"}</span>
+                  <span className="text-right">{formatDateDDMMYYYY(procedure.date)}</span>
+                </div>
+                <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації</p>
+                <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
+                  {procedure.comment || "-"}
+                </p>
+              </div>
+            ))}
     </div>
   ) : (
     <p className="text-crm-black text-[20px]">Немає інформації про вакцинацію</p>

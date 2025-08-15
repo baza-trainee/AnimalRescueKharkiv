@@ -4,11 +4,18 @@ import CloseBtb from "../../CatalogCrm/CatalogCrmIcons/Closebtn";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+    onSave: () => void;
   title?: string;
   children: React.ReactNode;
+  isLoading?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen,
+  onClose,
+  onSave,
+  title,
+  children,
+  isLoading = false }) => {
   if (!isOpen) return null;
 
   return (
@@ -18,6 +25,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           <button   onClick={onClose}><CloseBtb/></button>
         </div>
         <div>{children}</div>
+        <button
+        onClick={onSave}
+        className={"mt-4 self-end px-4 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
+       }
+      >
+        Зберегти
+      </button>
       </div>
     </div>
   );

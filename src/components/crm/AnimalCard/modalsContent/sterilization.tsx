@@ -1,11 +1,8 @@
 "use client";
-import React, { useState,useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import { CustomDatePicker } from "../../../ui/inputs/CustomDatePicker";
 import { BooleanRadio } from "@/src/components/ui/inputs/BooleanRadio";
-import { updateAnimalSection, lockSection,unlockSection } from "../helpers/updateAnimalSection";
-import { useParams } from "next/navigation";
 import { CommentInput } from "@/src/components/ui/inputs/CommentInput";
-
 
 interface SterilizationData {
   sterilization__done: boolean;
@@ -16,96 +13,77 @@ interface SterilizationData {
 interface Props {
   data: SterilizationData;
   animalId: string;
-  onClose: () => void; 
-   
+  onChange: (payload: SterilizationData) => void;
+  isOpen?: boolean;
 }
 
-const SterilizationModalContent: React.FC<Props> = ({ data,animalId,onClose }) => {
+const SterilizationModalContent: React.FC<Props> = ({
+  data,
+  onChange,
+  isOpen,
+}) => {
   const [sterilizationDone, setSterilizationDone] = useState<boolean | null>(
-    data.sterilization__done
+    data.sterilization__done ?? null
   );
-  const [comment, setComment] = useState(data.sterilization__comment || "");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    data.sterilization__date ? new Date(data.sterilization__date) : null
-    );
-     const [isLoading, setIsLoading] = useState(false);
-  
- 
-  const section = "sterilization";
+  const [comment, setComment] = useState<string>(data.sterilization__comment || "");
 
-  
-  useEffect(() => {
-  const lock = async () => {
-    try {
-      await lockSection(animalId, section);
-    } catch (error) {
-      console.error("Помилка при блокуванні секції:", error);
-    }
-  };
-  lock();
-}, [animalId, section]);
+  const parseDate = (dateStr?: string): Date | null => {
+  if (!dateStr) return null;
+  const [y, m, d] = dateStr.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d);
+};
 
+const [selectedDate, setSelectedDate] = useState<Date | null>(
+  parseDate(data.sterilization__date)
+);
+   useEffect(() => {
+    const isoDate = selectedDate
+      ? `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")}`
+      : "";
 
-    const handleClose = async () => {
-    try {
-      await unlockSection(animalId, section);
-    } catch (error) {
-      console.error("Помилка при розблокуванні:", error);
-    }
-    onClose();
-  };
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    const payload = {
-      sterilization__done: sterilizationDone,
+    onChange({
+      sterilization__done: sterilizationDone ?? false,
       sterilization__comment: comment.trim(),
-      sterilization__date: selectedDate?.toISOString().slice(0, 10) || null,
-    };
-    try {
-      await updateAnimalSection(animalId, section, payload);
-      await handleClose();
-    } catch (error) {
-      console.error("Помилка при збереженні:", error);
-    } finally {
-    
-      setIsLoading(false);
-      
-    }
-  }
+      sterilization__date: isoDate, // на бэк ISO
+    });
+  }, [sterilizationDone, comment, selectedDate, onChange]);
 
+
+  useEffect(() => {
+    if (isOpen) {
+      setSterilizationDone(null);
+      setComment("");
+      setSelectedDate(null);
+    }
+  }, [isOpen]);
 
   return (
     <div className="flex flex-col gap-[16px] mb-[16px]">
       <h3 className="text-[24px] font-semibold leading-[36px] border-b border-crm-light-blue">
         Стерилізація/кастрація
       </h3>
-        <BooleanRadio
-       name="sterilization"  
-              onChange={(value) => setSterilizationDone(value)}
-/>
-      <div>
+
+      <BooleanRadio
+        name="sterilization"
+        onChange={(value) => setSterilizationDone(value)}
+       
+      />
+
         <CustomDatePicker
-          selected={selectedDate}
-          onChange={setSelectedDate}
-          label="Дата проведення"
-          isHasLabelMargin={true}
-        />
-      </div>
+        selected={selectedDate}
+        onChange={(date: Date | null) => setSelectedDate(date)}
+        label="Дата проведення"
+        isHasLabelMargin={true}
+      />
 
-      <div>
-              <CommentInput
-                  label="Рекомендації/коментар"
-                value={comment}
-  onChange={(e) => setComment(e.target.value)}/>
-      </div>
-
-      <button
-        onClick={handleSubmit}
-        className={"mt-4 self-end px-4 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
-       }
-      >
-        Зберегти
-      </button>
+      <CommentInput
+        label="Рекомендації/коментар"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+      />
     </div>
   );
 };

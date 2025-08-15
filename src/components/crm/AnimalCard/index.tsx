@@ -8,6 +8,8 @@ import MainInfoCard from "../MainInfoCArd";
 import MadicalInfoCard from "../MadicalInfoCard";
 import Modal from "./helpers/editingModal";
 import SterilizationModalContent from "./modalsContent/sterilization";
+import { updateAnimalSection, unlockSection, lockSection } from "./helpers/updateAnimalSection";
+
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -100,7 +102,56 @@ const AnimalCard = ({ animalId }: Props) => {
   const [activeTab, setActiveTab] = useState<"Main info" | "Medical info">("Main info");
 
   const [modalOpen, setModalOpen] = useState(false);
-const [modalType, setModalType] = useState<"sterilization" | "microchipping" | "vaccination" | "diagnoses" | "procedures" | null>(null);
+  const [modalType, setModalType] = useState<"sterilization" | "microchipping" | "vaccination" | "diagnoses" | "procedures" | null>(null);
+  const [modalData, setModalData] = useState<any>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+
+  const openModal = async (type: "sterilization" | "microchipping" | "vaccination" | "diagnoses" | "procedures") => {
+  if (!animalId) return;
+
+  try {
+    await lockSection(animalId, type); 
+    setModalType(type);
+     setModalData(null);
+    setModalOpen(true);
+  } catch (error) {
+    console.error("Помилка при блокуванні секції:", error);
+  }
+};
+  useEffect(() => {
+    if (animalId) {
+      fetch<Animal>(`${API_CRM_PATH}/animals/${animalId}`)
+        .then(setAnimal)
+        .catch(err => console.error("Помилка при завантаженні тварини:", err));
+    }
+  }, [animalId]);
+
+  const handleSave = async () => {
+    if (!animal || !modalType || !modalData) return;
+    setIsSaving(true);
+    try {
+      await updateAnimalSection(animal.id, modalType, modalData);
+      const updated = await fetch<Animal>(`${API_CRM_PATH}/animals/${animalId}`);
+      setAnimal(updated);
+      setModalOpen(false);
+    } catch (err) {
+      console.error("Помилка при збереженні:", err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCloseModal = async () => {
+    if (animal && modalType) {
+      try {
+        await unlockSection(animal.id, modalType);
+      } catch (err) {
+        console.error("Помилка unlockSection:", err);
+      }
+    }
+    setModalOpen(false);
+  };
   
   const getModalContent = () => {
 
@@ -111,8 +162,9 @@ const [modalType, setModalType] = useState<"sterilization" | "microchipping" | "
         return (
           <SterilizationModalContent
             data={animal.sterilization}
-            onClose={() => setModalOpen(false)}
-          animalId={animal.id}/>
+            onChange={setModalData}
+            animalId={animal.id}
+          isOpen={modalOpen}/>
       );
     case "vaccination":
       return (
@@ -135,18 +187,7 @@ const [modalType, setModalType] = useState<"sterilization" | "microchipping" | "
   }
 };
     const fallbackImage = "/assets/imagescrm/сat.png";
-  useEffect(() => {
-    const fetchAnimal = async () => {
-      try {
-        const data = await fetch<Animal>(`${API_CRM_PATH}/animals/${animalId}`);
-        setAnimal(data);
-      } catch (err) {
-        console.error("Помилка при завантаженні тварини:", err);
-      }
-    };
-
-    if (animalId) fetchAnimal();
-  }, [animalId]);
+ 
 
   if (!animal) return <p>Завантаження...</p>;
 
@@ -199,18 +240,17 @@ const [modalType, setModalType] = useState<"sterilization" | "microchipping" | "
           ) : (
             <MadicalInfoCard
   animal={animal}
-  openModal={(type) => {
-    setModalType(type);
-    setModalOpen(true);
-  }}
+ openModal={openModal} 
 />
           )}
         </div>
        {modalOpen && animal && (
   <Modal
-    isOpen={modalOpen}
-    onClose={() => setModalOpen(false)}
-    title="Редагування"
+   isOpen={modalOpen}
+            onClose={handleCloseModal}
+            onSave={handleSave}
+            isLoading={isSaving}
+            title="Редагування"
   >
     {getModalContent()}
   </Modal>
