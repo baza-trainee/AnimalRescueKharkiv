@@ -27,30 +27,32 @@ const SterilizationModalContent: React.FC<Props> = ({
   );
   const [comment, setComment] = useState<string>(data.sterilization__comment || "");
 
-  const parseDate = (dateStr?: string): Date | null => {
-  if (!dateStr) return null;
-  const [y, m, d] = dateStr.split("-").map(Number);
-  if (!y || !m || !d) return null;
-  return new Date(y, m - 1, d);
-};
+ const parseDate = (dateStr?: string | null): Date | null => {
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? null : d;
+  };
 
-const [selectedDate, setSelectedDate] = useState<Date | null>(
-  parseDate(data.sterilization__date)
-);
-   useEffect(() => {
-    const isoDate = selectedDate
-      ? `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")}`
-      : "";
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    parseDate(data.sterilization__date)
+  );
 
-    onChange({
-      sterilization__done: sterilizationDone ?? false,
-      sterilization__comment: comment.trim(),
-      sterilization__date: isoDate, // на бэк ISO
-    });
-  }, [sterilizationDone, comment, selectedDate, onChange]);
+useEffect(() => {
+  
+  let isoDate = "";
+  if (selectedDate) {
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(selectedDate.getDate()).padStart(2, "0");
+    isoDate = `${year}-${month}-${day}`;
+  }
 
+  onChange({
+    sterilization__done: sterilizationDone ?? false,
+    sterilization__comment: comment.trim(),
+    sterilization__date: isoDate,
+  });
+}, [sterilizationDone, comment, selectedDate, onChange]);
 
   useEffect(() => {
     if (isOpen) {

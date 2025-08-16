@@ -8,30 +8,30 @@ interface Props {
     sterilization: {
      sterilization__done: boolean,
      sterilization__comment: string,
-     sterilization__date:any,
+     sterilization__date:string,
     },
 
      microchipping: {
     microchipping__done: boolean,
        microchipping__comment: string,
-    microchipping__date:any,
+    microchipping__date:string,
     },
      vaccinations: 
     {
       is_vaccinated: boolean,
       vaccine_type:string,
-      date: any,
+      date: string,
       comment: string
     }[],
     diagnoses: {
       name: string,
-      date: any,
+      date: string,
       comment:string
        
     }[],
     procedures: {
         name: string,
-      date: any,
+      date: string,
       comment:string
     }[]
      
@@ -43,16 +43,23 @@ interface Props {
 }
 
 export default function MadicalInfoCard({ animal,openModal }: Props) {
-  const formatDateDDMMYYYY = (date: any) => {
-    if (!date) return "-";
-    if (typeof date === "string" && /^\d{2}\.\d{2}\.\d{4}$/.test(date)) return date;
-    const d = new Date(date);
-    if (isNaN(d.getTime())) return "-";
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const year = String(d.getFullYear());
-    return `${day}.${month}.${year}`;
-  };
+// const formatDateDDMMYYYY = (date: string | null | undefined): string => {
+//   if (!date) return "-";
+
+//   try {
+//     const parsed = new Date(date);
+//     if (isNaN(parsed.getTime())) return "-";
+
+//     const d = parsed.getDate().toString().padStart(2, "0");
+//     const m = (parsed.getMonth() + 1).toString().padStart(2, "0");
+//     const y = parsed.getFullYear();
+
+//     return `${d}.${m}.${y}`;
+//   } catch {
+//     return "-";
+//   }
+// };
+
   return (
     <>
     <InfoCardBlock
@@ -74,7 +81,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
         <div className="w-1/2">
           <p className="font-medium text-lg text-crm-secondary-blue">Дата проведення</p>
           <div className="font-normal text-xl text-crm-black break-words">
-           {animal.sterilization.sterilization__date ? formatDateDDMMYYYY (animal.sterilization.sterilization__date) : "-"}
+           {animal.sterilization.sterilization__date }
           </div>
         </div>
       </div>
@@ -102,7 +109,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
         <div className="w-1/2">
           <p className="font-medium text-lg text-crm-secondary-blue">Дата проведення</p>
           <div className="font-normal text-xl text-crm-black break-words">
-           {animal.microchipping.microchipping__date ? formatDateDDMMYYYY (animal.microchipping.microchipping__date) : "-"}
+           {animal.microchipping.microchipping__date }
           </div>
         </div>
       </div>
@@ -131,7 +138,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
                 </div>
                 <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
                   <span>{vaccine.vaccine_type || "-"}</span>
-                  <span className="text-right">{formatDateDDMMYYYY(vaccine.date)}</span>
+                  <span className="text-right">{vaccine.date}</span>
                 </div>
                 <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації/коментар</p>
                 <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
@@ -160,7 +167,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
                 </div>
                 <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
                   <span>{diagnose.name || "-"}</span>
-                  <span className="text-right">{formatDateDDMMYYYY(diagnose.date)}</span>
+                  <span className="text-right">{diagnose.date}</span>
                 </div>
                 <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації</p>
                 <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
@@ -189,7 +196,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
                 </div>
                 <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
                   <span>{procedure.name || "-"}</span>
-                  <span className="text-right">{formatDateDDMMYYYY(procedure.date)}</span>
+                  <span className="text-right">{procedure.date}</span>
                 </div>
                 <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації</p>
                 <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
