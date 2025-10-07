@@ -27,7 +27,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen,
         <div>{children}</div>
         <button
         onClick={onSave}
-        className={"mt-4 self-end px-4 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
+        className={"mt-4 w-full h-14 px-[13px] rounded-[10px] text-crm-backgraund bg-mainBlue font-normal text-xl"
        }
       >
         Зберегти

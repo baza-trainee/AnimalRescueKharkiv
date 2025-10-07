@@ -15,6 +15,7 @@ import arrowInColor from "../../../public/assets/icons/catalogCrm/arrow_in_circl
 import leftCircle from "../../../public/assets/icons/animalCard/LeftCircle.svg";
 import editBtn from "../../../public/assets/icons/animalCard/edit.svg";
 import uploadBtn from "../../../public/assets/icons/animalCard/Document Upload .svg"
+import plusBtn from "../../../public/assets/icons/animalCard/mingcute_plus-line.svg"
 
 export const ICONS = {
   MAIN_LOGO: mainLogo,
@@ -34,4 +35,5 @@ export const ICONS = {
   COMEBACK_BTN: leftCircle,
   EDIT_BTN: editBtn,
   UPLOAD_BTN: uploadBtn,
+  PLUS_BTN:plusBtn,
 };

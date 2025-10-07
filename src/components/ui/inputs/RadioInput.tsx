@@ -29,7 +29,7 @@ export const RadioInput: React.FC<PropsRadioInput> = forwardRef(
             value={String(value)}
             onChange={() => rest.onChange(value)}
             ref={_ref}
-            className="w-[20px] h-[20px] accent-mainBlue "
+            className="w-[20px] h-[20px] accent-mainBlue checked:border-mainBlue"
           />
         </label>
       </>

@@ -4,28 +4,28 @@ import { CustomDatePicker } from "../../../ui/inputs/CustomDatePicker";
 import { BooleanRadio } from "@/src/components/ui/inputs/BooleanRadio";
 import { CommentInput } from "@/src/components/ui/inputs/CommentInput";
 
-interface SterilizationData {
-  sterilization__done: boolean;
-  sterilization__comment: string;
-  sterilization__date: string;
+interface MicrochippingData {
+   microchipping__done: boolean,
+        microchipping__comment: string,
+      microchipping__date:string,
 }
 
 interface Props {
-  data: SterilizationData;
+  data: MicrochippingData;
   animalId: string;
-  onChange: (payload: SterilizationData) => void;
+  onChange: (payload: MicrochippingData) => void;
   isOpen?: boolean;
 }
 
-const SterilizationModalContent: React.FC<Props> = ({
+const MicrochippingModalContent: React.FC<Props> = ({
   data,
   onChange,
   isOpen,
 }) => {
-  const [sterilizationDone, setSterilizationDone] = useState<boolean | null>(
-    data.sterilization__done ?? null
+  const [microchippingDone, setMicrochippingDone] = useState<boolean | null>(
+    data.microchipping__done?? null
   );
-  const [comment, setComment] = useState<string>(data.sterilization__comment || "");
+  const [comment, setComment] = useState<string>(data.microchipping__comment || "");
 
  const parseDate = (dateStr?: string | null): Date | null => {
     if (!dateStr) return null;
@@ -34,7 +34,7 @@ const SterilizationModalContent: React.FC<Props> = ({
   };
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(
-    parseDate(data.sterilization__date)
+    parseDate(data.microchipping__date)
   );
 
 useEffect(() => {
@@ -48,15 +48,15 @@ useEffect(() => {
   }
 
   onChange({
-    sterilization__done: sterilizationDone ?? false,
-    sterilization__comment: comment.trim(),
-    sterilization__date: isoDate,
+    microchipping__done: microchippingDone ?? false,
+    microchipping__comment: comment.trim(),
+    microchipping__date: isoDate,
   });
-}, [sterilizationDone, comment, selectedDate, onChange]);
+}, [microchippingDone, comment, selectedDate, onChange]);
 
   useEffect(() => {
     if (isOpen) {
-      setSterilizationDone(null);
+      setMicrochippingDone(null);
       setComment("");
       setSelectedDate(null);
     }
@@ -65,12 +65,12 @@ useEffect(() => {
   return (
     <div className="flex flex-col gap-[16px] mb-[16px]">
       <h3 className="text-[24px] font-semibold leading-[36px] border-b border-crm-light-blue">
-        Стерилізація/кастрація
+       Чіпування
       </h3>
 
       <BooleanRadio
-        name="sterilization"
-        onChange={(value) => setSterilizationDone(value)}
+        name="microchipping"
+        onChange={(value) => setMicrochippingDone(value)}
         
        
       />
@@ -92,4 +92,4 @@ useEffect(() => {
   );
 };
 
-export default SterilizationModalContent;
+export default MicrochippingModalContent;

@@ -43,23 +43,18 @@ interface Props {
 }
 
 export default function MadicalInfoCard({ animal,openModal }: Props) {
-// const formatDateDDMMYYYY = (date: string | null | undefined): string => {
-//   if (!date) return "-";
+const formatDateDDMMYYYY = (date: string | null | undefined): string => {
+  if (!date) return "-";
 
-//   try {
-//     const parsed = new Date(date);
-//     if (isNaN(parsed.getTime())) return "-";
+  try {
+    const [y, m, d] = date.split("-");
+    if (!y || !m || !d) return "-";
 
-//     const d = parsed.getDate().toString().padStart(2, "0");
-//     const m = (parsed.getMonth() + 1).toString().padStart(2, "0");
-//     const y = parsed.getFullYear();
-
-//     return `${d}.${m}.${y}`;
-//   } catch {
-//     return "-";
-//   }
-// };
-
+    return `${d.padStart(2, "0")}.${m.padStart(2, "0")}.${y}`;
+  } catch {
+    return "-";
+  }
+};
   return (
     <>
     <InfoCardBlock
@@ -81,7 +76,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
         <div className="w-1/2">
           <p className="font-medium text-lg text-crm-secondary-blue">Дата проведення</p>
           <div className="font-normal text-xl text-crm-black break-words">
-           {animal.sterilization.sterilization__date }
+           {formatDateDDMMYYYY(animal.sterilization.sterilization__date) }
           </div>
         </div>
       </div>
@@ -98,7 +93,8 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
         <div className="font-semibold text-crm-black text-2xl leading-[36px]">
           Чіпування
         </div>
-      }>
+      }
+       onEdit={() => openModal("microchipping")}>
                 <div className="flex gap-4">
         <div className="flex-row w-1/2">
           <p className="font-medium text-lg text-crm-secondary-blue">Проведено?</p>
@@ -109,7 +105,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
         <div className="w-1/2">
           <p className="font-medium text-lg text-crm-secondary-blue">Дата проведення</p>
           <div className="font-normal text-xl text-crm-black break-words">
-           {animal.microchipping.microchipping__date }
+           {formatDateDDMMYYYY(animal.microchipping.microchipping__date) }
           </div>
         </div>
       </div>
@@ -138,7 +134,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
                 </div>
                 <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
                   <span>{vaccine.vaccine_type || "-"}</span>
-                  <span className="text-right">{vaccine.date}</span>
+                  <span className="text-right">{formatDateDDMMYYYY(vaccine.date)}</span>
                 </div>
                 <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації/коментар</p>
                 <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
@@ -167,7 +163,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
                 </div>
                 <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
                   <span>{diagnose.name || "-"}</span>
-                  <span className="text-right">{diagnose.date}</span>
+                  <span className="text-right">{formatDateDDMMYYYY(diagnose.date)}</span>
                 </div>
                 <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації</p>
                 <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">
@@ -196,7 +192,7 @@ export default function MadicalInfoCard({ animal,openModal }: Props) {
                 </div>
                 <div className="grid grid-cols-2 text-[20px] leading-[30px] text-crm-black mb-2">
                   <span>{procedure.name || "-"}</span>
-                  <span className="text-right">{procedure.date}</span>
+                  <span className="text-right">{formatDateDDMMYYYY(procedure.date)}</span>
                 </div>
                 <p className="font-medium text-lg text-crm-secondary-blue mb-1">Рекомендації</p>
                 <p className="text-[20px] leading-[30px] text-crm-black border-b border-b-crm-light-blue">

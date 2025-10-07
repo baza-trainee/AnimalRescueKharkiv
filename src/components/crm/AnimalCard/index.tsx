@@ -8,7 +8,9 @@ import MainInfoCard from "../MainInfoCArd";
 import MadicalInfoCard from "../MadicalInfoCard";
 import Modal from "./helpers/editingModal";
 import SterilizationModalContent from "./modalsContent/sterilization";
+
 import { updateAnimalSection, unlockSection, lockSection } from "./helpers/updateAnimalSection";
+import MicrochippingModalContent from "./modalsContent/chiping";
 
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
@@ -66,9 +68,9 @@ death__comment: string
      sterilization__date:any,
     },
  microchipping: {
-    microchipping__done: boolean,
-       microchipping__comment: string,
-    microchipping__date:any,
+      microchipping__done: boolean,
+        microchipping__comment: string,
+      microchipping__date:any,
   },
   vaccinations: 
     {
@@ -166,21 +168,13 @@ const AnimalCard = ({ animalId }: Props) => {
             animalId={animal.id}
           isOpen={modalOpen}/>
       );
-    case "vaccination":
-      return (
-        <div>
-          {animal.vaccinations.map((v, i) => (
-            <div key={i}>
-              <label>Тип вакцини</label>
-              <input defaultValue={v.vaccine_type} />
-              <label>Дата</label>
-              <input type="date" defaultValue={v.date} />
-              <label>Коментар</label>
-              <textarea defaultValue={v.comment} />
-            </div>
-          ))}
-      
-        </div>
+    case "microchipping":
+       return (
+          <MicrochippingModalContent
+            data={animal.microchipping}
+            onChange={setModalData}
+            animalId={animal.id}
+          isOpen={modalOpen}/>
       );
     default:
       return null;
@@ -208,7 +202,7 @@ const AnimalCard = ({ animalId }: Props) => {
         </div>
         <button className="self-start"><ICONS.EDIT_BTN/></button>
         </div>
-        <PhotoGallery images={images} />
+        <PhotoGallery animalId={animal.id} images={images} />
 
          <div className="mt-6 flex border border-mainBlue rounded-[10px] overflow-hidden w-full h-[80px] mx-auto">
           <button
