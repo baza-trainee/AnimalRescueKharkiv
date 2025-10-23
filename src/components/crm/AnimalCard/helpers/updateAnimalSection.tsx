@@ -6,10 +6,18 @@ export const updateAnimalSection = async (
   data: Record<string, any>
 ) => {
   try {
+    let payload = data;
+
+  
+    if (section_name === "vaccinations") {
+      payload = { vaccinations: data };
+    }
+
     const res = await apiClient.put(
       `/crm/animals/${animal_id}/${section_name}`,
-      data
+      payload
     );
+
     return res.data;
   } catch (error) {
     console.error("Помилка при оновленні секції:", error);

@@ -3,7 +3,7 @@
 import InfoCardBlock from "../InfoCardBlock";
 
 interface Props {
-  openModal: (type: "sterilization" | "microchipping" | "vaccination" | "diagnoses" | "procedures") => void;
+  openModal: (type: "sterilization" | "microchipping" | "vaccinations" | "diagnoses" | "procedures") => void;
   animal: {
     sterilization: {
      sterilization__done: boolean,
@@ -123,7 +123,8 @@ const formatDateDDMMYYYY = (date: string | null | undefined): string => {
         <div className="font-semibold text-crm-black text-2xl leading-[36px]">
           Вакцинація
         </div>
-      }>
+      }
+       onEdit={() => openModal("vaccinations")}>
         {Array.isArray(animal.vaccinations) && animal.vaccinations.length > 0 ? (
           <div className="flex flex-col gap-4">
           {animal.vaccinations.map((vaccine, i) => (

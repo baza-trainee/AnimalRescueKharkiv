@@ -5,6 +5,7 @@ import { ErrorMessage } from "./ErrorMessage";
 interface PropsBooleanRadio {
   name: string;
   onChange: (value: boolean) => void;
+    value: boolean | null;
   errorMessage?: string;
 }
 

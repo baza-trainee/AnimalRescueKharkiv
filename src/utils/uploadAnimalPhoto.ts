@@ -6,10 +6,10 @@ export const uploadAnimalPhoto = async (
   file: File
 ) => {
   try {
-    // блокировка секции
+    
     await apiClient.post(`/crm/animals/${animal_id}/${section_name}/lock`);
 
-    // загрузка файла
+  
     const formData = new FormData();
     formData.append("file", file);
     const uploadRes = await apiClient.post("/media/assets", formData, {
@@ -17,12 +17,12 @@ export const uploadAnimalPhoto = async (
     });
     const mediaId = uploadRes.data.id;
 
-    // добавление к животному
+  
     await apiClient.put(`/crm/animals/${animal_id}/${section_name}`, {
        media: [{ id: mediaId }],
     });
 
-    // получаем URL с сервера
+    
     const mediaRes = await apiClient.get(`/media/assets/${mediaId}`);
     const url = mediaRes.data.uri.startsWith("http")
       ? mediaRes.data.uri
