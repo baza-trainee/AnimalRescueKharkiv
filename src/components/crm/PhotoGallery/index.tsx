@@ -34,15 +34,15 @@ const PhotoGallery = ({ animalId,images }: PhotoGalleryProps) => {
     const file = e.target.files[0];
 
     try {
-      // Временный объект для мгновенного отображения
+      
       const tempId = `temp-${Date.now()}`;
       const tempUrl = URL.createObjectURL(file);
       setGallery(prev => [...prev, { id: tempId, url: tempUrl }]);
 
-      // Загрузка на сервер
+  
       const { id, url } = await uploadAnimalPhoto(animalId, "media", file);
 
-      // Заменяем временный объект на серверный
+      
       setGallery(prev =>
         prev.map(g => (g.id === tempId ? { id, url } : g))
       );

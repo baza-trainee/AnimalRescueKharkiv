@@ -11,6 +11,7 @@ import SterilizationModalContent from "./modalsContent/sterilization";
 import MicrochippingModalContent from "./modalsContent/chiping";
 import VaccinationModalContent from "./modalsContent/vaccination";
 import { updateAnimalSection, unlockSection, lockSection } from "./helpers/updateAnimalSection";
+import DiagnosesModalContent from "./modalsContent/diagnoses";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -179,6 +180,15 @@ const AnimalCard = ({ animalId }: Props) => {
         return (
           <VaccinationModalContent
             data={modalData || animal.vaccinations}
+            onChange={setModalData}
+            animalId={animal.id}
+            isOpen={modalOpen}
+          />
+        );
+      case "diagnoses":
+        return (
+          <DiagnosesModalContent
+            data={modalData || animal.diagnoses}
             onChange={setModalData}
             animalId={animal.id}
             isOpen={modalOpen}

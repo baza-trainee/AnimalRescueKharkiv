@@ -13,6 +13,9 @@ export const updateAnimalSection = async (
       payload = { vaccinations: data };
     }
 
+    if (section_name === "diagnoses") {
+      payload = { diagnoses: data };
+    }
     const res = await apiClient.put(
       `/crm/animals/${animal_id}/${section_name}`,
       payload

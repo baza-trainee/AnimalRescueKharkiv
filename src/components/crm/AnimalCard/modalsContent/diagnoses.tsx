@@ -1,78 +1,75 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { CustomDatePicker } from "../../../ui/inputs/CustomDatePicker";
-import { BooleanRadio } from "@/src/components/ui/inputs/BooleanRadio";
+
 import { CommentInput } from "@/src/components/ui/inputs/CommentInput";
 import { ArrowUpIcon } from "../../../ui/icon/ArrowUpIcon";
 import { ArrowDownIcon } from "../../../ui/icon/ArrowDownIcon";
 
-interface VaccinationData {
-  id?: string;
-  is_vaccinated: boolean | null;
-  vaccine_type: string;
+interface DiagnosesData {
+    name: string;
   date: string;
   comment: string;
 }
 
 interface Props {
   animalId: string;
-  data: VaccinationData[];
-  onChange: (payload: VaccinationData[]) => void;
+  data: DiagnosesData[];
+  onChange: (payload: DiagnosesData[]) => void;
   isOpen?: boolean;
 }
 
-const VaccinationModalContent: React.FC<Props> = ({
+const DiagnosesModalContent: React.FC<Props> = ({
   data,
   onChange,
   isOpen,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [localVaccines, setLocalVaccines] = useState<VaccinationData[]>([]);
+  const [localDiagnoses, setLocalDiagnoses] = useState<DiagnosesData[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setLocalVaccines(
+      setLocalDiagnoses(
         data?.length
           ? data
-          : [{ is_vaccinated: null, vaccine_type: "", date: "", comment: "" }]
+          : [{ name:"", date: "", comment: "" }]
       );
       setSelectedIndex((prev) => (prev < data.length ? prev : 0));
     }
   }, [isOpen, data]);
 
-  const handleFieldChange = (field: keyof VaccinationData, value: any) => {
-    const updated = [...localVaccines];
+  const handleFieldChange = (field: keyof DiagnosesData, value: any) => {
+    const updated = [...localDiagnoses];
     updated[selectedIndex] = { ...updated[selectedIndex], [field]: value };
-    setLocalVaccines(updated);
+    setLocalDiagnoses(updated);
     onChange(updated);
   };
 
-  const addNewVaccination = () => {
-    const newItem: VaccinationData = {
-      is_vaccinated: null,
-      vaccine_type: "",
+    const addNewDiagnos      = () => {
+    const newItem: DiagnosesData = {
+      name:"",
       date: "",
       comment: "",
     };
-    const updated = [...localVaccines, newItem];
-    setLocalVaccines(updated);
+    const updated = [...localDiagnoses, newItem];
+    setLocalDiagnoses(updated);
     onChange(updated);
     setSelectedIndex(updated.length - 1);
   };
 
-  const selected = localVaccines[selectedIndex];
+  const selected = localDiagnoses[selectedIndex];
 
   return (
     <div className="w-[310px] flex flex-col gap-[16px]">
       <h3 className="text-2xl h-9 leading-9 font-semibold border-b border-crm-light-blue text-crm-black">
-        Вакцинація
+        Хвороби і діагнози
       </h3>
 
-      {localVaccines.length > 0 && (
+      {localDiagnoses.length > 0 && (
         <div className="flex flex-col gap-2">
           <label className="text-lg text-crm-black font-medium">
-            Оберіть вакцинацію для редагування
+            Оберіть діагноз для редагування
           </label>
 
           <div className="relative w-full">
@@ -83,9 +80,9 @@ const VaccinationModalContent: React.FC<Props> = ({
               onChange={(e) => setSelectedIndex(Number(e.target.value))}
               value={selectedIndex}
             >
-              {localVaccines.map((_, idx) => (
+              {localDiagnoses.map((_, idx) => (
                 <option key={idx} value={idx}>
-                  {`Вакцина №${idx + 1}`}
+                  {`Діагноз №${idx + 1}`}
                 </option>
               ))}
             </select>
@@ -97,18 +94,13 @@ const VaccinationModalContent: React.FC<Props> = ({
         </div>
       )}
 
-      <BooleanRadio
-        name="is_vaccinated"
-        value={selected?.is_vaccinated ?? null}
-        onChange={(val) => handleFieldChange("is_vaccinated", val)}
-      />
-
+      
       <CommentInput
-        label="Тип вакцини/препарат"
-        value={selected?.vaccine_type || ""}
-        placeholder="Від чого провакциновано та яким препаратом"
+        label="Діагноз"
+        value={selected?.name || ""}
+        placeholder="Впишіть діагноз"
         className="crm-input h-fit"
-        onChange={(e) => handleFieldChange("vaccine_type", e.target.value)}
+        onChange={(e) => handleFieldChange("name", e.target.value)}
       />
 
       <CustomDatePicker
@@ -116,7 +108,7 @@ const VaccinationModalContent: React.FC<Props> = ({
         onChange={(date) =>
           handleFieldChange("date", date ? date.toISOString().split("T")[0] : "")
         }
-        label="Дата проведення"
+        label="Дата постановки"
       />
 
       <CommentInput
@@ -128,13 +120,13 @@ const VaccinationModalContent: React.FC<Props> = ({
 
       <button
         type="button"
-        onClick={addNewVaccination}
+        onClick={addNewDiagnos}
         className="crm-btn-secondary mt-2 border border-crm-main-blue rounded-[10px] h-[56px] shadow-statistic bg-crm-backgraund text-mainBlue font-normal text-xl"
       >
-        Додати вакцинацію
+        Додати діагноз
       </button>
     </div>
   );
 };
 
-export default VaccinationModalContent;
+export default DiagnosesModalContent;

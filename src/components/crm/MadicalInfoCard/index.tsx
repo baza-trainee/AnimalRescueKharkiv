@@ -153,7 +153,8 @@ const formatDateDDMMYYYY = (date: string | null | undefined): string => {
         <div className="font-semibold text-crm-black text-2xl leading-[36px]">
         Хвороби і діагнози
         </div>
-      }>
+      }
+       onEdit={() => openModal("diagnoses")}>
         {Array.isArray(animal.diagnoses) && animal.diagnoses.length > 0 ? (
           <div className="flex flex-col gap-4">
           {animal.diagnoses.map((diagnose, i) => (

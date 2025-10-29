@@ -44,11 +44,14 @@ useEffect(() => {
   fetchAnimals();
 }, []);
 
-   const formatDate = (dateStr: string) => {
-    const [day, month] = dateStr.split("/");
-    return `${day}.${month}`;
-  };
-
+ const formatDate = (dateStr: string) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return "";
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${day}.${month}`;
+};
 
   
   return (
