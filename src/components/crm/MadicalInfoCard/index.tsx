@@ -183,7 +183,7 @@ const formatDateDDMMYYYY = (date: string | null | undefined): string => {
   <div className="font-semibold text-crm-black text-2xl leading-[36px]">
     Процедури
   </div>
-}>
+}onEdit={() => openModal("procedures")}>
   {Array.isArray(animal.procedures) && animal.procedures.length > 0 ? (
     <div className="flex flex-col gap-4">
       {animal.procedures.map((procedure, i) => (
