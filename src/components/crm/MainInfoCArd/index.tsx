@@ -3,6 +3,7 @@
 import InfoCardBlock from "../InfoCardBlock";
 
 interface Props {
+    openModal: (type: "origin"| "general") => void;
   animal: {
     locations: {
       location: {
@@ -59,7 +60,7 @@ const genderMap: Record<string, string> = {
  
 };
 
-export default function MainInfoCard({ animal }: Props) {
+export default function MainInfoCard({ animal,openModal }: Props) {
   const { origin__city, origin__arrival_date, origin__address } = animal.origin;
   const { general__animal_type, general__gender, general__weight, general__age, general__specials } = animal.general;
   const locationName = animal.current_location?.location?.name ?? "Немає даних";
@@ -93,7 +94,7 @@ export default function MainInfoCard({ animal }: Props) {
 
   return (
      <>
-       <InfoCardBlock title="Дата прибуття">
+       <InfoCardBlock title="Дата прибуття" onEdit={() => openModal("origin")}>
       <div className="font-normal text-[20px] leading-[30px] text-crm-black"> {formatDateLong(origin__arrival_date)}</div>  
       <div className="flex gap-4">
         <div className="flex-row w-1/2">
@@ -113,7 +114,7 @@ export default function MainInfoCard({ animal }: Props) {
       </div>
       </InfoCardBlock>
       
-      <InfoCardBlock title="Тип тварини">
+      <InfoCardBlock title="Тип тварини" onEdit={() => openModal("general")}>
             <div className="font-normal text-[20px] leading-[30px] text-crm-black break-words">{ general__animal_type.name}</div>
         <div className="flex gap-4 mt-2">
           <div className="w-1/2">

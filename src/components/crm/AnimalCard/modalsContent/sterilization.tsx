@@ -70,6 +70,7 @@ useEffect(() => {
 
       <BooleanRadio
         name="sterilization"
+        value={sterilizationDone }
         onChange={(value) => setSterilizationDone(value)}
         
        

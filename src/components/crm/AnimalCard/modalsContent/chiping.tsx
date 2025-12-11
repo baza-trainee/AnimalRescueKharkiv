@@ -70,6 +70,7 @@ useEffect(() => {
 
       <BooleanRadio
         name="microchipping"
+         value={microchippingDone}
         onChange={(value) => setMicrochippingDone(value)}
         
        

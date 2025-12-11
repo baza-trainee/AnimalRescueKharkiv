@@ -8,7 +8,9 @@ export const updateAnimalSection = async (
   try {
     let payload = data;
 
-  
+  if (section_name === "name") {
+      payload =  data;
+    }
     if (section_name === "vaccinations") {
       payload = { vaccinations: data };
     }

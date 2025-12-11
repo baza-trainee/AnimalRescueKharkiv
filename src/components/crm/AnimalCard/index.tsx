@@ -14,6 +14,11 @@ import { updateAnimalSection, unlockSection, lockSection } from "./helpers/updat
 import DiagnosesModalContent from "./modalsContent/diagnoses";
 import ProceduresModalContent from "./modalsContent/procedures";
 
+import NameModalContent from "./modalsContent/name";
+import OriginModalContent from "./modalsContent/origin";
+import GeneralInfoModalContent from "./modalsContent/general";
+
+
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -26,7 +31,8 @@ interface Animal {
     origin__address?: string | null;
   };
   general: {
-    general__animal_type: { name: string };
+ 
+    general__animal_type: { name: string};
   };
   locations: {
     location: { name: string };
@@ -81,13 +87,14 @@ const AnimalCard = ({ animalId }: Props) => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<
-    "sterilization" | "microchipping" | "vaccinations" | "diagnoses" | "procedures" | null
+    "sterilization" | "microchipping" | "vaccinations" | "diagnoses" | "procedures" | "name" | "origin" | "general"| null
   >(null);
   const [modalData, setModalData] = useState<any>(null);
   const [isSaving, setIsSaving] = useState(false);
 
+
   const openModal = async (
-    type: "sterilization" | "microchipping" | "vaccinations" | "diagnoses" | "procedures"
+    type: "sterilization" | "microchipping" | "vaccinations" | "diagnoses" | "procedures"| "name" | "origin" | "general"
   ) => {
     if (!animalId || !animal) return;
 
@@ -96,6 +103,15 @@ const AnimalCard = ({ animalId }: Props) => {
       setModalType(type);
 
       switch (type) {
+        case "name":
+          setModalData( animal.name );
+          break;
+        case "origin":
+          setModalData( animal.origin );
+          break;
+        case "general":
+          setModalData( animal.general );
+          break;
         case "sterilization":
           setModalData(animal.sterilization);
           break;
@@ -159,6 +175,33 @@ const AnimalCard = ({ animalId }: Props) => {
     if (!animal) return null;
 
     switch (modalType) {
+          case "name":
+        return (
+          <NameModalContent
+            data={modalData || animal.name}
+            onChange={setModalData}
+            animalId={animal.id}
+            isOpen={modalOpen}
+          />
+        );
+      case "origin":
+        return (
+          <OriginModalContent
+            data={modalData || animal.origin}
+            onChange={setModalData}
+            animalId={animal.id}
+            isOpen={modalOpen}
+          />
+        );
+       case "general":
+        return (
+          <GeneralInfoModalContent
+            data={modalData || animal.general}
+            onChange={setModalData}
+            animalId={animal.id}
+            isOpen={modalOpen}
+          />
+        );
       case "sterilization":
         return (
           <SterilizationModalContent
@@ -236,9 +279,11 @@ const AnimalCard = ({ animalId }: Props) => {
               ID {animal.id}
             </div>
           </div>
-          <button className="self-start">
-            <ICONS.EDIT_BTN />
-          </button>
+          <button className="self-start" onClick={() => openModal("name")}>
+  <ICONS.EDIT_BTN />
+</button>
+
+
         </div>
 
         <PhotoGallery animalId={animal.id} images={images} />
@@ -268,7 +313,7 @@ const AnimalCard = ({ animalId }: Props) => {
 
         <div className="mt-5">
           {activeTab === "Main info" ? (
-            <MainInfoCard animal={animal} />
+            <MainInfoCard animal={animal}  openModal={openModal} />
           ) : (
             <MadicalInfoCard animal={animal} openModal={openModal} />
           )}
