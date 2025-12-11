@@ -40,7 +40,7 @@ const CustomInput = forwardRef<HTMLButtonElement, PropsCustomInput>(
           }  transition duration-[350ms]`}
         >
           {isCalendarOpen ? (
-            <ArrowUpIcon style={"w-[18px] h-[18px]"} />
+            <ArrowUpIcon style={"w-[18px] h-[18px] "} />
           ) : (
             <ArrowDownIcon style={"w-[18px] h-[18px]"} />
           )}

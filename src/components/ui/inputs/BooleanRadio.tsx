@@ -5,6 +5,7 @@ import { ErrorMessage } from "./ErrorMessage";
 interface PropsBooleanRadio {
   name: string;
   onChange: (value: boolean) => void;
+    value: boolean | null;
   errorMessage?: string;
 }
 
@@ -23,8 +24,9 @@ export const BooleanRadio: React.FC<PropsBooleanRadio> = forwardRef(
           Проведено?
         </h4>
         <div className="flex">
-          <div className="w-[167px]">
+          <div className="w-[167px] ">
             <RadioInput
+            
               {...rest}
               label="Так"
               name={name}

@@ -5,7 +5,6 @@ import { fetch } from "../../../utils/api";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import Header from "../../crm/Header";
 
 const API_CRM_PATH = process.env.NEXT_PUBLIC_API_CRM_PATH;
 const API_STATS_PATH = process.env.NEXT_PUBLIC_API_STATS_PATH;

@@ -10,14 +10,14 @@ const HeaderCrm: React.FC<{ title: string }> = ({ title }) => {
 
   return (
     <header className="flex mx-auto justify-between w-[390px] pt-[18px] pb-[2px] border-b border-lightBlue ">
-      <div className="w-[342px] mx-auto flex mx-auto items-center justify-between">
+      <div className="w-[342px] mx-auto flex  items-center justify-between">
         <h1
           className={`${inter.className} font-bold text-[24px] leading-[150%] text-mainBlue`}
         >
           {title}
         </h1>
         {isProfilePage && (
-          <div className="flex flex-col items-center text-mainBlue ml-4 block">
+          <div className="flex flex-col items-center text-mainBlue ml-4 ">
             <ICONS.PROFILE_LOGO />
           </div>
         )}
